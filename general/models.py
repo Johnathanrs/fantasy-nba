@@ -39,10 +39,10 @@ class Player(models.Model):
     team = models.CharField(max_length=50)
     team_points = models.FloatField()
     value = models.FloatField()
-    data_source = models.CharField(max_length=30, choices=DATA_SOURCE, default='FanDuel')
 
-    created_at = models.DateField(auto_now_add=True)
-    updated_at = models.DateField(auto_now=True)
+    data_source = models.CharField(max_length=30, choices=DATA_SOURCE, default='FanDuel')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
