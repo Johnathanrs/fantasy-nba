@@ -9,3 +9,4 @@ settings.py
 static/icons
 data/.~lock.*
 *.csv
+*.csv#
