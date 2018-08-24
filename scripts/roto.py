@@ -10,9 +10,10 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
+import pdb
 
 def get_players(data_source):
-    try:
+    # try:
         url = 'https://www.rotowire.com/daily/tables/optimizer-nba.php?sport=NBA&' + \
               'site={}&projections=&type=main&slate=all'.format(data_source)
 
@@ -24,12 +25,15 @@ def get_players(data_source):
                   'proj_site', 'proj_third_party_one', 'proj_third_party_two', 'real_position', 
                   'salary', 'salary_custom', 'salary_original', 'team', 'team_points', 'value']
 
+        pdb.set_trace()
+
         for ii in players:
-            defaults = { key: ii[key] for key in fields }
+            defaults = { key: str(ii[key]).replace(',', '') for key in fields }
             obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
                                                   defaults=defaults)
-    except:
-        pass
+    # except:
+    #     pass
 
 if __name__ == "__main__":
-    get_players('FanDuel')
+    for ds in DATA_SOURCE:
+        get_players(ds[0])

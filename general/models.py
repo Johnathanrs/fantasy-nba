@@ -5,7 +5,7 @@ from django.db import models
 
 DATA_SOURCE = (
     ('FanDuel', 'FanDuel'),
-    ('DraftKing', 'DraftKing'),
+    ('DraftKings', 'DraftKings'),
     ('Yahoo', 'Yahoo'),
     ('Head2Head', 'Head2Head'),
     ('Fanball', 'Fanball'),
