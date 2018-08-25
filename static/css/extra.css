@@ -1,0 +1,14 @@
+th {
+    border-top: none !important;
+    border-bottom: 1px solid #dee2e6 !important;
+}
+
+.players-pane {
+    border:  1px solid #eee;
+    border-top: none;   
+}
+
+.sub {
+    font-size: 13px;
+    color: #555;
+}

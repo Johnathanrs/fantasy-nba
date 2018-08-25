@@ -1,0 +1,27 @@
+{% load humanize %}
+
+<div class="mt-5 jumbotron p-4">
+  <span>Selected Players: </span><span class="font-weight-bold"> {{ players.count }}</span><br>
+  <span>Total Number of Lineup possibilities: </span><span class="font-weight-bold"> {{ total_num_lineups|intcomma }}</span><br>
+  <span>Lineup Projection Average: </span><span class="font-weight-bold"> {{ avg_points|floatformat:2 }}</span>
+</div>
+<div style="overflow-y: scroll; height: calc(98vh - 145px)">
+  <table class="table table-striped table-hover table-responsive-md">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Lineups</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ii in players_ %}
+        <tr>
+          <td>{{ ii.name }}</td>
+          <td>{{ ii.team }}</td>
+          <td>{{ ii.lineups }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>  
+  </table>
+</div>

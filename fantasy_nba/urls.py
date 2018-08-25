@@ -16,8 +16,16 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 
+from general.views import *
+
 admin.site.site_header = "Fantasy NBA"
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', players, name="players"),
+    url(r'^players', players, name="players"),
+    url(r'^gen-lineups', gen_lineups, name="gen_lineups"),
+    url(r'^get-players', get_players, name="get_players"),
+    url(r'^export_lineups', export_lineups, name="export_lineups"),
+    url(r'^update-point', update_point, name="update_point"),
 ]

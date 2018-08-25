@@ -1,0 +1,28 @@
+<table class="table table-striped table-hover table-responsive-md">
+  <thead>
+    <tr>
+      <th><input type="checkbox" id="chk-all" checked="" onclick="choose_all(this)"></th>
+      <th colspan="2">Player</th>
+      <th>Salary</th>
+      <th>FPPG</th>
+      <th>Points</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ii in players %}
+      <tr>
+        <td><input type="checkbox" name="ids" checked="" value="{{ ii.id }}"></td>
+        <td>{{ ii.position }}</td>
+        <td style="cursor: pointer;" onclick="pr_click(this)">
+          <div>{{ ii.first_name }} {{ ii.last_name }}</div>
+          <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>
+        </td>
+        <td>{{ ii.salary }}</td>
+        <td>{{ ii.point_spread|floatformat:-1 }}</td>
+        <td>
+          <input type="number" min="0" class="form-control" step="0.1" data-id="{{ ii.id }}" value="{{ ii.proj_points }}" style="width: 80px;" onchange="change_point(this);">
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>  
+</table>
