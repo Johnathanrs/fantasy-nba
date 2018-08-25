@@ -54,11 +54,11 @@ def export_lineups(request):
     players = Player.objects.filter(id__in=ids)
     lineups = calc_lineups(players, num_lineups)
 
-    csv_fields = ['FWD', 'FWD', 'MID', 'MID', 'MID', 'DEF', 'DEF', 'GK', 'Projected', 'Salary']
+    # csv_fields = ['FWD', 'FWD', 'MID', 'MID', 'MID', 'DEF', 'DEF', 'GK', 'Projected', 'Salary']
     path = "/tmp/.fantasy_nba.csv"
 
     with open(path, 'w') as f:
-        f.write(','.join(csv_fields)+'\n')
+        # f.write(','.join(csv_fields)+'\n')
         for ii in lineups:
             f.write(ii.get_csv())
     
