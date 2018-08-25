@@ -13,7 +13,16 @@ th {
     color: #555;
 }
 
-#div-players td, #div-players th, #div-players td input {
+#div-players {
+    overflow-y: scroll; 
+    height: calc(98vh - 240px);
+}
+
+#div-players td, 
+#div-players th, 
+#div-result td, 
+#div-result th, 
+#div-players td input {
     font-size: 15px !important;
 }
 
@@ -32,4 +41,29 @@ table th {
 
 .fa-lock-open {
     color: #ccc;
+}
+
+.btn-calc {
+    width: 100px; 
+    color: white !important;
+}
+
+.btn-export {
+    width: 100px;
+}
+
+.btn-clear {
+    width: 100px; 
+    color: white !important;
+}
+
+.num-lineups {
+    width: 90px !important;
+}
+
+div.lineups {
+    overflow-y: scroll; 
+    border: 1px solid #eee;
+    border-radius: 4px;    
+    height: calc(98vh - 300px)
 }

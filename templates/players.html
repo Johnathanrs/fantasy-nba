@@ -10,7 +10,7 @@
     {% csrf_token %}
     <div class="clearfix"></div>
       <div class="col-md-6 pr-0 pl-4 mb-5">
-        <h3 class="mb-4 mt-5">Players List</h3>
+        <h3 class="mb-4 mt-4">Players List</h3>
         <ul class="nav nav-tabs">
           {% for ds in data_sources %}  
           <li class="nav-item">
@@ -19,20 +19,18 @@
           {% endfor %}
         </ul>
         <div class="tab-content players-pane p-2">
-          <div style="overflow-y: scroll; height: calc(98vh - 240px);" id="div-players">
-          </div>
+          <div id="div-players"></div>
         </div>
       </div>
 
       <div class="col-md-2 pt-5 text-center">
-        <button class="btn btn-success mb-3" style="width: 100px;" id="btn-export">Export</button><br>
-        <a class="btn btn-success mb-3" style="width: 100px; color: white;" id="btn-calc">Calculate</a><br>
-        <a class="btn btn-success mb-5" style="width: 100px; color: white;" id="btn-clear">Clear</a><br>
-        <span class="pt-5" style="font-size: 17px;">Number of Lineups:</span><br>
-        <input type="number" class="form-control m-3" style="width: 100px;" name="num-lineups" value="150" min="1"><br>
+        <button class="btn btn-success mb-3 btn-export">Export</button><br>
+        <a class="btn btn-success mb-3 btn-calc">Calculate</a><br>
+        <a class="btn btn-success mb-5 btn-clear">Clear</a><br>
+        <span class="pt-5">Number of Lineups:</span><br>
+        <input type="number" class="form-control m-3 num-lineups" name="num-lineups" value="30" min="1"><br>
       </div>
-      <div class="col-md-4 pl-0 pr-4" id="div-result">        
-      </div>
+      <div class="col-md-4 pl-0 pr-4" id="div-result"></div>
   </form>
 
   <div class="modal fade" id="dlg-export">
@@ -41,7 +39,7 @@
 
         <!-- Modal Header -->
         <div class="modal-header">
-          <h4 class="modal-title">Exporting</h4>
+          <h4 class="modal-title">Exporting Lineups</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
@@ -54,70 +52,11 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
         </div>
-
       </div>
     </div>
   </div>  
 {% endblock %}
 
 {% block script %}
-<script type="text/javascript">
-  $(function() {
-    // click first tab
-    $('.nav-link:first').click();
-
-    $('#btn-export').click(function() {
-      var num_players = $('input[type="checkbox"]:checked').length;
-      if (num_players == 0) {
-        alert('Please choose players.');
-        return false;
-      }
-
-      $('#dlg-export').modal();
-    });
-
-    $('#btn-calc').click(function() {
-      var num_players = $('input[type="checkbox"]:checked').length;
-      if (num_players == 0) {
-        alert('Please choose players.');
-        return
-      }
-
-      $('#div-result').html('<span class="font-weight-bold ml-5">Calculating ...</span>');
-      $.post( "/gen-lineups", $('#frm-player').serialize(), function( data ) {
-        $( "#div-result" ).html( data );
-      });
-    });
-
-    $('#btn-clear').click(function() {
-      $('#div-result').html('');
-    });   
-  })
-
-  function pr_click(obj) {
-    var checked = $(obj).parent().find('input').prop("checked");
-    $(obj).parent().find('input').prop("checked", !checked);
-  }
-
-  function choose_all (obj) {
-    $('input[type="checkbox"]').prop("checked", $(obj).prop('checked'));
-  }
-
-  function change_point (obj) {
-    var pid = $(obj).data('id'),
-        val = $(obj).val();
-    $.post( "/update-point", { pid: pid, val: val }, function( data ) {})
-  }
-
-  function chooseDS (tab) {
-    $.post( "/get-players", { ds: tab }, function( data ) {
-      $( "#div-players" ).html( data );
-    });
-  }  
-
-  function toggleLock(obj) {
-    $(obj).toggleClass('fa-lock-open');
-    $(obj).toggleClass('fa-lock');
-  }
-</script>  
+<script src="/static/js/players.js"></script>
 {% endblock %}

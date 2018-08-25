@@ -40,10 +40,9 @@ def gen_lineups(request):
     ids = [int(ii) for ii in ids]
     players = Player.objects.filter(id__in=ids)
     lineups = calc_lineups(players, num_lineups)
-    total_num_lineups = get_total_num_lineups(players)
     avg_points = mean([ii.projected() for ii in lineups])
 
-    players_ = [{ 'name': ii.name, 'team': ii.team, 'lineups': get_num_lineups(ii, lineups)} 
+    players_ = [{ 'name': '{} {}'.format(ii.first_name, ii.last_name), 'team': ii.team, 'lineups': get_num_lineups(ii, lineups)} 
                 for ii in players]
     players_ = sorted(players_, key=lambda k: k['lineups'], reverse=True)
     return HttpResponse(render_to_string('player-lineup.html', locals()))
@@ -75,5 +74,5 @@ def export_lineups(request):
 def update_point(request):
     pid = int(request.POST.get('pid'))
     points = request.POST.get('val')
-    Player.objects.filter(id=pid).update(points=points)
+    Player.objects.filter(id=pid).update(proj_points=points)
     return HttpResponse('')

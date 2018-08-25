@@ -6,10 +6,11 @@ from general.models import *
 
 class Roster:
     POSITION_ORDER = {
-        "F": 0,
-        "M": 1,
-        "D": 2,
-        "GK": 3
+        "PG": 0,
+        "SG": 1,
+        "SF": 2,
+        "PF": 3,
+        "C": 4
     }
 
     def __init__(self):
@@ -29,7 +30,7 @@ class Roster:
         return sum(map(lambda x: x.salary, self.players))
 
     def projected(self):
-        return sum(map(lambda x: x.points, self.players))
+        return sum(map(lambda x: x.proj_points, self.players))
 
     def position_order(self, player):
         return self.POSITION_ORDER[player.position]
@@ -50,28 +51,32 @@ class Roster:
 
 
 POSITION_LIMITS = [
-    ["F", 2, 2],
-    ["M", 3, 3],
-    ["D", 2, 2],
-    ["GK", 1, 1]
+    ["PG", 1, 3],
+    ["SG", 1, 3],
+    ["SF", 1, 3],
+    ["PF", 1, 3],
+    ["C", 1, 2]
 ]
 
 ROSTER_SIZE = 8
 
 
 def get_lineup(players, teams, SALARY_CAP, MAX_POINT):
-    solver = pywraplp.Solver('FanDuel-FIFA-2018', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
+    solver = pywraplp.Solver('nba-lineup', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     variables = []
 
     for player in players:
-        variables.append(solver.IntVar(0, 1, str(player.name)))
+        if False: # player.lock:
+            variables.append(solver.IntVar(1, 1, str(player)))
+        else:        
+            variables.append(solver.IntVar(0, 1, str(player)))
 
     objective = solver.Objective()
     objective.SetMaximization()
 
     for i, player in enumerate(players):
-        objective.SetCoefficient(variables[i], player.points)
+        objective.SetCoefficient(variables[i], player.proj_points)
 
     salary_cap = solver.Constraint(0, SALARY_CAP)
     for i, player in enumerate(players):
@@ -79,7 +84,7 @@ def get_lineup(players, teams, SALARY_CAP, MAX_POINT):
 
     point_cap = solver.Constraint(0, MAX_POINT)
     for i, player in enumerate(players):
-        point_cap.SetCoefficient(variables[i], player.points)
+        point_cap.SetCoefficient(variables[i], player.proj_points)
 
     for position, min_limit, max_limit in POSITION_LIMITS:
         position_cap = solver.Constraint(min_limit, max_limit)
@@ -127,26 +132,3 @@ def calc_lineups(players, num_lineups):
                 break
 
     return result
-
-def ncr(n, r):
-    r = min(r, n-r)
-    numer = reduce(op.mul, xrange(n, n-r, -1), 1)
-    denom = reduce(op.mul, xrange(1, r+1), 1)
-    return numer//denom
-
-def get_total_num_lineups(players):
-    num_F = 0
-    num_M = 0
-    num_D = 0
-    num_GK = 0
-    for ii in players:
-        if ii.position == 'F':
-            num_F = num_F + 1
-        elif ii.position == 'M':
-            num_M = num_M + 1
-        elif ii.position == 'D':
-            num_D = num_D + 1
-        elif ii.position == 'GK':
-            num_GK = num_GK + 1
-
-    return ncr(num_F, 2) * ncr(num_M, 3) * ncr(num_D, 2) * ncr(num_GK, 1)
