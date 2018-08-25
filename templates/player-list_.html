@@ -16,7 +16,7 @@
           <div>{{ ii.first_name }} {{ ii.last_name }}</div>
           <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>
         </td>
-        <td>{{ ii.salary }}</td>
+        <td>{{ ii.salary|floatformat:2 }}</td>
         <td>
           <input type="number" min="0" class="form-control" step="0.1" data-id="{{ ii.id }}" value="{{ ii.proj_points }}" style="width: 80px;" onchange="change_point(this);">
         </td>
