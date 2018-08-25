@@ -4,8 +4,7 @@
       <th><input type="checkbox" id="chk-all" checked="" onclick="choose_all(this)"></th>
       <th colspan="2">Player</th>
       <th>Salary</th>
-      <th>FPPG</th>
-      <th>Points</th>
+      <th colspan="2">Points</th>
     </tr>
   </thead>
   <tbody>
@@ -18,9 +17,11 @@
           <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>
         </td>
         <td>{{ ii.salary }}</td>
-        <td>{{ ii.point_spread|floatformat:-1 }}</td>
         <td>
           <input type="number" min="0" class="form-control" step="0.1" data-id="{{ ii.id }}" value="{{ ii.proj_points }}" style="width: 80px;" onchange="change_point(this);">
+        </td>
+        <td>
+          <i class="fas fa-lock-open fa-md lock unlocked" onclick="toggleLock(this);"></i>
         </td>
       </tr>
     {% endfor %}

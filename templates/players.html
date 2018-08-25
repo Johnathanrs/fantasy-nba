@@ -114,5 +114,10 @@
       $( "#div-players" ).html( data );
     });
   }  
+
+  function toggleLock(obj) {
+    $(obj).toggleClass('fa-lock-open');
+    $(obj).toggleClass('fa-lock');
+  }
 </script>  
 {% endblock %}

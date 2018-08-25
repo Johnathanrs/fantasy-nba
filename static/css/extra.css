@@ -9,6 +9,27 @@ th {
 }
 
 .sub {
-    font-size: 13px;
+    font-size: 12px;
     color: #555;
+}
+
+#div-players td, #div-players th, #div-players td input {
+    font-size: 15px !important;
+}
+
+table td {
+    padding: .4rem .6rem !important;
+}
+
+table th {
+    padding: .7rem .6rem !important;
+}
+
+.fas.lock {
+    padding-top: 10px;
+    cursor: pointer;
+}
+
+.fa-lock-open {
+    color: #ccc;
 }
