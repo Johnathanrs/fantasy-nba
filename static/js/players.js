@@ -29,17 +29,33 @@ $(function() {
     $('#div-result').html('');
   });
 
-  // filter players
-  $("#search-player").on("keyup", function() {
-    var value = $(this).val().toLowerCase();    
+  filterTable = function () {
+    var position = $('.position-filter .nav-item a.active').html(),
+        keyword = $('#search-player').val().toLowerCase().trim();    
+
+    if (position == 'All') {
+      position = '';
+    }
+
     $("#div-players tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      $(this).toggle($(this).find('td:nth-child(2)').text().indexOf(position) > -1 && $(this).find('td:nth-child(3)').text().toLowerCase().indexOf(keyword) > -1)
     });
-    
+
     $("#div-players thead tr").filter(function() {
       $(this).toggle(true);
     });
+  }
+
+  // filter players
+  $("#search-player").on("keyup", function() {
+    filterTable();
   });  
+
+  $('.position-filter .nav-item a').on('click', function() {
+    $('.position-filter .nav-item a').removeClass('active');
+    $(this).toggleClass('active');
+    filterTable();
+  })
 })
 
 function pr_click(obj) {
