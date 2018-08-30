@@ -15,7 +15,7 @@ th {
 
 #div-players {
     overflow-y: scroll; 
-    height: calc(98vh - 240px);
+    height: calc(98vh - 230px);
 }
 
 #div-players td, 
@@ -65,5 +65,10 @@ div.lineups {
     overflow-y: scroll; 
     border: 1px solid #eee;
     border-radius: 4px;    
-    height: calc(98vh - 300px)
+    height: calc(98vh - 318px)
+}
+
+#search-player {
+    width: calc(100% - 1.5rem);
+    font-size: 14px;
 }

@@ -27,7 +27,19 @@ $(function() {
 
   $('.btn-clear').click(function() {
     $('#div-result').html('');
-  });   
+  });
+
+  // filter players
+  $("#search-player").on("keyup", function() {
+    var value = $(this).val().toLowerCase();    
+    $("#div-players tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+    
+    $("#div-players thead tr").filter(function() {
+      $(this).toggle(true);
+    });
+  });  
 })
 
 function pr_click(obj) {
