@@ -61,13 +61,13 @@ POSITION_LIMITS = [
 ROSTER_SIZE = 8
 
 
-def get_lineup(players, teams, SALARY_CAP, MAX_POINT):
+def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
     solver = pywraplp.Solver('nba-lineup', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     variables = []
 
     for player in players:
-        if False: # player.lock:
+        if player.id in locked:
             variables.append(solver.IntVar(1, 1, str(player)))
         else:        
             variables.append(solver.IntVar(0, 1, str(player)))
@@ -115,14 +115,14 @@ def get_lineup(players, teams, SALARY_CAP, MAX_POINT):
         return roster
 
 
-def calc_lineups(players, num_lineups):
+def calc_lineups(players, num_lineups, locked=[]):
     result = []
     SALARY_CAP = 60000
     MAX_POINT = 10000
     teams = set([ii.team for ii in players])
 
     while True:
-        roster = get_lineup(players, teams, SALARY_CAP, MAX_POINT)
+        roster = get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked)
         if not roster:
             break
         MAX_POINT = roster.projected() - 0.001

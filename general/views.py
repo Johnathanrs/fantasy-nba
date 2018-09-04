@@ -33,13 +33,20 @@ def get_num_lineups(player, lineups):
 def mean(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
 
-def gen_lineups(request):
-    rosters = []
+def _get_lineups(request):
     ids = request.POST.getlist('ids')
+    locked = request.POST.getlist('locked')
     num_lineups = int(request.POST.get('num-lineups'))
+
     ids = [int(ii) for ii in ids]
+    locked = [int(ii) for ii in locked]
+
     players = Player.objects.filter(id__in=ids)
-    lineups = calc_lineups(players, num_lineups)
+    lineups = calc_lineups(players, num_lineups, locked)
+    return lineups, players
+
+def gen_lineups(request):
+    lineups, players = _get_lineups(request)
     avg_points = mean([ii.projected() for ii in lineups])
 
     players_ = [{ 'name': '{} {}'.format(ii.first_name, ii.last_name), 'team': ii.team, 'lineups': get_num_lineups(ii, lineups)} 
@@ -48,12 +55,7 @@ def gen_lineups(request):
     return HttpResponse(render_to_string('player-lineup.html', locals()))
 
 def export_lineups(request):
-    ids = request.POST.getlist('ids')
-    num_lineups = int(request.POST.get('num-lineups'))
-    ids = [int(ii) for ii in ids]
-    players = Player.objects.filter(id__in=ids)
-    lineups = calc_lineups(players, num_lineups)
-
+    lineups, _ = _get_lineups(request)
     # csv_fields = ['FWD', 'FWD', 'MID', 'MID', 'MID', 'DEF', 'DEF', 'GK', 'Projected', 'Salary']
     path = "/tmp/.fantasy_nba.csv"
 

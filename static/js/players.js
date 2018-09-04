@@ -14,8 +14,8 @@ $(function() {
 
   $('.btn-calc').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;
-    if (num_players == 0) {
-      alert('Please choose players.');
+    if (num_players < 8) {
+      alert('Please choose more than 8 players.');
       return
     }
 
@@ -79,7 +79,18 @@ function chooseDS (tab) {
   });
 }  
 
-function toggleLock(obj) {
+function toggleLock(obj, pid) {
+  if ($('.fa-lock').length == 4 && $(obj).hasClass('fa-lock-open')) {
+    alert('You cannot add more locked players.');
+    return false;
+  }
+
   $(obj).toggleClass('fa-lock-open');
   $(obj).toggleClass('fa-lock');
+
+  if ($(obj).hasClass('fa-lock')) {
+    $('#frm-player').append(`<input type="hidden" name="locked" value="${pid}" id="lock${pid}">`);
+  } else {
+    $(`#lock${pid}`).remove();
+  }
 }
