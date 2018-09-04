@@ -1,3 +1,7 @@
+body {
+    overflow: hidden;
+}
+
 th {
     border-top: none !important;
     border-bottom: 1px solid #dee2e6 !important;
@@ -15,7 +19,7 @@ th {
 
 #div-players {
     overflow-y: scroll; 
-    height: calc(98vh - 230px);
+    height: calc(98vh - 300px);
 }
 
 #div-players td, 
@@ -65,7 +69,7 @@ div.lineups {
     overflow-y: scroll; 
     border: 1px solid #eee;
     border-radius: 4px;    
-    height: calc(98vh - 318px)
+    height: calc(98vh - 280px)
 }
 
 #search-player {
