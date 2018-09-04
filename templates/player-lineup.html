@@ -16,7 +16,11 @@
     <tbody>
       {% for ii in players_ %}
         <tr>
-          <td><img src="/static/img/nba.ico" width="36" class="mr-2">{{ ii.name }}</td>
+          <td>
+            <a href="/players/{{ ii.id }}">
+              <img src="/static/img/nba.ico" width="36" class="mr-2">{{ ii.name }}
+            </a>
+          </td>
           <td>{{ ii.team }}</td>
           <td>{{ ii.lineups }}</td>
         </tr>

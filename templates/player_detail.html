@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load extra %}
+
+{% block css %}
+  <link rel="stylesheet" href="/static/css/extra.css">
+{% endblock %}
+
+{% block content %}
+  <h2>{{ player.first_name }} {{ player.last_name }}</h2>
+{% endblock %}
+
+{% block script %}
+<script src="/static/js/players.js"></script>
+{% endblock %}

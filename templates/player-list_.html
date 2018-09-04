@@ -11,10 +11,14 @@
     {% for ii in players %}
       <tr>
         <td><input type="checkbox" name="ids" checked="" value="{{ ii.id }}"></td>
-        <td><img src="/static/img/nba.ico" width="36" class="mr-2"> {{ ii.position }}</td>
         <td style="cursor: pointer;" onclick="pr_click(this)">
-          <div>{{ ii.first_name }} {{ ii.last_name }}</div>
-          <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>
+          <img src="/static/img/nba.ico" width="36" class="mr-2"> {{ ii.position }}
+        </td>
+        <td>
+          <a href="/players/{{ ii.id }}">
+            <div>{{ ii.first_name }} {{ ii.last_name }}</div>
+            <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>            
+          </a>
         </td>
         <td>{{ ii.salary|floatformat:2 }}</td>
         <td>
