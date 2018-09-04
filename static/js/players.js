@@ -80,7 +80,7 @@ function chooseDS (tab) {
 }  
 
 function toggleLock(obj, pid) {
-  if ($('.fa-lock').length == 4 && $(obj).hasClass('fa-lock-open')) {
+  if ($('.fa-lock').length == 7 && $(obj).hasClass('fa-lock-open')) {
     alert('You cannot add more locked players.');
     return false;
   }
