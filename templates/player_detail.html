@@ -1,14 +1,48 @@
 {% extends 'base.html' %}
 {% load extra %}
 
-{% block css %}
-  <link rel="stylesheet" href="/static/css/extra.css">
-{% endblock %}
-
 {% block content %}
-  <h2>{{ player.first_name }} {{ player.last_name }}</h2>
+<div class="container mt-4">
+  <div class="mr-3 float-left" style="height: 200px;">
+    <img src="/static/img/nba.ico" width="120">
+  </div>
+  <div>
+    <h2>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}</small></h2>
+
+    <h5 class="text-success">{{ player.team }}</h5>
+    <h5 class="text-warning">{{ player.injury }}</h5>
+    <h6 class="text-secondary"><span class="text-body">Salary:</span> ${{ player.salary|floatformat:2 }}</h6>
+    <h6 class="text-secondary"><span class="text-body">Avg Minutes:</span> {{ player.minutes }}</h6>
+    <h6 class="text-secondary"><span class="text-body">Avg FPPG:</span> {{ player.value }}</h6>
+  </div>
+  <div id="flot-placeholder" style="width:900px;height:200px;" class="mt-5"></div>
+</div>
+
 {% endblock %}
 
 {% block script %}
-<script src="/static/js/players.js"></script>
+  <script type="text/javascript" src="/static/flot/jquery.min.js"></script>
+  <script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
+  <script type="text/javascript" src="/static/flot/jquery.flot.time.min.js"></script>
+  <script type="text/javascript" src="/static/flot/jquery.flot.symbol.min.js"></script>
+
+  <script type="text/javascript">
+    var data = [[1, 130], [2, 40], [3, 80], [4, 160], [5, 159], [6, 370], [7, 330], [8, 350], [9, 370], [10, 400], [11, 330], [12, 350]];
+
+    var dataset = [{label: "Value",data: data}];
+
+    var options = {
+        series: {
+            lines: { show: true },
+            points: {
+                radius: 3,
+                show: true
+            }
+        }
+    };
+
+    $(document).ready(function () {
+        $.plot($("#flot-placeholder"), dataset, options);
+    });
+  </script>
 {% endblock %}

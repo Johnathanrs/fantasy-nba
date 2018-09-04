@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load extra %}
 
-{% block css %}
-  <link rel="stylesheet" href="/static/css/extra.css">
-{% endblock %}
-
 {% block content %}
   <form class="form-inline" id="frm-player" action="/export_lineups" method="POST">
     {% csrf_token %}
