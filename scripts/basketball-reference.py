@@ -33,10 +33,11 @@ def main():
         try:
             if not player.get('class'): # ignore header
                 name = player.find("td", {"data-stat":"player"}).text
-                team_id = player.find("td", {"data-stat":"team_id"}).text
-                game_location = player.find("td", {"data-stat":"game_location"}).text
-                opp_id = player.find("td", {"data-stat":"opp_id"}).text
+                team = player.find("td", {"data-stat":"team_id"}).text
+                location = player.find("td", {"data-stat":"game_location"}).text
+                opp = player.find("td", {"data-stat":"opp_id"}).text
                 game_result = player.find("td", {"data-stat":"game_result"}).text
+                
                 mp = player.find("td", {"data-stat":"mp"}).text
                 fg = player.find("td", {"data-stat":"fg"}).text
                 fga = player.find("td", {"data-stat":"fga"}).text

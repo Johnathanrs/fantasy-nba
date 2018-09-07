@@ -12,3 +12,4 @@ class PlayerAdmin(admin.ModelAdmin):
     list_filter = ['data_source', 'position']
 
 admin.site.register(Player, PlayerAdmin)
+admin.site.register(PlayerGame)

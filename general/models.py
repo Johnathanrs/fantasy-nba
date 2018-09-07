@@ -46,3 +46,34 @@ class Player(models.Model):
 
     def __str__(self):
         return '{} {}'.format(self.first_name, self.last_name)
+
+
+class PlayerGame(models.Model):
+    name = models.CharField("Player", max_length=50)
+    team = models.CharField("Tm", max_length=50)
+    location = models.CharField("H-A", max_length=50)
+    opp = models.CharField("Vs", max_length=50)
+    game_result = models.CharField("W-L", max_length=50)
+
+    mp = models.FloatField("MP")
+    fg = models.IntegerField("FG")
+    fga = models.IntegerField("FGA")
+    fg_pct = models.FloatField("FG%")
+    fg3 = models.IntegerField("3P")
+    fg3a = models.IntegerField("3PA")
+    fg3_pct = models.FloatField("3P%")
+    ft = models.IntegerField("FT")
+    fta = models.IntegerField("FTA")
+    ft_pct = models.FloatField("FT%")
+    trb = models.IntegerField("REB")
+    ast = models.IntegerField("AST")
+    stl = models.IntegerField("ST")
+    blk = models.IntegerField("BLK")
+    tov = models.IntegerField("TO")
+    pf = models.IntegerField("PF")
+    pts = models.IntegerField("PTS")
+    fpts = models.FloatField("FPTS")
+    date = models.DateField()
+
+    def __str__(self):
+        return self.name
