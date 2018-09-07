@@ -11,5 +11,14 @@ class PlayerAdmin(admin.ModelAdmin):
     search_fields = ['first_name', 'last_name', 'team']
     list_filter = ['data_source', 'position']
 
+
+class PlayerGameAdmin(admin.ModelAdmin):
+    list_display = ['name', 'team', 'location', 'opp', 'game_result', 'mp', 'fg', 'fga', 'fg_pct',
+                    'fg3', 'fg3a', 'fg3_pct', 'ft', 'fta', 'ft_pct', 'trb', 'ast', 'stl', 'blk',
+                    'tov', 'pf', 'pts', 'date']
+    search_fields = ['name', 'team']
+    list_filter = ['team', 'location', 'game_result']
+
+
 admin.site.register(Player, PlayerAdmin)
-admin.site.register(PlayerGame)
+admin.site.register(PlayerGame, PlayerGameAdmin)
