@@ -38,6 +38,14 @@ table th {
     padding: .7rem .6rem !important;
 }
 
+.games table td {
+    padding: .4rem .6rem !important;
+}
+
+.games table th {
+    padding: .7rem .2rem !important;
+}
+
 .fas.lock {
     padding-top: 10px;
     cursor: pointer;

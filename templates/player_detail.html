@@ -12,32 +12,16 @@
       <h2>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}</small></h2>
 
       <h5 class="text-success">{{ player.team }}</h5>
-      <h5 class="text-warning">{{ player.injury }}</h5>
+      <h5 class="text-warning">{{ player.injury1 }}</h5>
       <h6 class="text-secondary"><span class="text-body">Salary:</span> ${{ player.salary|floatformat:2 }}</h6>
       <h6 class="text-secondary"><span class="text-body">Avg Minutes:</span> {{ player.minutes }}</h6>
       <h6 class="text-secondary"><span class="text-body">Avg FPPG:</span> {{ player.value }}</h6>
     </div>
     <div id="flot-placeholder" style="height:160px;" class="mt-3 col-md-8"></div>
 
-    <div style="height: 400px; overflow-y: scroll;" class="col-md-12 mt-4">
-      <table class="table table-hover table-responsive-md">
+    <div style="height: calc(100vh - 350px); overflow-y: scroll;" class="col-md-12 mt-3 games">
+      <table class="table table-responsive-md">
         <tr>
-          <td>
-            <table>
-              <tr><th>Name</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.name }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>Team</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.team }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
           <td>
             <table>
               <tr><th>Minutes</th></tr>
@@ -48,9 +32,139 @@
           </td>
           <td>
             <table>
+              <tr><th>FG</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fg }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>FGA</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fga }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>FG%</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fg_pct }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>3P</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fg3 }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>3PA</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fg3a }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>3P%</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fg3_pct }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>FT</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.ft }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>FTA</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.fta }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+
+          <td>
+            <table>
+              <tr><th>FT%</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.ft_pct }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>REB</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.trb }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>AST</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.ast }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>ST</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.stl }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>BLK</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.blk }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>TO</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.tov }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>PF</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.pf }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>PTS</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.pts }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+
+          <td>
+            <table>
               <tr><th>Date</th></tr>
               {% for ii in games %}
-              <tr><td>{{ ii.date }}</td></tr>
+              <tr><td>{{ ii.date|date:'m/d/Y' }}</td></tr>
               {% endfor %}
             </table>
           </td>
@@ -66,12 +180,19 @@
   <script type="text/javascript" src="/static/flot/jquery.min.js"></script>
   <script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
   <script type="text/javascript" src="/static/flot/jquery.flot.time.min.js"></script>
-  <script type="text/javascript" src="/static/flot/jquery.flot.symbol.min.js"></script>
+  <!-- <script type="text/javascript" src="/static/flot/jquery.flot.symbol.js"></script> -->
 
   <script type="text/javascript">
-    var data = [[1, 130], [2, 40], [3, 80], [4, 160], [5, 159], [6, 370], [7, 330], [8, 350], [9, 370], [10, 400], [11, 330], [12, 350]];
+    function gd(year, month, day) {
+        return new Date(year, month, day).getTime();
+    }
 
-    var dataset = [{label: "Value",data: data}];
+    var rdata = [];
+    {% for ii in games %}
+      rdata.push([gd({{ ii.date|date:"Y, m, d" }}), {{ ii.pts }}])
+    {% endfor %}
+
+    var dataset = [{label: "PTS",data: rdata}];
 
     var options = {
         series: {
@@ -80,11 +201,67 @@
                 radius: 3,
                 show: true
             }
-        }
+        },
+        grid: { hoverable: true, clickable: true },
+        xaxis: {
+            mode: "time"
+        },
+        legend: {
+          noColumns: 0,
+          labelBoxBorderColor: "#000000",
+          position: "nw"
+        },
     };
 
     $(document).ready(function () {
         $.plot($("#flot-placeholder"), dataset, options);
+        $("#flot-placeholder").UseTooltip();
     });
+
+    var previousPoint = null, previousLabel = null;
+
+    $.fn.UseTooltip = function () {
+      $(this).bind("plothover", function (event, pos, item) {
+          if (item) {
+              if ((previousLabel != item.series.label) || (previousPoint != item.dataIndex)) {
+                  previousPoint = item.dataIndex;
+                  previousLabel = item.series.label;
+                  $("#tooltip").remove();
+
+                  var x = item.datapoint[0];
+                  var y = item.datapoint[1];
+
+                  var color = item.series.color;
+                  var date = new Date(x);
+
+                  if (item.seriesIndex == 0) {
+                      showTooltip(item.pageX,
+                      item.pageY,
+                      color,
+                      `<strong>${item.series.label}</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
+                  }
+              }
+          } else {
+              $("#tooltip").remove();
+              previousPoint = null;
+          }
+      });
+    };
+
+    function showTooltip(x, y, color, contents) {
+      $('<div id="tooltip">' + contents + '</div>').css({
+          position: 'absolute',
+          display: 'none',
+          top: y - 40,
+          left: x - 120,
+          border: '2px solid ' + color,
+          padding: '5px 10px',
+          'font-size': '12px',
+          'border-radius': '5px',
+          'background-color': '#fff',
+          'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
+          opacity: 0.9
+      }).appendTo("body").fadeIn(200);
+    }
   </script>
 {% endblock %}
