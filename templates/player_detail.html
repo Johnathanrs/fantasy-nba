@@ -16,6 +16,28 @@
     <h6 class="text-secondary"><span class="text-body">Avg FPPG:</span> {{ player.value }}</h6>
   </div>
   <div id="flot-placeholder" style="width:900px;height:200px;" class="mt-5"></div>
+  <div>
+  <table class="table table-striped table-hover table-responsive-md">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Lineups</th>
+        <th>Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ii in games %}
+        <tr>
+          <td>{{ ii.name }}
+          </td>
+          <td>{{ ii.team }}</td>
+          <td>{{ ii.mp }}</td>
+          <td>{{ ii.date }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>  
+  </table>  </div>
 </div>
 
 {% endblock %}

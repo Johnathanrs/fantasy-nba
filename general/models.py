@@ -48,12 +48,17 @@ class Player(models.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
+GAME_RESULT = (
+    ('W', 'Win'),
+    ('L', 'Loss'),
+)
+
 class PlayerGame(models.Model):
     name = models.CharField("Player", max_length=50)
     team = models.CharField("Tm", max_length=50)
     location = models.CharField("H-A", max_length=50)
     opp = models.CharField("Vs", max_length=50)
-    game_result = models.CharField("W-L", max_length=50)
+    game_result = models.CharField("W-L", max_length=50, choices=GAME_RESULT)
 
     mp = models.FloatField("MP")
     fg = models.IntegerField("FG")

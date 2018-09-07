@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 import os
 import mimetypes
 
+import datetime
+
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -35,6 +37,12 @@ def mean(numbers):
 
 def player_detail(request, pid):
     player = Player.objects.get(id=pid)
+    print '{} {}'.format(player.first_name, player.last_name), player.team, datetime.date.today()+datetime.timedelta(-180)
+    games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
+                                      team=player.team,
+                                      date__gte=datetime.date.today()+datetime.timedelta(-210)) \
+                              .order_by('-date')
+    print games.count()
     return render(request, 'player_detail.html', locals())
 
 def _get_lineups(request):
