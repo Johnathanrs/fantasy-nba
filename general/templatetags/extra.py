@@ -6,4 +6,4 @@ register = template.Library()
 
 @register.filter
 def percent(val):
-    return int(val * 100) if val else '-';
+    return val if val else '-';
