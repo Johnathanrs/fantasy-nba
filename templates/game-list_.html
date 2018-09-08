@@ -44,7 +44,7 @@
       <table>
         <tr><th>FG%</th></tr>
         {% for ii in games %}
-        <tr><td>{{ ii.fg_pct }}</td></tr>
+        <tr><td>{% if ii.fg_pct %} {{ ii.fg_pct }} {% else %} &nbsp; {% endif %}</td></tr>
         {% endfor %}
       </table>
     </td>
@@ -68,7 +68,7 @@
       <table>
         <tr><th>3P%</th></tr>
         {% for ii in games %}
-        <tr><td>{{ ii.fg3_pct }}</td></tr>
+        <tr><td>{% if ii.fg3_pct %} {{ ii.fg3_pct }} {% else %} &nbsp; {% endif %}</td></tr>
         {% endfor %}
       </table>
     </td>
@@ -93,7 +93,7 @@
       <table>
         <tr><th>FT%</th></tr>
         {% for ii in games %}
-        <tr><td>{{ ii.ft_pct }}</td></tr>
+        <tr><td>{% if ii.ft_pct %} {{ ii.ft_pct }} {% else %} &nbsp; {% endif %}</td></tr>
         {% endfor %}
       </table>
     </td>
