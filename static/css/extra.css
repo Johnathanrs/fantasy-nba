@@ -114,3 +114,8 @@ div.lineups {
 .filters select {
     padding: 3px 7px;
 }
+
+.filters .season {
+    padding-top: 5px;
+    font-size: 14px;
+}
