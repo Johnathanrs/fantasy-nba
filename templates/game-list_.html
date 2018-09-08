@@ -1,8 +1,9 @@
+{% load extra %}
 <table class="table table-responsive-md">
   <tr>
     <td>
       <table>
-        <tr><th>Loc</th></tr>
+        <tr><th>H/A</th></tr>
         {% for ii in games %}
         <tr><td>{% if ii.location %} {{ ii.location }} {% else %} &nbsp; {% endif %}</td></tr>
         {% endfor %}
@@ -44,7 +45,7 @@
       <table>
         <tr><th>FG%</th></tr>
         {% for ii in games %}
-        <tr><td>{% if ii.fg_pct %} {{ ii.fg_pct }} {% else %} &nbsp; {% endif %}</td></tr>
+        <tr><td>{{ ii.fg_pct|percent }}</td></tr>
         {% endfor %}
       </table>
     </td>
@@ -68,7 +69,7 @@
       <table>
         <tr><th>3P%</th></tr>
         {% for ii in games %}
-        <tr><td>{% if ii.fg3_pct %} {{ ii.fg3_pct }} {% else %} &nbsp; {% endif %}</td></tr>
+        <tr><td>{{ ii.fg3_pct|percent }}</td></tr>
         {% endfor %}
       </table>
     </td>
@@ -93,7 +94,7 @@
       <table>
         <tr><th>FT%</th></tr>
         {% for ii in games %}
-        <tr><td>{% if ii.ft_pct %} {{ ii.ft_pct }} {% else %} &nbsp; {% endif %}</td></tr>
+        <tr><td>{{ ii.ft_pct|percent }}</td></tr>
         {% endfor %}
       </table>
     </td>
