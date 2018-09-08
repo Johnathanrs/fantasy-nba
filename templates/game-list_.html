@@ -1,0 +1,165 @@
+<table class="table table-responsive-md">
+  <tr>
+    <td>
+      <table>
+        <tr><th>Loc</th></tr>
+        {% for ii in games %}
+        <tr><td>{% if ii.location %} {{ ii.location }} {% else %} &nbsp; {% endif %}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>Opp</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.opp }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>Minutes</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.mp }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>FG</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fg }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>FGA</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fga }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>FG%</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fg_pct }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>3P</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fg3 }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>3PA</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fg3a }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>3P%</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fg3_pct }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>FT</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.ft }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>FTA</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fta }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+
+    <td>
+      <table>
+        <tr><th>FT%</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.ft_pct }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>REB</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.trb }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>AST</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.ast }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>ST</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.stl }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>BLK</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.blk }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>TO</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.tov }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>PF</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.pf }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>PTS</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.pts }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
+        <tr><th>Date</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.date|date:'m/d/Y' }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+  </tr>
+</table>

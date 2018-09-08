@@ -29,4 +29,5 @@ urlpatterns = [
     url(r'^get-players', get_players, name="get_players"),
     url(r'^export_lineups', export_lineups, name="export_lineups"),
     url(r'^update-point', update_point, name="update_point"),
+    url(r'^player-games', player_games, name="player_games")
 ]

@@ -21,13 +21,13 @@
 
     <div class="col-md-12 mt-4 filters">
       <label class="ml-2">Location: </label>
-      <select class="ml-2">
-        <option value="">All</option>
-        <option value=" ">Home</option>
+      <select class="ml-2 loc">
+        <option value="all">All</option>
+        <option value="">Home</option>
         <option value="@">Away</option>
       </select>
       <label class="ml-5">Opponent: </label>
-      <select class="ml-2">
+      <select class="ml-2 opp">
         <option value="">All</option>
         {% for ii in opps %}
           <option>{{ ii }}</option>
@@ -35,172 +35,6 @@
       </select>
     </div>
     <div class="col-md-12 mt-2 games">
-      <table class="table table-responsive-md">
-        <tr>
-          <td>
-            <table>
-              <tr><th>H-A</th></tr>
-              {% for ii in games %}
-              <tr><td>{% if ii.location %} {{ ii.location }} {% else %} &nbsp; {% endif %}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>Opp</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.opp }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>Minutes</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.mp }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>FG</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fg }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>FGA</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fga }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>FG%</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fg_pct }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>3P</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fg3 }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>3PA</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fg3a }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>3P%</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fg3_pct }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>FT</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.ft }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>FTA</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.fta }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-
-          <td>
-            <table>
-              <tr><th>FT%</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.ft_pct }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>REB</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.trb }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>AST</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.ast }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>ST</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.stl }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>BLK</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.blk }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>TO</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.tov }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>PF</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.pf }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-          <td>
-            <table>
-              <tr><th>PTS</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.pts }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-
-          <td>
-            <table>
-              <tr><th>Date</th></tr>
-              {% for ii in games %}
-              <tr><td>{{ ii.date|date:'m/d/Y' }}</td></tr>
-              {% endfor %}
-            </table>
-          </td>
-        </tr>
-      </table>
     </div>
   </div>
 </div>
@@ -211,88 +45,13 @@
   <script type="text/javascript" src="/static/flot/jquery.min.js"></script>
   <script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
   <script type="text/javascript" src="/static/flot/jquery.flot.time.min.js"></script>
-  <!-- <script type="text/javascript" src="/static/flot/jquery.flot.symbol.js"></script> -->
-
   <script type="text/javascript">
-    function gd(year, month, day) {
-        return new Date(year, month, day).getTime();
-    }
+    var rdata = [],
+        pid = {{ pid }};
 
-    var rdata = [];
     {% for ii in games %}
-      rdata.push([gd({{ ii.date|date:"Y, m, d" }}), {{ ii.pts }}])
+      rdata.push([new Date({{ ii.date|date:"Y, m, d" }}), {{ ii.pts }}])
     {% endfor %}
-
-    var dataset = [{label: "PTS",data: rdata}];
-
-    var options = {
-        series: {
-            lines: { show: true },
-            points: {
-                radius: 3,
-                show: true
-            }
-        },
-        grid: { hoverable: true, clickable: true },
-        xaxis: {
-            mode: "time"
-        },
-        legend: {
-          noColumns: 0,
-          labelBoxBorderColor: "#000000",
-          position: "nw"
-        },
-    };
-
-    $(document).ready(function () {
-        $.plot($("#flot-placeholder"), dataset, options);
-        $("#flot-placeholder").UseTooltip();
-    });
-
-    var previousPoint = null, previousLabel = null;
-
-    $.fn.UseTooltip = function () {
-      $(this).bind("plothover", function (event, pos, item) {
-          if (item) {
-              if ((previousLabel != item.series.label) || (previousPoint != item.dataIndex)) {
-                  previousPoint = item.dataIndex;
-                  previousLabel = item.series.label;
-                  $("#tooltip").remove();
-
-                  var x = item.datapoint[0];
-                  var y = item.datapoint[1];
-
-                  var color = item.series.color;
-                  var date = new Date(x);
-
-                  if (item.seriesIndex == 0) {
-                      showTooltip(item.pageX,
-                      item.pageY,
-                      color,
-                      `<strong>${item.series.label}</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
-                  }
-              }
-          } else {
-              $("#tooltip").remove();
-              previousPoint = null;
-          }
-      });
-    };
-
-    function showTooltip(x, y, color, contents) {
-      $('<div id="tooltip">' + contents + '</div>').css({
-          position: 'absolute',
-          display: 'none',
-          top: y - 40,
-          left: x - 120,
-          border: '2px solid ' + color,
-          padding: '5px 10px',
-          'font-size': '12px',
-          'border-radius': '5px',
-          'background-color': '#fff',
-          'font-family': 'Verdana, Arial, Helvetica, Tahoma, sans-serif',
-          opacity: 0.9
-      }).appendTo("body").fadeIn(200);
-    }
   </script>
+  <script type="text/javascript" src="/static/js/player_detail.js"></script>
 {% endblock %}

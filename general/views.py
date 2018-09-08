@@ -37,13 +37,29 @@ def mean(numbers):
 
 def player_detail(request, pid):
     player = Player.objects.get(id=pid)
-    print '{} {}'.format(player.first_name, player.last_name), player.team, datetime.date.today()+datetime.timedelta(-180)
+
     games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
                                       team=player.team,
-                                      date__gte=datetime.date.today()+datetime.timedelta(-210)) \
-                              .order_by('-date')
+                                      date__gte=datetime.date.today()+datetime.timedelta(-210))
     opps = set(games.values_list('opp', flat=True).distinct())
     return render(request, 'player_detail.html', locals())
+
+@csrf_exempt
+def player_games(request):
+    pid = request.POST.get('pid')
+    loc = request.POST.get('loc')
+    opp = request.POST.get('opp')
+
+    player = Player.objects.get(id=pid)
+    games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
+                                      team=player.team,
+                                      opp__contains=opp,
+                                      date__gte=datetime.date.today()+datetime.timedelta(-210)) \
+                              .order_by('-date')
+    if loc != 'all':
+        games = games.filter(location=loc).order_by('-date')
+        
+    return HttpResponse(render_to_string('game-list_.html', locals()))
 
 def _get_lineups(request):
     ids = request.POST.getlist('ids')
