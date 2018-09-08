@@ -19,9 +19,40 @@
     </div>
     <div id="flot-placeholder" style="height:160px;" class="mt-3 col-md-8"></div>
 
-    <div style="height: calc(100vh - 350px); overflow-y: scroll;" class="col-md-12 mt-3 games">
+    <div class="col-md-12 mt-4 filters">
+      <label class="ml-2">Location: </label>
+      <select class="ml-2">
+        <option value="">All</option>
+        <option value=" ">Home</option>
+        <option value="@">Away</option>
+      </select>
+      <label class="ml-5">Opponent: </label>
+      <select class="ml-2">
+        <option value="">All</option>
+        {% for ii in opps %}
+          <option>{{ ii }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-12 mt-2 games">
       <table class="table table-responsive-md">
         <tr>
+          <td>
+            <table>
+              <tr><th>H-A</th></tr>
+              {% for ii in games %}
+              <tr><td>{% if ii.location %} {{ ii.location }} {% else %} &nbsp; {% endif %}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
+          <td>
+            <table>
+              <tr><th>Opp</th></tr>
+              {% for ii in games %}
+              <tr><td>{{ ii.opp }}</td></tr>
+              {% endfor %}
+            </table>
+          </td>
           <td>
             <table>
               <tr><th>Minutes</th></tr>

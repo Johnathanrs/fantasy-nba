@@ -38,12 +38,19 @@ table th {
     padding: .7rem .6rem !important;
 }
 
+.games {
+    height: calc(100vh - 350px); 
+    overflow-y: scroll;
+}
+
 .games table td {
-    padding: .4rem .6rem !important;
+    padding: .4rem .5rem !important;
+    font-size: 14px;
 }
 
 .games table th {
-    padding: .7rem .2rem !important;
+    padding: .7rem 2px !important;
+    font-size: 15px;
 }
 
 .fas.lock {
@@ -96,4 +103,14 @@ div.lineups {
     font-size: 15px;
     font-weight: 600;
     padding-top: 5px;
+}
+
+.filters label {
+    font-size: 16px;
+    font-weight: 600;
+    color: #555;
+}
+
+.filters select {
+    padding: 3px 7px;
 }

@@ -42,7 +42,7 @@ def player_detail(request, pid):
                                       team=player.team,
                                       date__gte=datetime.date.today()+datetime.timedelta(-210)) \
                               .order_by('-date')
-    print games.count()
+    opps = set(games.values_list('opp', flat=True).distinct())
     return render(request, 'player_detail.html', locals())
 
 def _get_lineups(request):
