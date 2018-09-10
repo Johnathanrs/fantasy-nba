@@ -1,5 +1,3 @@
-var dataset = [{label: "PTS",data: rdata}];
-
 var options = {
   series: {
     lines: { show: true },
@@ -20,10 +18,9 @@ var options = {
 };
 
 $(document).ready(function () {
-  $.plot($("#flot-placeholder"), dataset, options);
   $("#flot-placeholder").UseTooltip();
 
-  loadGame();
+  loadGame(true);
 });
 
 var previousPoint = null, previousLabel = null;
@@ -46,7 +43,7 @@ $.fn.UseTooltip = function () {
           showTooltip(item.pageX,
           item.pageY,
           color,
-          `<strong>${item.series.label}</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
+          `<strong>PTS</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
         }
       }
     } else {
@@ -75,18 +72,40 @@ function showTooltip(x, y, color, contents) {
 function setSeason(obj) {
   $('.filters .season').removeClass('active');
   $(obj).addClass('active');
-  loadGame();
+  loadGame(true);
 }
 
-function loadGame() {
-  var data = { 
-    pid: pid, 
-    loc: $('.filters select.loc').val(), 
-    opp: $('.filters select.opp').val(),
-    season: $('.filters .season.active').data('season')
-  };
+var prevSeason = '';
+
+function loadGame(updateOpp) {
+  var season = $('.filters .season.active').data('season'),
+      data = { 
+        pid: pid, 
+        loc: $('.filters select.loc').val(), 
+        opp: $('.filters select.opp').val(),
+        season: season
+      };
+
+  // get all games for new season
+  if (prevSeason != season) {
+    data.loc = 'all';
+    data.opp = '';
+  }
 
   $.post( "/player-games", data, function( data ) {
-    $('.games').html(data);
+    // table
+    $('.games').html(data.game_table);
+    if (prevSeason != season) {
+      prevSeason = season;
+      // opp select
+      $('.filters select.opp').html(data.opps);
+      // chart 
+      var vdata = [];
+      for (ii in data.chart) {
+        vdata.push([new Date(data.chart[ii][0]), data.chart[ii][1]])
+      }
+      var dataset = [{ data: vdata }];
+      $.plot($("#flot-placeholder"), dataset, options);
+    }
   });
 }

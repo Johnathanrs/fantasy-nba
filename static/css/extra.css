@@ -41,6 +41,7 @@ table th {
 .games {
     height: calc(100vh - 370px); 
     overflow-y: scroll;
+    overflow-x: hidden;
 }
 
 .games table td {

@@ -6,7 +6,7 @@ import mimetypes
 import datetime
 
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 
 from django.utils.encoding import smart_str
@@ -58,8 +58,18 @@ def player_games(request):
     season = int(request.POST.get('season'))
 
     games = get_games_(pid, loc, opp, season)
-        
-    return HttpResponse(render_to_string('game-list_.html', locals()))
+
+    opps = '<option value="">All</option>'
+    for ii in set(games.values_list('opp', flat=True).distinct()):
+        opps += '<option>{}</option>'.format(ii)
+
+    result = {
+        'game_table': render_to_string('game-list_.html', locals()),
+        'chart': [[ii.date.strftime('%Y/%m/%d'), ii.pts] for ii in games],
+        'opps': opps
+    }
+
+    return JsonResponse(result, safe=False)
 
 def _get_lineups(request):
     ids = request.POST.getlist('ids')

@@ -28,10 +28,6 @@
       </select>
       <label class="ml-5">Opponent: </label>
       <select class="ml-2 opp" onchange="loadGame()">
-        <option value="">All</option>
-        {% for ii in opps %}
-          <option>{{ ii }}</option>
-        {% endfor %}
       </select>
       <a href="#" onclick="setSeason(this)" data-season="2017" class="season float-right active">[2017-2018]</a>
       <a href="#" onclick="setSeason(this)" data-season="2016" class="season float-right mr-2">[2016-2017]</a>
@@ -48,12 +44,7 @@
   <script type="text/javascript" src="/static/flot/jquery.flot.min.js"></script>
   <script type="text/javascript" src="/static/flot/jquery.flot.time.min.js"></script>
   <script type="text/javascript">
-    var rdata = [],
-        pid = {{ pid }};
-
-    {% for ii in games %}
-      rdata.push([new Date({{ ii.date|date:"Y, m, d" }}), {{ ii.pts }}])
-    {% endfor %}
+    var pid = {{ pid }};
   </script>
   <script type="text/javascript" src="/static/js/player_detail.js"></script>
 {% endblock %}
