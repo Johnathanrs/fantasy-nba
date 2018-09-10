@@ -35,13 +35,19 @@ def get_num_lineups(player, lineups):
 def mean(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
 
-def player_detail(request, pid):
+def get_games_(pid, loc, opp, season):
     player = Player.objects.get(id=pid)
-
     games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
                                       team=player.team,
-                                      date__gte=datetime.date.today()+datetime.timedelta(-210))
-    opps = set(games.values_list('opp', flat=True).distinct())
+                                      opp__contains=opp,
+                                      date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)]) \
+                              .order_by('-date')
+    if loc != 'all':
+        games = games.filter(location=loc).order_by('-date')
+    return games
+
+def player_detail(request, pid):
+    player = Player.objects.get(id=pid)
     return render(request, 'player_detail.html', locals())
 
 @csrf_exempt
@@ -49,15 +55,9 @@ def player_games(request):
     pid = request.POST.get('pid')
     loc = request.POST.get('loc')
     opp = request.POST.get('opp')
+    season = int(request.POST.get('season'))
 
-    player = Player.objects.get(id=pid)
-    games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
-                                      team=player.team,
-                                      opp__contains=opp,
-                                      date__gte=datetime.date.today()+datetime.timedelta(-210)) \
-                              .order_by('-date')
-    if loc != 'all':
-        games = games.filter(location=loc).order_by('-date')
+    games = get_games_(pid, loc, opp, season)
         
     return HttpResponse(render_to_string('game-list_.html', locals()))
 

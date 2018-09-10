@@ -23,11 +23,7 @@ $(document).ready(function () {
   $.plot($("#flot-placeholder"), dataset, options);
   $("#flot-placeholder").UseTooltip();
 
-  loadGame('all', '');
-
-  $('.filters select').change(function () {
-    loadGame($('.filters select.loc').val(), $('.filters select.opp').val());
-  });
+  loadGame();
 });
 
 var previousPoint = null, previousLabel = null;
@@ -76,8 +72,19 @@ function showTooltip(x, y, color, contents) {
   }).appendTo("body").fadeIn(200);
 }
 
-function loadGame(loc, opp) {
-  var data = { pid: pid, loc: loc, opp: opp };
+function setSeason(obj) {
+  $('.filters .season').removeClass('active');
+  $(obj).addClass('active');
+  loadGame();
+}
+
+function loadGame() {
+  var data = { 
+    pid: pid, 
+    loc: $('.filters select.loc').val(), 
+    opp: $('.filters select.opp').val(),
+    season: $('.filters .season.active').data('season')
+  };
 
   $.post( "/player-games", data, function( data ) {
     $('.games').html(data);

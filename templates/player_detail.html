@@ -21,20 +21,20 @@
 
     <div class="col-md-12 mt-4 filters">
       <label class="ml-2">Home / Away: </label>
-      <select class="ml-2 loc">
+      <select class="ml-2 loc" onchange="loadGame()">
         <option value="all">All</option>
         <option value="">Home</option>
         <option value="@">Away</option>
       </select>
       <label class="ml-5">Opponent: </label>
-      <select class="ml-2 opp">
+      <select class="ml-2 opp" onchange="loadGame()">
         <option value="">All</option>
         {% for ii in opps %}
           <option>{{ ii }}</option>
         {% endfor %}
       </select>
-      <a href="javascript:void(0)" class="season float-right">[2017-2018]</a>
-      <a href="javascript:void(0)" class="season float-right mr-2">[2016-2017]</a>
+      <a href="#" onclick="setSeason(this)" data-season="2017" class="season float-right active">[2017-2018]</a>
+      <a href="#" onclick="setSeason(this)" data-season="2016" class="season float-right mr-2">[2016-2017]</a>
     </div>
     <div class="col-md-12 mt-2 games">
     </div>

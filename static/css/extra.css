@@ -39,7 +39,7 @@ table th {
 }
 
 .games {
-    height: calc(100vh - 350px); 
+    height: calc(100vh - 370px); 
     overflow-y: scroll;
 }
 
@@ -118,4 +118,9 @@ div.lineups {
 .filters .season {
     padding-top: 5px;
     font-size: 14px;
+    color: #777;
+}
+
+.filters .season.active {
+    color: #007bff;
 }
