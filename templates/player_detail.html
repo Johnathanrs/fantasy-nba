@@ -9,10 +9,9 @@
       <div class="mr-3 float-left" style="height: 200px;">
         <img src="/static/img/nba.ico" width="120">
       </div>
-      <h2>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}</small></h2>
+      <h3>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}</small></h3>
 
-      <h5 class="text-success">{{ player.team }}</h5>
-      <h5 class="text-warning">{{ player.injury1 }}</h5>
+      <h6 class="text-success">{{ player.team }}</h6>
       <h6 class="text-secondary"><span class="text-body">Salary:</span> ${{ player.salary|floatformat:2 }}</h6>
       <h6 class="text-secondary"><span class="text-body">Avg Minutes:</span> {{ player.minutes }}</h6>
       <h6 class="text-secondary"><span class="text-body">Avg FPPG:</span> {{ player.value }}</h6>
@@ -27,8 +26,13 @@
         <option value="@">Away</option>
       </select>
       <label class="ml-5">Opponent: </label>
-      <select class="ml-2 opp" onchange="loadGame()">
-      </select>
+      <select class="ml-2 opp" onchange="loadGame()"></select>
+
+      <label class="ml-5">Sum: </label>
+      <span id="sum"></span>
+      <label class="ml-3">Avg: </label>
+      <span id="avg"></span>
+
       <a href="#" onclick="setSeason(this)" data-season="2017" class="season float-right active">[2017-2018]</a>
       <a href="#" onclick="setSeason(this)" data-season="2016" class="season float-right mr-2">[2016-2017]</a>
     </div>
@@ -36,7 +40,6 @@
     </div>
   </div>
 </div>
-
 {% endblock %}
 
 {% block script %}

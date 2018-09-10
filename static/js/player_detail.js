@@ -17,13 +17,15 @@ var options = {
   },
 };
 
+var previousPoint = null, 
+    previousLabel = null,
+    prevSeason = '';
+
 $(document).ready(function () {
   $("#flot-placeholder").UseTooltip();
 
-  loadGame(true);
+  loadGame();
 });
-
-var previousPoint = null, previousLabel = null;
 
 $.fn.UseTooltip = function () {
   $(this).bind("plothover", function (event, pos, item) {
@@ -72,12 +74,10 @@ function showTooltip(x, y, color, contents) {
 function setSeason(obj) {
   $('.filters .season').removeClass('active');
   $(obj).addClass('active');
-  loadGame(true);
+  loadGame();
 }
 
-var prevSeason = '';
-
-function loadGame(updateOpp) {
+function loadGame() {
   var season = $('.filters .season.active').data('season'),
       data = { 
         pid: pid, 
@@ -108,4 +108,32 @@ function loadGame(updateOpp) {
       $.plot($("#flot-placeholder"), dataset, options);
     }
   });
+}
+
+function getStats() {
+  var selection = document.getSelection().toString(),
+      sum = 0,
+      avg = 0,
+      num = 0;
+  
+  if (!selection.match(/[A-Z%//@]/g)) {
+    cells = selection.split('\n');
+    for (var i in cells) {
+      if (cells[i]) {
+        num++;
+        if (cells[i] != '-') {
+          sum += parseFloat(cells[i]);
+        }        
+      }
+    }
+
+    if (num > 0) {
+      avg = Math.round(sum * 100 / num) / 100;
+      $('#sum').html(Math.round(sum * 100) / 100);
+      $('#avg').html(avg);
+    } else {
+      $('#sum').html('');
+      $('#avg').html('');
+    }
+  }
 }

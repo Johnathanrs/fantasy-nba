@@ -60,7 +60,7 @@ def player_games(request):
     games = get_games_(pid, loc, opp, season)
 
     opps = '<option value="">All</option>'
-    for ii in set(games.values_list('opp', flat=True).distinct()):
+    for ii in sorted(set(games.values_list('opp', flat=True).distinct())):
         opps += '<option>{}</option>'.format(ii)
 
     result = {
