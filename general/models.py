@@ -16,6 +16,7 @@ class Player(models.Model):
     uid = models.IntegerField()
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    avatar = models.CharField(max_length=250, default="/static/img/nba.ico")
     injury = models.TextField(blank=True, null=True)
     minutes = models.FloatField()
     money_line = models.IntegerField()

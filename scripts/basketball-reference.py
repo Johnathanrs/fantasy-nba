@@ -1,7 +1,6 @@
 import urllib2
 
 from bs4 import BeautifulSoup
-from operator import itemgetter
 
 import os
 from os import sys, path
@@ -41,10 +40,21 @@ def main():
         try:
             if not player.get('class'): # ignore header
                 mp = player.find("td", {"data-stat":"mp"}).text.split(':')
+                name = player.find("td", {"data-stat":"player"}).text.strip()
+                team = player.find("td", {"data-stat":"team_id"}).text.strip()
+                team = 'GS' if team == 'GSW' else team
+                uid = player.find("td", {"data-stat":"player"}).get('data-append-csv')
+                player = Player.objects.filter(first_name__iexact=name.split(' ')[0],
+                                               last_name__iexact=name.split(' ')[1],
+                                               team=team)
+
+                if player and not 'nba.ico' in player.first().avatar:
+                    avatar = 'https://d2cwpp38twqe55.cloudfront.net/req/201808311/images/players/{}.jpg'.format(uid)
+                    player.update(avatar=avatar)
 
                 obj = PlayerGame.objects.create(
-                    name = player.find("td", {"data-stat":"player"}).text,
-                    team = player.find("td", {"data-stat":"team_id"}).text,
+                    name = name,
+                    team = team,
                     location = player.find("td", {"data-stat":"game_location"}).text,
                     opp = player.find("td", {"data-stat":"opp_id"}).text,
                     game_result = player.find("td", {"data-stat":"game_result"}).text,

@@ -7,9 +7,9 @@ from general.models import *
 
 class PlayerAdmin(admin.ModelAdmin):
     list_display = ['first_name', 'last_name', 'team', 'position', 'opponent', 'salary', 
-                    'proj_points', 'data_source', 'updated_at']
+                    'proj_points', 'data_source', 'avatar', 'updated_at']
     search_fields = ['first_name', 'last_name', 'team']
-    list_filter = ['data_source', 'position']
+    list_filter = ['team', 'data_source', 'position']
 
 
 class PlayerGameAdmin(admin.ModelAdmin):
