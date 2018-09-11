@@ -15,7 +15,7 @@ class PlayerAdmin(admin.ModelAdmin):
 class PlayerGameAdmin(admin.ModelAdmin):
     list_display = ['name', 'team', 'location', 'opp', 'game_result', 'mp', 'fg', 'fga', 'fg_pct',
                     'fg3', 'fg3a', 'fg3_pct', 'ft', 'fta', 'ft_pct', 'trb', 'ast', 'stl', 'blk',
-                    'tov', 'pf', 'pts', 'date']
+                    'tov', 'pf', 'pts', 'fpts', 'date']
     search_fields = ['name', 'team']
     list_filter = ['team', 'location', 'game_result']
 

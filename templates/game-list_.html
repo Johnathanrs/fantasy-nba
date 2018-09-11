@@ -156,6 +156,14 @@
     </td>
     <td>
       <table>
+        <tr><th>FPTS</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.fpts }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
         <tr><th>Date</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.date|date:'m/d/Y' }}</td></tr>

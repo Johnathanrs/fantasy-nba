@@ -65,7 +65,7 @@ def player_games(request):
 
     result = {
         'game_table': render_to_string('game-list_.html', locals()),
-        'chart': [[ii.date.strftime('%Y/%m/%d'), ii.pts] for ii in games],
+        'chart': [[ii.date.strftime('%Y/%m/%d'), ii.fpts] for ii in games],
         'opps': opps
     }
 

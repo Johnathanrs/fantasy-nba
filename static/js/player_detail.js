@@ -45,7 +45,7 @@ $.fn.UseTooltip = function () {
           showTooltip(item.pageX,
           item.pageY,
           color,
-          `<strong>PTS</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
+          `<strong>FPTS</strong><br>${date.getMonth()+1}/${date.getDate()}/${date.getYear()+1900}: <strong>${y}</strong>`);
         }
       }
     } else {
