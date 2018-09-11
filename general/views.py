@@ -87,7 +87,11 @@ def gen_lineups(request):
     lineups, players = _get_lineups(request)
     avg_points = mean([ii.projected() for ii in lineups])
 
-    players_ = [{ 'name': '{} {}'.format(ii.first_name, ii.last_name), 'team': ii.team, 'id': ii.id, 'lineups': get_num_lineups(ii, lineups)} 
+    players_ = [{ 'name': '{} {}'.format(ii.first_name, ii.last_name), 
+                  'team': ii.team, 
+                  'id': ii.id, 
+                  'avatar': ii.avatar, 
+                  'lineups': get_num_lineups(ii, lineups)} 
                 for ii in players if get_num_lineups(ii, lineups)]
     players_ = sorted(players_, key=lambda k: k['lineups'], reverse=True)
     return HttpResponse(render_to_string('player-lineup.html', locals()))

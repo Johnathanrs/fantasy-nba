@@ -21,7 +21,7 @@
       <table>
         <tr><th>Minutes</th></tr>
         {% for ii in games %}
-        <tr><td>{{ ii.mp }}</td></tr>
+        <tr><td>{{ ii.mp|floatformat:1 }}</td></tr>
         {% endfor %}
       </table>
     </td>
