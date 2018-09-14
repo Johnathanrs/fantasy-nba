@@ -17,8 +17,7 @@ var options = {
   },
 };
 
-var previousPoint = null, 
-    previousLabel = null,
+var previousPoint = null,
     prevSeason = '';
 
 $(document).ready(function () {
@@ -30,9 +29,8 @@ $(document).ready(function () {
 $.fn.UseTooltip = function () {
   $(this).bind("plothover", function (event, pos, item) {
     if (item) {
-      if ((previousLabel != item.series.label) || (previousPoint != item.dataIndex)) {
+      if (previousPoint != item.dataIndex) {
         previousPoint = item.dataIndex;
-        previousLabel = item.series.label;
         $("#tooltip").remove();
 
         var x = item.datapoint[0];
