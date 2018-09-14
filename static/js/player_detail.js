@@ -33,12 +33,13 @@ $.fn.UseTooltip = function () {
         previousPoint = item.dataIndex;
         $("#tooltip").remove();
 
-        var x = item.datapoint[0];
-        var y = item.datapoint[1];
+        var x = item.datapoint[0],
+            y = item.datapoint[1],
+            color = item.series.color,
+            date = new Date(x);
 
-        var color = item.series.color;
-        var date = new Date(x);
-
+        console.log(item.pageX, item.pageY);
+        
         if (item.seriesIndex == 0) {
           showTooltip(item.pageX,
           item.pageY,
