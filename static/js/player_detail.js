@@ -27,7 +27,7 @@ $(document).ready(function () {
 });
 
 $.fn.UseTooltip = function () {
-  $(this).bind("plothover", function (event, pos, item) {
+  $(this).bind("plotclick", function (event, pos, item) {
     if (item) {
       if (previousPoint != item.dataIndex) {
         previousPoint = item.dataIndex;
