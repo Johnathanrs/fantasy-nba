@@ -18,12 +18,19 @@ var options = {
 };
 
 var previousPoint = null,
-    prevSeason = '';
+    prevSeason = '',
+    selectColumn = 0;
 
 $(document).ready(function () {
   $("#flot-placeholder").UseTooltip();
 
   loadGame();
+
+  $('.games').on('click', 'th.num', function () {
+    $(this).closest('table').selText();
+    selectColumn = 2;
+    getStats();
+  })
 });
 
 $.fn.UseTooltip = function () {
@@ -38,8 +45,6 @@ $.fn.UseTooltip = function () {
             color = item.series.color,
             date = new Date(x);
 
-        console.log(item.pageX, item.pageY);
-        
         if (item.seriesIndex == 0) {
           showTooltip(item.pageX,
           item.pageY,
@@ -53,6 +58,26 @@ $.fn.UseTooltip = function () {
     }
   });
 };
+
+$.fn.selText = function() {
+  var obj = this[0];
+  if ($.browser.msie) {
+      var range = obj.offsetParent.createTextRange();
+      range.moveToElementText(obj);
+      range.select();
+  } else if ($.browser.mozilla || $.browser.opera || $.browser.chrome) {
+      var selection = obj.ownerDocument.defaultView.getSelection();
+      var range = obj.ownerDocument.createRange();
+      range.selectNodeContents(obj);
+      selection.removeAllRanges();
+      selection.addRange(range);
+  } else if ($.browser.safari) {
+      var selection = obj.ownerDocument.defaultView.getSelection();
+      selection.setBaseAndExtent(obj, 0, obj, 1);
+  }
+
+  return this;
+}
 
 function showTooltip(x, y, color, contents) {
   $('<div id="tooltip">' + contents + '</div>').css({
@@ -115,8 +140,8 @@ function getStats() {
       avg = 0,
       num = 0;
   
-  if (!selection.match(/[A-Z%//@]/g)) {
-    cells = selection.split('\n');
+  if (!selection.match(/[A-Z%//@]/g) || selectColumn) {
+    cells = selection.split('\n').slice(selectColumn);
     for (var i in cells) {
       if (cells[i]) {
         num++;
@@ -135,4 +160,5 @@ function getStats() {
       $('#avg').html('');
     }
   }
+  selectColumn = 0;
 }

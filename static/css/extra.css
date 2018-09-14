@@ -52,6 +52,7 @@ table th {
 .games table th {
     padding: .7rem 2px !important;
     font-size: 15px;
+    cursor: pointer;
 }
 
 .fas.lock {

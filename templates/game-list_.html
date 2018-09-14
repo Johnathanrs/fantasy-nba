@@ -19,7 +19,7 @@
     </td>
     <td>
       <table>
-        <tr><th>Minutes</th></tr>
+        <tr><th class="num">Minutes</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.mp|floatformat:1 }}</td></tr>
         {% endfor %}
@@ -27,7 +27,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FG</th></tr>
+        <tr><th class="num">FG</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fg }}</td></tr>
         {% endfor %}
@@ -35,7 +35,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FGA</th></tr>
+        <tr><th class="num">FGA</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fga }}</td></tr>
         {% endfor %}
@@ -43,7 +43,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FG%</th></tr>
+        <tr><th class="num">FG%</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fg_pct|percent }}</td></tr>
         {% endfor %}
@@ -51,7 +51,7 @@
     </td>
     <td>
       <table>
-        <tr><th>3P</th></tr>
+        <tr><th class="num">3P</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fg3 }}</td></tr>
         {% endfor %}
@@ -59,7 +59,7 @@
     </td>
     <td>
       <table>
-        <tr><th>3PA</th></tr>
+        <tr><th class="num">3PA</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fg3a }}</td></tr>
         {% endfor %}
@@ -67,7 +67,7 @@
     </td>
     <td>
       <table>
-        <tr><th>3P%</th></tr>
+        <tr><th class="num">3P%</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fg3_pct|percent }}</td></tr>
         {% endfor %}
@@ -75,7 +75,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FT</th></tr>
+        <tr><th class="num">FT</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.ft }}</td></tr>
         {% endfor %}
@@ -83,7 +83,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FTA</th></tr>
+        <tr><th class="num">FTA</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fta }}</td></tr>
         {% endfor %}
@@ -92,7 +92,7 @@
 
     <td>
       <table>
-        <tr><th>FT%</th></tr>
+        <tr><th class="num">FT%</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.ft_pct|percent }}</td></tr>
         {% endfor %}
@@ -100,7 +100,7 @@
     </td>
     <td>
       <table>
-        <tr><th>REB</th></tr>
+        <tr><th class="num">REB</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.trb }}</td></tr>
         {% endfor %}
@@ -108,7 +108,7 @@
     </td>
     <td>
       <table>
-        <tr><th>AST</th></tr>
+        <tr><th class="num">AST</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.ast }}</td></tr>
         {% endfor %}
@@ -116,7 +116,7 @@
     </td>
     <td>
       <table>
-        <tr><th>ST</th></tr>
+        <tr><th class="num">ST</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.stl }}</td></tr>
         {% endfor %}
@@ -124,7 +124,7 @@
     </td>
     <td>
       <table>
-        <tr><th>BLK</th></tr>
+        <tr><th class="num">BLK</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.blk }}</td></tr>
         {% endfor %}
@@ -132,7 +132,7 @@
     </td>
     <td>
       <table>
-        <tr><th>TO</th></tr>
+        <tr><th class="num">TO</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.tov }}</td></tr>
         {% endfor %}
@@ -140,7 +140,7 @@
     </td>
     <td>
       <table>
-        <tr><th>PF</th></tr>
+        <tr><th class="num">PF</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.pf }}</td></tr>
         {% endfor %}
@@ -148,7 +148,7 @@
     </td>
     <td>
       <table>
-        <tr><th>PTS</th></tr>
+        <tr><th class="num">PTS</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.pts }}</td></tr>
         {% endfor %}
@@ -156,7 +156,7 @@
     </td>
     <td>
       <table>
-        <tr><th>FPTS</th></tr>
+        <tr><th class="num">FPTS</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.fpts }}</td></tr>
         {% endfor %}
