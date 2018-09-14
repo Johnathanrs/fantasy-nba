@@ -28,7 +28,7 @@ $(document).ready(function () {
 
   $('.games').on('click', 'th.num', function () {
     $(this).closest('table').selText();
-    selectColumn = 2;
+    selectColumn = 1;
     getStats();
   })
 });
@@ -135,7 +135,7 @@ function loadGame() {
 }
 
 function getStats() {
-  var selection = document.getSelection().toString(),
+  var selection = document.getSelection().toString().trim(),
       sum = 0,
       avg = 0,
       num = 0;
@@ -143,10 +143,10 @@ function getStats() {
   if (!selection.match(/[A-Z%//@]/g) || selectColumn) {
     cells = selection.split('\n').slice(selectColumn);
     for (var i in cells) {
-      if (cells[i]) {
+      if (cells[i].trim()) {
         num++;
-        if (cells[i] != '-') {
-          sum += parseFloat(cells[i]);
+        if (cells[i].trim() != '-') {
+          sum += parseFloat(cells[i].trim());
         }        
       }
     }
