@@ -2,22 +2,23 @@
 from __future__ import unicode_literals
 import os
 import mimetypes
-
-import datetime
+from datetime import date
+from wsgiref.util import FileWrapper
 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
-
 from django.utils.encoding import smart_str
-from wsgiref.util import FileWrapper
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Avg
 
 from general.models import *
 from general.lineup import *
 
+
 def players(request):
     return render(request, 'players.html', { 'data_sources': DATA_SOURCE })
+
 
 @csrf_exempt
 def get_players(request):
@@ -25,30 +26,30 @@ def get_players(request):
     players = Player.objects.filter(data_source=ds).order_by('-proj_points')
     return HttpResponse(render_to_string('player-list_.html', locals()))
 
-def get_num_lineups(player, lineups):
-    num = 0
-    for ii in lineups:
-        if ii.is_member(player):
-            num = num + 1
-    return num
-
-def mean(numbers):
-    return float(sum(numbers)) / max(len(numbers), 1)
 
 def get_games_(pid, loc, opp, season):
     player = Player.objects.get(id=pid)
     games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
                                       team=player.team,
                                       opp__contains=opp,
-                                      date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)]) \
+                                      date__range=[date(season, 10, 1), date(season+1, 6, 30)]) \
                               .order_by('-date')
     if loc != 'all':
         games = games.filter(location=loc).order_by('-date')
+
     return games
+
 
 def player_detail(request, pid):
     player = Player.objects.get(id=pid)
+    today = date.today()
+    year = today.year if today > date(today.year, 10, 15) else today.year - 1
+    games = get_games_(pid, 'all', '', year)
+    avg_min = games.aggregate(Avg('mp'))
+    avg_fpts = games.aggregate(Avg('fpts'))
+
     return render(request, 'player_detail.html', locals())
+
 
 @csrf_exempt
 def player_games(request):
@@ -71,6 +72,11 @@ def player_games(request):
 
     return JsonResponse(result, safe=False)
 
+
+def mean(numbers):
+    return float(sum(numbers)) / max(len(numbers), 1)
+
+
 def _get_lineups(request):
     ids = request.POST.getlist('ids')
     locked = request.POST.getlist('locked')
@@ -82,6 +88,15 @@ def _get_lineups(request):
     players = Player.objects.filter(id__in=ids)
     lineups = calc_lineups(players, num_lineups, locked)
     return lineups, players
+
+
+def get_num_lineups(player, lineups):
+    num = 0
+    for ii in lineups:
+        if ii.is_member(player):
+            num = num + 1
+    return num
+
 
 def gen_lineups(request):
     lineups, players = _get_lineups(request)
@@ -95,6 +110,7 @@ def gen_lineups(request):
                 for ii in players if get_num_lineups(ii, lineups)]
     players_ = sorted(players_, key=lambda k: k['lineups'], reverse=True)
     return HttpResponse(render_to_string('player-lineup.html', locals()))
+
 
 def export_lineups(request):
     lineups, _ = _get_lineups(request)
@@ -113,6 +129,7 @@ def export_lineups(request):
     response['Content-Length'] = os.path.getsize( path ) # not FileField instance
     response['Content-Disposition'] = 'attachment; filename=%s' % smart_str( os.path.basename( path ) ) # same here        
     return response
+
 
 @csrf_exempt
 def update_point(request):
