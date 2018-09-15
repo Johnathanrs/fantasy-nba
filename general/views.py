@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import os
 import mimetypes
-from datetime import date
+import datetime
 from wsgiref.util import FileWrapper
 
 from django.shortcuts import render
@@ -32,7 +32,7 @@ def get_games_(pid, loc, opp, season):
     games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
                                       team=player.team,
                                       opp__contains=opp,
-                                      date__range=[date(season, 10, 1), date(season+1, 6, 30)]) \
+                                      date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)]) \
                               .order_by('-date')
     if loc != 'all':
         games = games.filter(location=loc).order_by('-date')
@@ -40,10 +40,14 @@ def get_games_(pid, loc, opp, season):
     return games
 
 
+def current_season():
+    today = datetime.date.today()
+    return today.year if today > datetime.date(today.year, 10, 15) else today.year - 1
+
+
 def player_detail(request, pid):
     player = Player.objects.get(id=pid)
-    today = date.today()
-    year = today.year if today > date(today.year, 10, 15) else today.year - 1
+    year = current_season()
     games = get_games_(pid, 'all', '', year)
     avg_min = games.aggregate(Avg('mp'))
     avg_fpts = games.aggregate(Avg('fpts'))
@@ -55,10 +59,85 @@ def player_match_up_board(request):
     return render(request, 'player-match-up-board.html', locals())
 
 
+def formated_diff(val):
+    fm = '{:.1f}' if val > 0 else '({:.1f})'
+    return fm.format(abs(val))
+
+
+POSITION_ORDER = {
+    "PG": 0,
+    "SG": 1,
+    "SF": 2,
+    "PF": 3,
+    "C": 4
+}
+
+def position_order(player):
+    return POSITION_ORDER[player['pos']]
+
+def get_ranking(players, sattr, dattr):
+    players = sorted(players, key=lambda k: -k[sattr])
+    ranking = 0
+    prev_val = None
+    for ii in players:
+        if ii[sattr] != prev_val:
+            prev_val = ii[sattr]
+            ranking += 1
+        ii[dattr] = ranking
+    return players
+
 @csrf_exempt
 def player_match_up(request):
+    loc = request.POST.get('loc')
+    pos = request.POST.get('pos')
+    ds = request.POST.get('ds')
+
     last_game = PlayerGame.objects.all().order_by('-date').first()
-    players = PlayerGame.objects.filter(date=last_game.date)
+    players = []
+    games = PlayerGame.objects.filter(date=last_game.date)
+
+    if loc != 'all':
+        games = games.filter(location=loc)
+
+    for ii in games:
+        names = ii.name.split(' ')
+        team = 'GS' if ii.team == 'GSW' else ii.team
+        player = Player.objects.filter(first_name=names[0], last_name=names[1], 
+                                       team=team, data_source='FanDuel').first()
+        if player and pos in player.position:
+            games = get_games_(player.id, 'all', '', current_season())
+            ampg = games.aggregate(Avg('mp'))['mp__avg']
+            smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']
+            afp = games.aggregate(Avg('fpts'))['fpts__avg']
+            sfp = games.filter(location='@').aggregate(Avg('fpts'))['fpts__avg']
+
+            fellows = Player.objects.filter(position=player.position, team=player.team)
+            fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
+
+            players.append({
+                'name': ii.name,
+                'team': ii.team,
+                'loc': ii.location,
+                'vs': ii.opp,
+                'pos': player.position,
+                'salary': player.salary,
+                'ampg': ampg,
+                'smpg': smpg,
+                'mdiff': formated_diff(smpg-ampg),
+                'afp': afp,
+                'sfp': sfp,
+                'pdiff': formated_diff(sfp-afp),
+                'val': player.salary / 250 + 10,
+                'opp': PlayerGame.objects.filter(team__contains=player.team, 
+                                                 date__gte=datetime.date.today()+datetime.timedelta(-145),
+                                                 name__in=fellows) \
+                                         .order_by('-fpts').first().fpts
+            })
+
+    players = get_ranking(players, 'opp', 'opr')
+    players = get_ranking(players, 'sfp', 'ppr')
+    players = sorted(players, key=position_order)
+
     return HttpResponse(render_to_string('player-board_.html', locals()))
 
 

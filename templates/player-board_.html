@@ -23,21 +23,21 @@
     {% for ii in players %}
       <tr>
         <td>{{ ii.name }}</td>
-        <td>PF</td>
+        <td>{{ ii.pos }}</td>
         <td>{{ ii.team }}</td>
-        <td>{{ ii.location }}</td>
-        <td>{{ ii.opp }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
-        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.loc }}</td>
+        <td>{{ ii.vs }}</td>
+        <td>$ {{ ii.salary|floatformat:2 }}</td>
+        <td>{{ ii.ampg|floatformat:1 }}</td>
+        <td>{{ ii.smpg|floatformat:1 }}</td>
+        <td>{{ ii.mdiff }}</td>
+        <td>{{ ii.opp|floatformat:1 }}</td>
+        <td>{{ ii.opr }}</td>
+        <td>{{ ii.afp|floatformat:1 }}</td>
+        <td>{{ ii.sfp|floatformat:1 }}</td>
+        <td>{{ ii.pdiff }}</td>
+        <td>{{ ii.val|floatformat:1 }}</td>
+        <td>{{ ii.ppr }}</td>
       </tr>
     {% endfor %}
   </tbody>

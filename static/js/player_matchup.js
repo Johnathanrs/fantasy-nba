@@ -9,6 +9,7 @@ function loadBoard() {
         pos: $('.filters select.pos').val(),
       };
 
+  $('.player-board').html('<div class="board-loading ml-1 mt-5">Loading ...</div>');
   $.post( "/player-match-up", data, function( data ) {
     $('.player-board').html(data);
   });

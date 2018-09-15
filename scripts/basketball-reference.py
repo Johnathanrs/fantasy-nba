@@ -44,13 +44,13 @@ def main():
                 team = player.find("td", {"data-stat":"team_id"}).text.strip()
                 team = 'GS' if team == 'GSW' else team
                 uid = player.find("td", {"data-stat":"player"}).get('data-append-csv')
-                player = Player.objects.filter(first_name__iexact=name.split(' ')[0],
+                player_ = Player.objects.filter(first_name__iexact=name.split(' ')[0],
                                                last_name__iexact=name.split(' ')[1],
                                                team=team)
 
-                if player and not 'nba.ico' in player.first().avatar:
+                if player_ and not 'nba.ico' in player_.first().avatar:
                     avatar = 'https://d2cwpp38twqe55.cloudfront.net/req/201808311/images/players/{}.jpg'.format(uid)
-                    player.update(avatar=avatar)
+                    player_.update(avatar=avatar)
 
                 obj = PlayerGame.objects.create(
                     name = name,
