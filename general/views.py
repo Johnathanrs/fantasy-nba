@@ -3,7 +3,6 @@ from __future__ import unicode_literals
 import os
 import mimetypes
 import datetime
-from colour import Color
 from wsgiref.util import FileWrapper
 
 from django.shortcuts import render
@@ -16,7 +15,7 @@ from django.db.models import Avg
 from general.models import *
 from general.lineup import *
 from general import html2text
-
+from general.color import *
 
 def players(request):
     return render(request, 'players.html', { 'data_sources': DATA_SOURCE })
@@ -76,7 +75,7 @@ def get_ranking(players, sattr, dattr, order=1):
             prev_val = ii[sattr]
             ranking += 1
         ii[dattr] = ranking
-    return players
+    return players, ranking
 
 @csrf_exempt
 def player_match_up(request):
@@ -129,13 +128,13 @@ def player_match_up(request):
                                          .order_by('-fpts').first().fpts
             })
 
-    players = get_ranking(players, 'opp', 'opr')
+    players, num_opr = get_ranking(players, 'opp', 'opr')
 
     POSITION_ORDER = ['PG', 'SG', 'SF', 'PF', 'C']
     groups = {ii: [] for ii in POSITION_ORDER}
 
-    red = Color("#aa2200")
-    colors = list(red.range_to(Color("#00bb00"), len(players)))
+    colors = linear_gradient('#90EE90', '#137B13', num_opr)['hex']
+
     for ii in players:
         ii['color'] = str(colors[ii['opr']-1])
         groups[ii['pos']].append(ii)
@@ -143,7 +142,7 @@ def player_match_up(request):
 
     for ii in POSITION_ORDER:
         if groups[ii]:
-            groups[ii] = get_ranking(groups[ii], 'sfp', 'ppr', -1)
+            groups[ii], _ = get_ranking(groups[ii], 'sfp', 'ppr', -1)
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
 
     players = []
