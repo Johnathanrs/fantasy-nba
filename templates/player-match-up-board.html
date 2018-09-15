@@ -15,16 +15,6 @@
         <option value="@">Away</option>
       </select>
 
-      <label class="ml-5">Position: </label>
-      <select class="ml-2 pos" onchange="loadBoard()">
-        <option value="">ALL</option>
-        <option>PG</option>
-        <option>SG</option>
-        <option>PF</option>
-        <option>SF</option>
-        <option>C</option>
-      </select>
-
       <label class="ml-5">From: </label>
       <select class="ml-2 ds" onchange="loadBoard()">
         <option>FanDuel</option>
@@ -32,7 +22,29 @@
         <option>Fanball</option>
       </select>
     </div>
-    <div class="col-md-12 mt-2 games player-board"></div>
+    <div class="col-md-6 mt-2 p-2 p-t-0">
+      <ul class="nav nav-pills position-filter p-2">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">All</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">PG</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">SG</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">SF</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">PF</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">C</a>
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-12 games player-board"></div>
   </div>
 </div>
 {% endblock %}

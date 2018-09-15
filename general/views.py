@@ -92,6 +92,7 @@ def get_ranking(players, sattr, dattr, order=1):
 def player_match_up(request):
     loc = request.POST.get('loc')
     pos = request.POST.get('pos')
+    pos = '' if pos == 'All' else pos
     ds = request.POST.get('ds')
 
     last_game = PlayerGame.objects.all().order_by('-date').first()
