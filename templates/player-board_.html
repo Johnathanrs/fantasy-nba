@@ -17,6 +17,7 @@
       <th>PDIFF</th>
       <th>VAL</th>
       <th>PPR</th>
+      <th>INJ</th>
     </tr>
   </thead>
   <tbody>
@@ -43,8 +44,9 @@
           </td>
           <td>{{ ii.val|floatformat:1 }}</td>
           <td>{{ ii.ppr }}</td>
+          <td class="{% if ii.inj != '-' %}text-danger{% endif %}">{{ ii.inj }}</td>
         {% else %}
-          <td colspan="16" class="break">&nbsp;</td>
+          <td colspan="17" class="break">&nbsp;</td>
         {% endif %}
       </tr>
     {% endfor %}

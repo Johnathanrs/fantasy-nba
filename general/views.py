@@ -14,6 +14,7 @@ from django.db.models import Avg
 
 from general.models import *
 from general.lineup import *
+from general import html2text
 
 
 def players(request):
@@ -122,6 +123,7 @@ def player_match_up(request):
                 'loc': ii.location,
                 'vs': ii.opp,
                 'pos': player.position,
+                'inj': html2text.html2text(player.injury) if player.injury else '-',
                 'salary': player.salary,
                 'ampg': ampg,
                 'smpg': smpg,
