@@ -36,7 +36,7 @@
             {{ ii.mdiff }}
           </td>
           <td>{{ ii.opp|floatformat:1 }}</td>
-          <td>{{ ii.opr }}</td>
+          <td class="text-center" style="color: yellow; opacity: 0.95; background: {{ ii.color }};">{{ ii.opr }}</td>
           <td>{{ ii.afp|floatformat:1 }}</td>
           <td>{{ ii.sfp|floatformat:1 }}</td>
           <td class="{% if '(' in ii.pdiff %}text-danger{% else %}text-success{% endif %}">

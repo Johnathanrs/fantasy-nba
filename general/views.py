@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import os
 import mimetypes
 import datetime
+from colour import Color
 from wsgiref.util import FileWrapper
 
 from django.shortcuts import render
@@ -64,14 +65,6 @@ def formated_diff(val):
     fm = '{:.1f}' if val > 0 else '({:.1f})'
     return fm.format(abs(val))
 
-
-POSITION_ORDER = {
-    "PG": 0,
-    "SG": 1,
-    "SF": 2,
-    "PF": 3,
-    "C": 4
-}
 
 # order = 1: ascending, -1: descending
 def get_ranking(players, sattr, dattr, order=1):
@@ -138,17 +131,23 @@ def player_match_up(request):
 
     players = get_ranking(players, 'opp', 'opr')
 
-    groups = {ii: [] for ii in POSITION_ORDER.keys()}
+    POSITION_ORDER = ['PG', 'SG', 'SF', 'PF', 'C']
+    groups = {ii: [] for ii in POSITION_ORDER}
+
+    red = Color("#aa2200")
+    colors = list(red.range_to(Color("#00bb00"), len(players)))
     for ii in players:
+        ii['color'] = str(colors[ii['opr']-1])
         groups[ii['pos']].append(ii)
 
-    for ii in POSITION_ORDER.keys():
+
+    for ii in POSITION_ORDER:
         if groups[ii]:
             groups[ii] = get_ranking(groups[ii], 'sfp', 'ppr', -1)
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
 
     players = []
-    for ii in POSITION_ORDER.keys():
+    for ii in POSITION_ORDER:
         if groups[ii]:
             players += groups[ii] + [{}]
 
