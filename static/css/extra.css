@@ -69,11 +69,14 @@ table th {
     display: block;
 }
 
-.player-board thead,
-tbody tr {
+.player-board thead, .player-board tbody tr {
   display: table;
   width: 100%;
   table-layout: fixed;
+}
+
+.player-board thead {
+    width: calc(100% - 10px);
 }
 
 .fas.lock {
