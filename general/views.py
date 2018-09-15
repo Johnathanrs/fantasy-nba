@@ -75,8 +75,9 @@ POSITION_ORDER = {
 def position_order(player):
     return POSITION_ORDER[player['pos']]
 
-def get_ranking(players, sattr, dattr):
-    players = sorted(players, key=lambda k: -k[sattr])
+# order = 1: ascending, -1: descending
+def get_ranking(players, sattr, dattr, order=1):
+    players = sorted(players, key=lambda k: k[sattr]*order)
     ranking = 0
     prev_val = None
     for ii in players:
@@ -103,7 +104,7 @@ def player_match_up(request):
         names = ii.name.split(' ')
         team = 'GS' if ii.team == 'GSW' else ii.team
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
-                                       team=team, data_source='FanDuel').first()
+                                       team=team, data_source=ds).first()
         if player and pos in player.position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
@@ -115,6 +116,7 @@ def player_match_up(request):
             fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
 
             players.append({
+                'id': player.id,
                 'name': ii.name,
                 'team': ii.team,
                 'loc': ii.location,
@@ -135,8 +137,18 @@ def player_match_up(request):
             })
 
     players = get_ranking(players, 'opp', 'opr')
-    players = get_ranking(players, 'sfp', 'ppr')
+    players = get_ranking(players, 'sfp', 'ppr', -1)
     players = sorted(players, key=position_order)
+    players_ = list(players)
+    # insert break for new position
+    if not pos: # for all
+        prev_pos = players_[-1]['pos']
+        num_players = len(players)
+
+        for idx in range(1, num_players):
+            if players_[-1*idx]['pos'] != prev_pos:
+                prev_pos = players_[-1*idx]['pos']
+                players.insert(num_players-idx+1, {})
 
     return HttpResponse(render_to_string('player-board_.html', locals()))
 

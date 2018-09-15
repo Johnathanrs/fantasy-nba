@@ -1,4 +1,4 @@
-<table class="table table-striped table-hover table-responsive-md">
+<table class="table table-hover table-responsive-md">
   <thead>
     <tr>
       <th>Player</th>
@@ -22,22 +22,30 @@
   <tbody>
     {% for ii in players %}
       <tr>
-        <td>{{ ii.name }}</td>
-        <td>{{ ii.pos }}</td>
-        <td>{{ ii.team }}</td>
-        <td>{{ ii.loc }}</td>
-        <td>{{ ii.vs }}</td>
-        <td>$ {{ ii.salary|floatformat:2 }}</td>
-        <td>{{ ii.ampg|floatformat:1 }}</td>
-        <td>{{ ii.smpg|floatformat:1 }}</td>
-        <td>{{ ii.mdiff }}</td>
-        <td>{{ ii.opp|floatformat:1 }}</td>
-        <td>{{ ii.opr }}</td>
-        <td>{{ ii.afp|floatformat:1 }}</td>
-        <td>{{ ii.sfp|floatformat:1 }}</td>
-        <td>{{ ii.pdiff }}</td>
-        <td>{{ ii.val|floatformat:1 }}</td>
-        <td>{{ ii.ppr }}</td>
+        {% if ii %}
+          <td><a href="/players/{{ ii.id }}">{{ ii.name }}</a></td>
+          <td>{{ ii.pos }}</td>
+          <td>{{ ii.team }}</td>
+          <td>{{ ii.loc }}</td>
+          <td><a href="#/team-match-up-board/{{ ii.vs }}">{{ ii.vs }}</a></td>
+          <td>$ {{ ii.salary|floatformat:2 }}</td>
+          <td>{{ ii.ampg|floatformat:1 }}</td>
+          <td>{{ ii.smpg|floatformat:1 }}</td>
+          <td class="{% if '(' in ii.mdiff %}text-danger{% else %}text-success{% endif %}">
+            {{ ii.mdiff }}
+          </td>
+          <td>{{ ii.opp|floatformat:1 }}</td>
+          <td>{{ ii.opr }}</td>
+          <td>{{ ii.afp|floatformat:1 }}</td>
+          <td>{{ ii.sfp|floatformat:1 }}</td>
+          <td class="{% if '(' in ii.pdiff %}text-danger{% else %}text-success{% endif %}">
+            {{ ii.pdiff }}
+          </td>
+          <td>{{ ii.val|floatformat:1 }}</td>
+          <td>{{ ii.ppr }}</td>
+        {% else %}
+          <td colspan="16" class="break">&nbsp;</td>
+        {% endif %}
       </tr>
     {% endfor %}
   </tbody>

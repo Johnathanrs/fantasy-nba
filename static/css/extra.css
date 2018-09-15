@@ -135,3 +135,7 @@ div.lineups {
     font-size: 16px;
     font-weight: 700;
 }
+
+td.break {
+    font-size: 9px !important;
+}
