@@ -55,8 +55,25 @@ table th {
 }
 
 .player-board {
-    max-height: calc(100vh - 220px); 
+    max-height: calc(100vh - 260px); 
     overflow-x: hidden;
+}
+
+.player-board table th {
+    border-bottom: none !important;
+}
+
+.player-board tbody {
+    max-height: calc(100vh - 325px); 
+    overflow-x: hidden;
+    display: block;
+}
+
+.player-board thead,
+tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 .fas.lock {
