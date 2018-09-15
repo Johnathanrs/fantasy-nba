@@ -73,9 +73,6 @@ POSITION_ORDER = {
     "C": 4
 }
 
-def position_order(player):
-    return POSITION_ORDER[player['pos']]
-
 # order = 1: ascending, -1: descending
 def get_ranking(players, sattr, dattr, order=1):
     players = sorted(players, key=lambda k: k[sattr]*order)
@@ -140,18 +137,20 @@ def player_match_up(request):
             })
 
     players = get_ranking(players, 'opp', 'opr')
-    players = get_ranking(players, 'sfp', 'ppr', -1)
-    players = sorted(players, key=position_order)
-    players_ = list(players)
-    # insert break for new position
-    if not pos: # for all
-        prev_pos = players_[-1]['pos']
-        num_players = len(players)
 
-        for idx in range(1, num_players):
-            if players_[-1*idx]['pos'] != prev_pos:
-                prev_pos = players_[-1*idx]['pos']
-                players.insert(num_players-idx+1, {})
+    groups = {ii: [] for ii in POSITION_ORDER.keys()}
+    for ii in players:
+        groups[ii['pos']].append(ii)
+
+    for ii in POSITION_ORDER.keys():
+        if groups[ii]:
+            groups[ii] = get_ranking(groups[ii], 'sfp', 'ppr', -1)
+            groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
+
+    players = []
+    for ii in POSITION_ORDER.keys():
+        if groups[ii]:
+            players += groups[ii] + [{}]
 
     return HttpResponse(render_to_string('player-board_.html', locals()))
 
