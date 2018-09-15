@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load extra %}
+
+{% block content %}
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-12 mt-3">
+      <h3>Player Match-Up Board</h3>
+    </div>
+    <div class="col-md-12 mt-4 filters">
+      <label class="ml-1">Home / Away: </label>
+      <select class="ml-2 loc" onchange="loadBoard()">
+        <option value="all">All</option>
+        <option value="">Home</option>
+        <option value="@">Away</option>
+      </select>
+
+      <label class="ml-5">Position: </label>
+      <select class="ml-2 pos" onchange="loadBoard()">
+        <option>ALL</option>
+        <option>PG</option>
+        <option>SG</option>
+        <option>PF</option>
+        <option>SF</option>
+        <option>C</option>
+      </select>
+    </div>
+    <div class="col-md-12 mt-2 games player-board"></div>
+  </div>
+</div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript" src="/static/js/player_matchup.js"></script>
+{% endblock %}

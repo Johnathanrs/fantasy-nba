@@ -55,6 +55,12 @@ table th {
     cursor: pointer;
 }
 
+.player-board {
+    height: calc(100vh - 220px); 
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
 .fas.lock {
     padding-top: 10px;
     cursor: pointer;

@@ -1,6 +1,6 @@
 $(function() {
   // click first tab
-  $('.nav-link:first').click();
+  $('.nav-tabs .nav-link:first').click();
 
   $('.btn-export').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;

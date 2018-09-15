@@ -51,6 +51,17 @@ def player_detail(request, pid):
     return render(request, 'player_detail.html', locals())
 
 
+def player_match_up_board(request):
+    return render(request, 'player-match-up-board.html', locals())
+
+
+@csrf_exempt
+def player_match_up(request):
+    last_game = PlayerGame.objects.all().order_by('-date').first()
+    players = PlayerGame.objects.filter(date=last_game.date)
+    return HttpResponse(render_to_string('player-board_.html', locals()))
+
+
 @csrf_exempt
 def player_games(request):
     pid = request.POST.get('pid')

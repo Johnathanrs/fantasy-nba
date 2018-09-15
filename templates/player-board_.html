@@ -1,0 +1,44 @@
+<table class="table table-striped table-hover table-responsive-md">
+  <thead>
+    <tr>
+      <th>Player</th>
+      <th>POS</th>
+      <th>TM</th>
+      <th>H/A</th>
+      <th>VS</th>
+      <th>Salary</th>
+      <th>AMPG</th>
+      <th>SMPG</th>
+      <th>MDIFF</th>
+      <th>OPP</th>
+      <th>OPR</th>
+      <th>AFP</th>
+      <th>SFP</th>
+      <th>PDIFF</th>
+      <th>VAL</th>
+      <th>PPR</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ii in players %}
+      <tr>
+        <td>{{ ii.name }}</td>
+        <td>PF</td>
+        <td>{{ ii.team }}</td>
+        <td>{{ ii.location }}</td>
+        <td>{{ ii.opp }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+        <td>{{ ii.mp|floatformat:1 }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
