@@ -17,7 +17,7 @@ $(document).ready(function () {
     }
   });
 
-  $( ".slider-val" ).val("20 - 60");
+  $( ".slider-val" ).val("10 - 60");
 
   loadBoard();
 })
