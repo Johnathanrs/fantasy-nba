@@ -3,7 +3,21 @@ $(document).ready(function () {
     $('.position-filter .nav-item a').removeClass('active');
     $(this).toggleClass('active');
     loadBoard();
-  })
+  });
+
+  $( ".slider-range" ).slider({
+    range: true,
+    min: 1,
+    step: 0.1,
+    max: 100,
+    values: [ 20, 60 ],
+    change: function( event, ui ) {
+      $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
+      loadBoard();
+    }
+  });
+
+  $( ".slider-val" ).val("20 - 60");
 
   loadBoard();
 })
@@ -12,7 +26,11 @@ function loadBoard() {
   var data = { 
         loc: $('.filters select.loc').val(), 
         ds: $('.filters select.ds').val(),
-        pos: $('.position-filter .nav-item a.active').html()
+        pos: $('.position-filter .nav-item a.active').html(),
+        min_afp: $('.afp').slider("values")[0],
+        max_afp: $('.afp').slider("values")[1],
+        min_sfp: $('.sfp').slider("values")[0],
+        max_sfp: $('.sfp').slider("values")[1]
       };
 
   $('.player-board').html('<div class="board-loading ml-1 mt-5">Loading ...</div>');

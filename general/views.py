@@ -83,6 +83,10 @@ def player_match_up(request):
     pos = request.POST.get('pos')
     pos = '' if pos == 'All' else pos
     ds = request.POST.get('ds')
+    min_afp = float(request.POST.get('min_afp'))
+    min_sfp = float(request.POST.get('min_sfp'))
+    max_afp = float(request.POST.get('max_afp'))
+    max_sfp = float(request.POST.get('max_sfp'))
 
     last_game = PlayerGame.objects.all().order_by('-date').first()
     players = []
@@ -103,30 +107,32 @@ def player_match_up(request):
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
             sfp = games.filter(location='@').aggregate(Avg('fpts'))['fpts__avg']
 
-            fellows = Player.objects.filter(position=player.position, team=player.team)
-            fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
+            if min_afp <= afp <= max_afp:
+                if min_sfp <= sfp <= max_sfp:
+                    fellows = Player.objects.filter(position=player.position, team=player.team)
+                    fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
 
-            players.append({
-                'id': player.id,
-                'name': ii.name,
-                'team': ii.team,
-                'loc': ii.location,
-                'vs': ii.opp,
-                'pos': player.position,
-                'inj': html2text.html2text(player.injury) if player.injury else '-',
-                'salary': player.salary,
-                'ampg': ampg,
-                'smpg': smpg,
-                'mdiff': formated_diff(smpg-ampg),
-                'afp': afp,
-                'sfp': sfp,
-                'pdiff': formated_diff(sfp-afp),
-                'val': player.salary / 250 + 10,
-                'opp': PlayerGame.objects.filter(team__contains=player.team, 
-                                                 date__gte=datetime.date.today()+datetime.timedelta(-145),
-                                                 name__in=fellows) \
-                                         .order_by('-fpts').first().fpts
-            })
+                    players.append({
+                        'id': player.id,
+                        'name': ii.name,
+                        'team': ii.team,
+                        'loc': ii.location,
+                        'vs': ii.opp,
+                        'pos': player.position,
+                        'inj': html2text.html2text(player.injury) if player.injury else '-',
+                        'salary': player.salary,
+                        'ampg': ampg,
+                        'smpg': smpg,
+                        'mdiff': formated_diff(smpg-ampg),
+                        'afp': afp,
+                        'sfp': sfp,
+                        'pdiff': formated_diff(sfp-afp),
+                        'val': player.salary / 250 + 10,
+                        'opp': PlayerGame.objects.filter(team__contains=player.team, 
+                                                         date__gte=datetime.date.today()+datetime.timedelta(-145),
+                                                         name__in=fellows) \
+                                                 .order_by('-fpts').first().fpts
+                    })
 
     players, num_opr = get_ranking(players, 'opp', 'opr')
 

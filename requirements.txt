@@ -3,4 +3,3 @@ Django==1.11.15
 ortools
 beautifulsoup4==4.6.0
 requests
-colour
