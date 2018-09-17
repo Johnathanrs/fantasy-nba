@@ -10,14 +10,14 @@ $(document).ready(function () {
     min: 1,
     step: 0.1,
     max: 100,
-    values: [ 10, 60 ],
+    values: [ 1, 100 ],
     change: function( event, ui ) {
       $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
       loadBoard();
     }
   });
 
-  $( ".slider-val" ).val("10 - 60");
+  $( ".slider-val" ).val("1 - 100");
 
   loadBoard();
 })
