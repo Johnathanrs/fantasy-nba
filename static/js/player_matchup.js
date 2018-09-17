@@ -10,7 +10,7 @@ $(document).ready(function () {
     min: 1,
     step: 0.1,
     max: 100,
-    values: [ 20, 60 ],
+    values: [ 10, 60 ],
     change: function( event, ui ) {
       $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
       loadBoard();
