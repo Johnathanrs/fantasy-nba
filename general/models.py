@@ -83,3 +83,24 @@ class PlayerGame(models.Model):
 
     def __str__(self):
         return self.name
+
+
+SLATES = (
+    ('Thu-Mon', 'Thu-Mon'),
+    ('Express', 'Express'),
+    ('Main', 'Main'),
+)
+
+class Game(models.Model):
+    date = models.DateTimeField()
+    game_status = models.CharField(max_length=50)
+    home_logo = models.CharField(max_length=120)
+    home_team = models.CharField(max_length=20)
+    visit_team = models.CharField(max_length=20)
+    visit_logo = models.CharField(max_length=120)
+    ou = models.FloatField()
+    ml = models.CharField(max_length=20)
+    slate = models.CharField(max_length=50, choices=SLATES)
+
+    def __str__(self):
+        return '{} - {}'.format(self.home_team, self.visit_team)

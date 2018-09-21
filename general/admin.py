@@ -20,5 +20,12 @@ class PlayerGameAdmin(admin.ModelAdmin):
     list_filter = ['team', 'location', 'game_result']
 
 
+class GameAdmin(admin.ModelAdmin):
+    list_display = ['home_team', 'visit_team', 'ou', 'game_status', 'date', 'slate']
+    search_fields = ['home_team', 'visit_team']
+    list_filter = ['slate', 'game_status']
+
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(PlayerGame, PlayerGameAdmin)
+admin.site.register(Game, GameAdmin)
