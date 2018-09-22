@@ -59,7 +59,7 @@ table th {
 }
 
 .player-board {
-    max-height: calc(100vh - 400px); 
+    max-height: calc(100vh - 270px); 
     overflow-x: hidden;
 }
 
@@ -68,7 +68,7 @@ table th {
 }
 
 .player-board tbody {
-    max-height: calc(100vh - 460px); 
+    max-height: calc(100vh - 330px); 
     overflow-x: hidden;
     display: block;
 }
@@ -170,4 +170,26 @@ div.lineups {
 
 td.break {
     font-size: 9px !important;
+}
+
+.slate {
+    font-size: 13px;
+}
+
+.slate a {
+    font-weight: 700;
+    font-size: 14px;
+    padding: 5px 14px;
+}
+
+.ds a {
+    /*font-weight: 700;*/
+    font-size: 15px;
+    /*padding: 5px 14px;*/
+}
+
+.slate-pane {
+    position: absolute;
+    top: 170px;
+    left: 30px;
 }

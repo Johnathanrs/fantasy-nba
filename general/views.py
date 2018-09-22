@@ -155,6 +155,7 @@ def player_match_up(request):
                     fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
 
                     players.append({
+                        'avatar': player.avatar,
                         'id': player.id,
                         'name': ii.name,
                         'team': team,

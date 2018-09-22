@@ -24,7 +24,7 @@
     {% for ii in players %}
       <tr>
         {% if ii %}
-          <td colspan="3"><a href="/players/{{ ii.id }}">{{ ii.name }}</a></td>
+          <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
           <td>{{ ii.pos }}</td>
           <td>{{ ii.team }}</td>
           <td>{{ ii.loc }}</td>
