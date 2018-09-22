@@ -2,16 +2,44 @@
 {% load extra %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-4">
   <form id="frm-player" action="/export_lineups" method="POST">
+    {% csrf_token %}
     <div class="row">
-      {% csrf_token %}
+      <div class="col-md-12 mb-4">
+        <h3 class="mb-4 mt-2">Player List</h3>
+
+        <ul class="nav nav-tabs slate">
+          {% for slate, values in games.items %}
+            <li class="nav-item">
+              <a class="nav-link" data-toggle="tab" href="#tab-{{ slate }}">{{ slate }}</a>
+            </li>
+          {% endfor %}
+        </ul>
+
+        <!-- Tab panes -->
+        <div class="tab-content mb-2">
+          {% for slate, values in games.items %}
+            <div class="tab-pane container slate pl-3 pt-3 pb-5" id="tab-{{ slate }}">
+              {% for game in values %}
+                <div class="float-left mr-5">
+                  <div class="form-check">
+                    <label class="form-check-label">
+                      <input type="checkbox" class="form-check-input" checked="" value="{{ game.home_team }}-{{ game.visit_team }}">{{ game.home_team }} - {{ game.visit_team }}
+                    </label>
+                  </div>
+                  <div class="ml-4 text-secondary">( {{ game.date|date:"H:i" }} )</div>
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>        
+      </div>
       <div class="col-md-7 mb-4">
-        <h3 class="mb-4 mt-4">Players List</h3>
-        <ul class="nav nav-tabs">
+        <ul class="nav nav-tabs ds">
           {% for ds in data_sources %}  
           <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#home" onclick="chooseDS('{{ ds.0 }}');">{{ ds.0 }}</a>
+            <a class="nav-link" data-toggle="tab" href="#home">{{ ds.0 }}</a>
           </li>
           {% endfor %}
         </ul>

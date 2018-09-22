@@ -1,6 +1,21 @@
+var slate, games;
+
 $(function() {
-  // click first tab
-  $('.nav-tabs .nav-link:first').click();
+  $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
+    slate = $(event.target).text();         // active tab
+    getPlayers();
+  });
+
+  $('.nav-tabs.ds a').on('shown.bs.tab', function(event) {
+    getPlayers();
+  });
+
+  $('.tab-pane.slate input').on('change', function() {
+    getPlayers();
+  });
+
+  $('.nav-tabs.ds .nav-link:first').click();
+  $('.nav-tabs.slate .nav-link:first').click();
 
   $('.btn-export').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;
@@ -19,7 +34,7 @@ $(function() {
       return
     }
 
-    $('#div-result').html('<div class="font-weight-bold ml-5" style="margin-top: 48vh;">Calculating ...</div>');
+    $('#div-result').html('<div class="font-weight-bold ml-5 pl-4" style="margin-top: 48vh;">Calculating ...</div>');
     $.post( "/gen-lineups", $('#frm-player').serialize(), function( data ) {
       $( "#div-result" ).html( data );
     });
@@ -73,10 +88,22 @@ function change_point (obj) {
   $.post( "/update-point", { pid: pid, val: val }, function( data ) {})
 }
 
-function chooseDS (tab) {
-  $.post( "/get-players", { ds: tab }, function( data ) {
-    $( "#div-players" ).html( data );
-  });
+function getPlayers () {
+  games = '';
+  $('#tab-'+slate).find('input:checked').each(function() {
+    games += $(this).val()+';';
+  })
+
+  var ds = $('.nav-tabs.ds .nav-link.active').text();
+  $.post( "/get-players", 
+    { 
+      ds: ds,
+      games: games
+    }, 
+    function( data ) {
+      $( "#div-players" ).html( data );
+    }
+  );
 }  
 
 function toggleLock(obj, pid) {

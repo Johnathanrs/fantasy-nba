@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Avg
+from django.db.models import Avg, Q
 
 from general.models import *
 from general.lineup import *
@@ -18,13 +18,30 @@ from general import html2text
 from general.color import *
 
 def players(request):
-    return render(request, 'players.html', { 'data_sources': DATA_SOURCE })
+    data_sources = DATA_SOURCE
+    games = {}
+    for slate in SLATES:
+        games[str(slate[0])] = Game.objects.filter(slate=slate[0])
+
+    return render(request, 'players.html', locals())
 
 
 @csrf_exempt
 def get_players(request):
     ds = request.POST.get('ds')
-    players = Player.objects.filter(data_source=ds).order_by('-proj_points')
+    games = request.POST.get('games').split(';')
+
+    if len(games) > 1:
+        q = Q()
+        for game in games:
+            if game:
+                teams = game.split('-')
+                q |= (Q(team=teams[0]) & Q(opponent__contains=teams[1])) | \
+                     (Q(team=teams[1]) & Q(opponent__contains=teams[0])) 
+    else:
+        q = Q(uid=-1)   # no result
+
+    players = Player.objects.filter(Q(data_source=ds) & q).order_by('-proj_points')
     return HttpResponse(render_to_string('player-list_.html', locals()))
 
 
