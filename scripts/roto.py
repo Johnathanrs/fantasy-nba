@@ -20,14 +20,13 @@ def get_players(data_source):
         players = requests.get(url).json()
 
         fields = ['first_name', 'last_name', 'injury', 'minutes', 'money_line', 
-                  'over_under', 'point_spread', 'position', 'proj_ceiling', 
+                  'over_under', 'point_spread', 'position', 'proj_ceiling', 'opponent',
                   'proj_custom', 'proj_floor', 'proj_original', 'proj_points', 'proj_rotowire', 
                   'proj_site', 'proj_third_party_one', 'proj_third_party_two', 'real_position', 
                   'salary', 'salary_custom', 'salary_original', 'team', 'team_points', 'value']
 
         for ii in players:
             defaults = { key: str(ii[key]).replace(',', '') for key in fields }
-            defaults['opponent'] = ii['opponent'].strip(' ').strip('@')
             obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
                                                   defaults=defaults)
     except:

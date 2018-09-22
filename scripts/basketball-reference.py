@@ -14,6 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
+from general.views import teamSync
 
 def main():
     dp = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"
@@ -34,6 +35,7 @@ def main():
         player_rows = table.find("tbody")
         players = player_rows.find_all("tr")
     except Exception as e:
+        print (e)
         return  # no players
 
     for player in players:
@@ -42,13 +44,13 @@ def main():
                 mp = player.find("td", {"data-stat":"mp"}).text.split(':')
                 name = player.find("td", {"data-stat":"player"}).text.strip()
                 team = player.find("td", {"data-stat":"team_id"}).text.strip()
-                team = 'GS' if team == 'GSW' else team
+                team = teamSync(team)
                 uid = player.find("td", {"data-stat":"player"}).get('data-append-csv')
                 player_ = Player.objects.filter(first_name__iexact=name.split(' ')[0],
                                                last_name__iexact=name.split(' ')[1],
                                                team=team)
 
-                if player_ and not 'nba.ico' in player_.first().avatar:
+                if player_ and 'nba.ico' in player_.first().avatar:
                     avatar = 'https://d2cwpp38twqe55.cloudfront.net/req/201808311/images/players/{}.jpg'.format(uid)
                     player_.update(avatar=avatar)
 

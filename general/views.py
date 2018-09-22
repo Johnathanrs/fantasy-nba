@@ -77,6 +77,14 @@ def get_ranking(players, sattr, dattr, order=1):
         ii[dattr] = ranking
     return players, ranking
 
+def teamSync(team):
+    team = team.strip().strip('@')
+    conv = {
+        'GSW': 'GS'
+    }
+
+    return conv[team] if team in conv else team
+
 @csrf_exempt
 def player_match_up(request):
     loc = request.POST.get('loc')
@@ -97,9 +105,11 @@ def player_match_up(request):
 
     for ii in games:
         names = ii.name.split(' ')
-        team = 'GS' if ii.team == 'GSW' else ii.team
+        team = teamSync(ii.team)
+        vs = teamSync(ii.opp)
+        # print (names[0], names[1], team, ds, vs)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
-                                       team=team, data_source=ds).first()
+                                       team=team, data_source=ds, opponent__contains=vs).first()
         if player and pos in player.position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
@@ -115,9 +125,9 @@ def player_match_up(request):
                     players.append({
                         'id': player.id,
                         'name': ii.name,
-                        'team': ii.team,
+                        'team': team,
                         'loc': ii.location,
-                        'vs': ii.opp,
+                        'vs': vs,
                         'pos': player.position,
                         'inj': html2text.html2text(player.injury) if player.injury else '-',
                         'salary': player.salary,

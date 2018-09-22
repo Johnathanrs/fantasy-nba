@@ -17,7 +17,7 @@
         <td>
           <a href="/players/{{ ii.id }}">
             <div>{{ ii.first_name }} {{ ii.last_name }}</div>
-            <div class="sub">{{ ii.team }} @ {{ ii.opponent }}</div>            
+            <div class="sub">{{ ii.team }} {{ ii.opponent }}</div>            
           </a>
         </td>
         <td>{{ ii.salary|floatformat:2 }}</td>

@@ -7,9 +7,7 @@ DATA_SOURCE = (
     ('FanDuel', 'FanDuel'),
     ('DraftKings', 'DraftKings'),
     ('Yahoo', 'Yahoo'),
-    ('Head2Head', 'Head2Head'),
-    ('Fanball', 'Fanball'),
-    ('FantasyDraft', 'FantasyDraft')
+    ('Fanball', 'Fanball')
 )
 
 class Player(models.Model):
@@ -91,15 +89,20 @@ SLATES = (
     ('Main', 'Main'),
 )
 
+GAME_STATUS = (
+    ('started', 'Started'),
+    ('upcomming', 'Upcomming')
+)
+
 class Game(models.Model):
-    date = models.DateTimeField()
-    game_status = models.CharField(max_length=50)
-    home_logo = models.CharField(max_length=120)
     home_team = models.CharField(max_length=20)
     visit_team = models.CharField(max_length=20)
-    visit_logo = models.CharField(max_length=120)
+    home_logo = models.CharField(max_length=120, null=True, blank=True)
+    visit_logo = models.CharField(max_length=120, null=True, blank=True)
     ou = models.FloatField()
     ml = models.CharField(max_length=20)
+    date = models.DateTimeField()
+    game_status = models.CharField(max_length=50, choices=GAME_STATUS, default='started')
     slate = models.CharField(max_length=50, choices=SLATES)
 
     def __str__(self):
