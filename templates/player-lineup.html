@@ -1,30 +1,32 @@
 {% load humanize %}
 
-<div class="mt-5 jumbotron p-4">
+<div class="jumbotron p-4" style="margin-top: 121px;margin-bottom: 15px;">
   <span>Selected Players: </span><span class="font-weight-bold"> {{ players.count }}</span><br>
   <span>Lineup Projection Average: </span><span class="font-weight-bold"> {{ avg_points|floatformat:2 }}</span>
 </div>
-<div class="lineups p-2">
-  <table class="table table-striped table-hover table-responsive-md">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Team</th>
-        <th>Lineups</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for ii in players_ %}
+<div class="pb-2" style="border: 1px solid #eee; border-radius: 4px;">
+  <div class="lineups p-2">
+    <table class="table table-striped table-hover table-responsive-md">
+      <thead>
         <tr>
-          <td>
-            <a href="/players/{{ ii.id }}">
-              <img src="{{ ii.avatar }}" width="36" class="mr-2">{{ ii.name }}
-            </a>
-          </td>
-          <td>{{ ii.team }}</td>
-          <td>{{ ii.lineups }}</td>
+          <th>Name</th>
+          <th>Team</th>
+          <th>Lineups</th>
         </tr>
-      {% endfor %}
-    </tbody>  
-  </table>
+      </thead>
+      <tbody>
+        {% for ii in players_ %}
+          <tr>
+            <td>
+              <a href="/players/{{ ii.id }}">
+                <img src="{{ ii.avatar }}" width="36" class="mr-2">{{ ii.name }}
+              </a>
+            </td>
+            <td>{{ ii.team }}</td>
+            <td>{{ ii.lineups }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>  
+    </table>
+  </div>
 </div>

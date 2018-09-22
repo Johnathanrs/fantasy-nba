@@ -19,7 +19,7 @@ $(function() {
       return
     }
 
-    $('#div-result').html('<span class="font-weight-bold ml-5">Calculating ...</span>');
+    $('#div-result').html('<div class="font-weight-bold ml-5" style="margin-top: 48vh;">Calculating ...</div>');
     $.post( "/gen-lineups", $('#frm-player').serialize(), function( data ) {
       $( "#div-result" ).html( data );
     });

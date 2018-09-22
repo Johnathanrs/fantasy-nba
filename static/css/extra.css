@@ -1,10 +1,14 @@
 body {
-    overflow: hidden;
+    /*overflow: hidden;*/
 }
 
 th {
     border-top: none !important;
     border-bottom: 1px solid #dee2e6 !important;
+}
+
+#frm-player {
+    width: 100%;
 }
 
 .players-pane {
@@ -103,14 +107,22 @@ table th {
 }
 
 .num-lineups {
-    width: 90px !important;
+    width: 60px !important;
+    text-align: right;
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    line-height: 1.2;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 
 div.lineups {
     overflow-y: scroll; 
-    border: 1px solid #eee;
-    border-radius: 4px;    
-    height: calc(98vh - 280px)
+    height: calc(98vh - 294px)
 }
 
 #search-player {

@@ -2,10 +2,11 @@
 {% load extra %}
 
 {% block content %}
-  <form class="form-inline" id="frm-player" action="/export_lineups" method="POST">
-    {% csrf_token %}
-    <div class="clearfix"></div>
-      <div class="col-md-6 pr-0 pl-4 mb-5">
+<div class="container">
+  <form id="frm-player" action="/export_lineups" method="POST">
+    <div class="row">
+      {% csrf_token %}
+      <div class="col-md-7 mb-4">
         <h3 class="mb-4 mt-4">Players List</h3>
         <ul class="nav nav-tabs">
           {% for ds in data_sources %}  
@@ -40,16 +41,16 @@
         </div>
       </div>
 
-      <div class="col-md-2 pt-5 text-center">
-        <button class="btn btn-success mb-3 btn-export">Export</button><br>
-        <a class="btn btn-success mb-3 btn-calc">Calculate</a><br>
-        <a class="btn btn-success mb-5 btn-clear">Clear</a><br>
-        <span class="pt-5">Number of Lineups:</span><br>
-        <input type="number" class="form-control m-3 num-lineups" name="num-lineups" value="30" min="1"><br>
+      <div class="col-md-5 pl-4" id="div-result"></div>
+      <div class="pl-4 col-md-10 mb-5">
+        <button class="btn btn-sm btn-success btn-export">Export</button>
+        <a class="btn btn-sm btn-success btn-calc">Calculate</a>
+        <a class="btn btn-sm btn-success btn-clear">Clear</a>
+        <input type="number" class="mr-3 num-lineups float-right" name="num-lineups" value="30" min="1">
+        <span class="float-right pt-1 mr-2">Number of Lineups:</span>
       </div>
-      <div class="col-md-4 pl-0 pr-4" id="div-result"></div>
+    </div>
   </form>
-
   <div class="modal fade" id="dlg-export">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -71,7 +72,8 @@
         </div>
       </div>
     </div>
-  </div>  
+  </div>
+</div>  
 {% endblock %}
 
 {% block script %}
