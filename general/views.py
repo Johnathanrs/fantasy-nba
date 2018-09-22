@@ -74,6 +74,10 @@ def player_detail(request, pid):
 
 
 def player_match_up_board(request):
+    games = {}
+    for slate in SLATES:
+        games[str(slate[0])] = Game.objects.filter(slate=slate[0])
+
     return render(request, 'player-match-up-board.html', locals())
 
 
@@ -112,10 +116,21 @@ def player_match_up(request):
     min_sfp = float(request.POST.get('min_sfp'))
     max_afp = float(request.POST.get('max_afp'))
     max_sfp = float(request.POST.get('max_sfp'))
+    games = request.POST.get('games').split(';')
+
+    if len(games) > 1:
+        q = Q()
+        for game in games:
+            if game:
+                teams = game.split('-')
+                q |= (Q(team__contains=teams[0]) & Q(opp__contains=teams[1])) | \
+                     (Q(team__contains=teams[1]) & Q(opp__contains=teams[0])) 
+    else:
+        q = Q(name=-1)   # no result
 
     last_game = PlayerGame.objects.all().order_by('-date').first()
     players = []
-    games = PlayerGame.objects.filter(date=last_game.date)
+    games = PlayerGame.objects.filter(Q(date=last_game.date) & q)
 
     if loc != 'all':
         games = games.filter(location=loc)

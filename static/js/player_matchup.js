@@ -1,10 +1,6 @@
-$(document).ready(function () {
-  $('.position-filter .nav-item a').on('click', function() {
-    $('.position-filter .nav-item a').removeClass('active');
-    $(this).toggleClass('active');
-    loadBoard();
-  });
+var slate, games;
 
+$(document).ready(function () {
   $( ".slider-range" ).slider({
     range: true,
     min: 1,
@@ -19,10 +15,30 @@ $(document).ready(function () {
 
   $( ".slider-val" ).val("1 - 100");
 
-  loadBoard();
+  $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
+    slate = $(event.target).text();         // active tab
+    loadBoard();
+  });
+
+  $('.tab-pane.slate input').on('change', function() {
+    loadBoard();
+  });
+
+  $('.position-filter .nav-item a').on('click', function() {
+    $('.position-filter .nav-item a').removeClass('active');
+    $(this).toggleClass('active');
+    loadBoard();
+  });
+
+  $('.nav-tabs.slate .nav-link:first').click();
 })
 
 function loadBoard() {
+  games = '';
+  $('#tab-'+slate).find('input:checked').each(function() {
+    games += $(this).val()+';';
+  })
+
   var data = { 
         loc: $('.filters select.loc').val(), 
         ds: $('.filters select.ds').val(),
@@ -30,7 +46,8 @@ function loadBoard() {
         min_afp: $('.afp').slider("values")[0],
         max_afp: $('.afp').slider("values")[1],
         min_sfp: $('.sfp').slider("values")[0],
-        max_sfp: $('.sfp').slider("values")[1]
+        max_sfp: $('.sfp').slider("values")[1],
+        games: games
       };
 
   $('.player-board').html('<div class="board-loading ml-1 mt-5">Loading ...</div>');

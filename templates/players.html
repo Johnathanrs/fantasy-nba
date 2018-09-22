@@ -6,8 +6,8 @@
   <form id="frm-player" action="/export_lineups" method="POST">
     {% csrf_token %}
     <div class="row">
-      <div class="col-md-12 mb-4">
-        <h3 class="mb-4 mt-2">Player List</h3>
+      <div class="col-md-12 mb-4 mt-2">
+        <h3 class="mb-4">Player List</h3>
 
         <ul class="nav nav-tabs slate">
           {% for slate, values in games.items %}
@@ -33,7 +33,7 @@
               {% endfor %}
             </div>
           {% endfor %}
-        </div>        
+        </div>
       </div>
       <div class="col-md-7 mb-4">
         <ul class="nav nav-tabs ds">
