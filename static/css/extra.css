@@ -193,3 +193,25 @@ td.break {
     top: 170px;
     left: 30px;
 }
+
+.game-item {
+    background: #eee;
+    border-radius: 10px;
+    padding: 11px 17px;
+    cursor: pointer;
+}
+
+.game-item.active {
+    color: white;
+    font-weight: 700;
+    background: #007bff;
+}
+
+.game-item.active .time {
+    color: white;
+}
+
+.game-item .time {
+    font-size: 12px;
+    color: #6c757d;
+}
