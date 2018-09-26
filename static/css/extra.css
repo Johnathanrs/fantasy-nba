@@ -59,7 +59,7 @@ table th {
 }
 
 .player-board {
-    max-height: calc(100vh - 270px); 
+    max-height: calc(100vh - 330px); 
     overflow-x: hidden;
 }
 
@@ -68,7 +68,7 @@ table th {
 }
 
 .player-board tbody {
-    max-height: calc(100vh - 330px); 
+    max-height: calc(100vh - 390px); 
     overflow-x: hidden;
     display: block;
 }
