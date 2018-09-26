@@ -17,12 +17,16 @@ from general.lineup import *
 from general import html2text
 from general.color import *
 
-def players(request):
-    data_sources = DATA_SOURCE
+def _get_game_slates():
     games = {}
     for slate in SLATES:
         games[str(slate[0])] = Game.objects.filter(slate=slate[0])
+    return games
 
+
+def players(request):
+    data_sources = DATA_SOURCE
+    games = _get_game_slates()
     return render(request, 'players.html', locals())
 
 
@@ -74,11 +78,13 @@ def player_detail(request, pid):
 
 
 def player_match_up_board(request):
-    games = {}
-    for slate in SLATES:
-        games[str(slate[0])] = Game.objects.filter(slate=slate[0])
-
+    games = _get_game_slates()
     return render(request, 'player-match-up-board.html', locals())
+
+
+def team_match_up_board(request):
+    games = _get_game_slates()
+    return render(request, 'team-match-up-board.html', locals())
 
 
 def formated_diff(val):
@@ -105,6 +111,13 @@ def teamSync(team):
     }
 
     return conv[team] if team in conv else team
+
+
+@csrf_exempt
+def team_match_up(request):
+    game = request.POST.get('game')
+    return HttpResponse(render_to_string('team-board_.html', locals()))
+
 
 @csrf_exempt
 def player_match_up(request):
