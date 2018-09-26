@@ -113,9 +113,74 @@ def teamSync(team):
     return conv[team] if team in conv else team
 
 
+def get_team_info(team):
+    season = current_season()
+    q = Q(team__contains=team) & \
+        Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+
+    # get all games for the team last season
+    team_games = PlayerGame.objects.filter(q)
+    wins = team_games.filter(game_result='W').count()
+    losses = team_games.filter(game_result='L').count()
+
+    # get distinct players
+    players_ = team_games.order_by('name').values('name', 'team').distinct()
+
+    players = []
+
+    for ii in players_:
+        names = ii['name'].split(' ')
+        team = teamSync(ii['team'])
+        # print (names[0], names[1], team, ds, vs)
+        player = Player.objects.filter(first_name=names[0], last_name=names[1], 
+                                       team=team).first()
+        if player:
+            games = team_games.filter(name=ii['name'])
+            ampg = games.aggregate(Avg('mp'))['mp__avg']
+            # smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']
+            afp = games.aggregate(Avg('fpts'))['fpts__avg']
+            sfp = [ig.fpts for ig in games.order_by('-date')[1:4]]
+            # print (sfp)
+            sfp = sum(sfp)
+
+            players.append({
+                'avatar': player.avatar,
+                'id': player.id,
+                'name': ii['name'],
+                'pos': player.position,
+                'inj': html2text.html2text(player.injury) if player.injury else '-',
+                'salary': player.salary,
+                'gp': games.count(),
+                'rpg': games.aggregate(Avg('trb'))['trb__avg'],
+                'apg': games.aggregate(Avg('ast'))['ast__avg'],
+                'spg': games.aggregate(Avg('stl'))['stl__avg'],
+                'bpg': games.aggregate(Avg('blk'))['blk__avg'],
+                'ppg': games.aggregate(Avg('pts'))['pts__avg'],
+                'tpg': games.aggregate(Avg('tov'))['tov__avg'],
+                'ampg': ampg,
+                'afp': afp,
+                'sfp': sfp / 3,
+                'val': player.salary / 250 + 10
+            })
+
+    return { 
+        'players': players, 
+        'wins': wins,
+        'losses': losses,
+        'win_percent': wins * 100 / (wins + losses)
+    }
+
+
 @csrf_exempt
 def team_match_up(request):
     game = request.POST.get('game')
+    game = Game.objects.get(id=game)
+
+    teams = {
+        'home': get_team_info(game.home_team),
+        'away': get_team_info(game.visit_team)
+    }
+
     return HttpResponse(render_to_string('team-board_.html', locals()))
 
 

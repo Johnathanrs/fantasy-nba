@@ -1,50 +1,62 @@
+<div class="row mb-3">
+  <div class="col-md-2 mt-3">
+    <label class="text-success title"><strong>Home Team: {{ game.home_team }}</strong></label>
+  </div>
+  <div class="col-md-4">
+    <table>
+      <tr>
+        <th>Win's</th>
+        <th>Loss's</th>
+        <th>Win %</th>
+      </tr>
+      <tr>
+        <td>{{ teams.home.wins }}</td>
+        <td>{{ teams.home.losses }}</td>
+        <td>{{ teams.home.win_percent|floatformat:1 }} %</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
 <table class="table table-hover table-responsive-md">
 <thead>
   <tr>
     <th>Player</th><th>&nbsp;</th><th>&nbsp;</th>
-    <th>POS</th>
-    <th>TM</th>
-    <th>H/A</th>
-    <th>VS</th>
     <th>Salary</th><th>&nbsp;</th>
-    <th>AMPG</th>
-    <th>SMPG</th>
-    <th>MDIFF</th>
-    <th>OPP</th>
-    <th>OPR</th>
-    <th>AFP</th>
+    <th>POS</th>
+    <th>GP</th>
+    <th>RPG</th>
+    <th>APG</th>
+    <th>SPG</th>
+    <th>BPG</th>
+    <th>PPG</th>
+    <th>TPG</th>
     <th>SFP</th>
-    <th>PDIFF</th>
+    <th>MPG</th>
+    <th>AFP</th>
     <th>VAL</th>
-    <th>PPR</th>
-    <th>INJ</th>
   </tr>
 </thead>
   <tbody>
-    {% for ii in players %}
+    {% for ii in teams.home.players %}
       <tr>
         {% if ii %}
           <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
-          <td>{{ ii.pos }}</td>
-          <td>{{ ii.team }}</td>
-          <td>{{ ii.loc }}</td>
-          <td><a href="#/team-match-up-board/{{ ii.vs }}">{{ ii.vs }}</a></td>
           <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+          <td>{{ ii.pos }}</td>
+          <td>{{ ii.gp }}</td>
+          <td>{{ ii.rpg|floatformat:1 }}</td>
+          <td>{{ ii.apg|floatformat:1 }}</td>
+          <td>{{ ii.spg|floatformat:1 }}</td>
+          <td>{{ ii.bpg|floatformat:1 }}</td>
+          <td>{{ ii.ppg|floatformat:1 }}</td>
+          <td>{{ ii.ppg|floatformat:1 }}</td>
+          <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-success{% endif %}">
+            {{ ii.sfp|floatformat:1 }}
+          </td>
           <td>{{ ii.ampg|floatformat:1 }}</td>
-          <td>{{ ii.smpg|floatformat:1 }}</td>
-          <td class="{% if '(' in ii.mdiff %}text-danger{% else %}text-success{% endif %}">
-            {{ ii.mdiff }}
-          </td>
-          <td>{{ ii.opp|floatformat:1 }}</td>
-          <td class="text-center" style="color: #ffff00; font-weight: 700; background: {{ ii.color }};">{{ ii.opr }}</td>
           <td>{{ ii.afp|floatformat:1 }}</td>
-          <td>{{ ii.sfp|floatformat:1 }}</td>
-          <td class="{% if '(' in ii.pdiff %}text-danger{% else %}text-success{% endif %}">
-            {{ ii.pdiff }}
-          </td>
           <td>{{ ii.val|floatformat:1 }}</td>
-          <td>{{ ii.ppr }}</td>
-          <td class="{% if ii.inj != '-' %}text-danger{% endif %}">{{ ii.inj }}</td>
         {% else %}
           <td colspan="17" class="break">&nbsp;</td>
         {% endif %}
@@ -52,3 +64,402 @@
     {% endfor %}
   </tbody>
 </table>
+
+<div class="row mb-3">
+  <div class="col-md-2 mt-3">
+    <label class="text-danger title"><strong>Away Team: {{ game.visit_team }}</strong></label>
+  </div>
+  <div class="col-md-4">
+    <table>
+      <tr>
+        <th>Win's</th>
+        <th>Loss's</th>
+        <th>Win %</th>
+      </tr>
+      <tr>
+        <td>{{ teams.away.wins }}</td>
+        <td>{{ teams.away.losses }}</td>
+        <td>{{ teams.away.win_percent|floatformat:1 }} %</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<table class="table table-hover table-responsive-md">
+<thead>
+  <tr>
+    <th>Player</th><th>&nbsp;</th><th>&nbsp;</th>
+    <th>Salary</th><th>&nbsp;</th>
+    <th>POS</th>
+    <th>GP</th>
+    <th>RPG</th>
+    <th>APG</th>
+    <th>SPG</th>
+    <th>BPG</th>
+    <th>PPG</th>
+    <th>TPG</th>
+    <th>SFP</th>
+    <th>MPG</th>
+    <th>AFP</th>
+    <th>VAL</th>
+  </tr>
+</thead>
+  <tbody>
+    {% for ii in teams.away.players %}
+      <tr>
+        {% if ii %}
+          <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
+          <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+          <td>{{ ii.pos }}</td>
+          <td>{{ ii.gp }}</td>
+          <td>{{ ii.rpg|floatformat:1 }}</td>
+          <td>{{ ii.apg|floatformat:1 }}</td>
+          <td>{{ ii.spg|floatformat:1 }}</td>
+          <td>{{ ii.bpg|floatformat:1 }}</td>
+          <td>{{ ii.ppg|floatformat:1 }}</td>
+          <td>{{ ii.ppg|floatformat:1 }}</td>
+          <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-success{% endif %}">
+            {{ ii.sfp|floatformat:1 }}
+          </td>
+          <td>{{ ii.ampg|floatformat:1 }}</td>
+          <td>{{ ii.afp|floatformat:1 }}</td>
+          <td>{{ ii.val|floatformat:1 }}</td>
+        {% else %}
+          <td colspan="17" class="break">&nbsp;</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<div class="row mt-5">
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPA RANK WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPA WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPS RANK WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPS WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row mt-3">
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM POS RANK WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM POS WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM POS FPS RANK WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM POS FPS WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<div class="row mt-5">
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPA RANK WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPA WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPS RANK WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPS WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row mt-3 mb-5">
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM POS RANK WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM POS WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM POS FPS RANK WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM POS FPS WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>17</td>
+        <td>27</td>
+      </tr>
+    </table>
+  </div>
+</div>
+

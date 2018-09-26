@@ -1,4 +1,18 @@
 $(document).ready(function () {
+  $( ".slider-range" ).slider({
+    range: true,
+    min: 1,
+    step: 0.1,
+    max: 100,
+    values: [ 1, 100 ],
+    change: function( event, ui ) {
+      $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
+      // loadBoard();
+    }
+  });
+
+  $( ".slider-val" ).val("1 - 100");
+  
   $('.game-item').on('click', function() {
     $('.game-item').removeClass('active');
     $(this).addClass('active');
