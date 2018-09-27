@@ -142,84 +142,22 @@
         <th>APG</th>
         <th>SPG</th>
         <th>BPG</th>
+        <th>TOPG</th>
         <th>PPG</th>
         <th>Total</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.home_stat.rpg_rank }}</td>
+        <td>{{ teams.home_stat.apg_rank }}</td>
+        <td>{{ teams.home_stat.spg_rank }}</td>
+        <td>{{ teams.home_stat.bpg_rank }}</td>
+        <td>{{ teams.home_stat.tpg_rank }}</td>
+        <td>{{ teams.home_stat.ppg_rank }}</td>
+        <td>{{ teams.home_stat.total_rank }}</td>
       </tr>
     </table>
   </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-success pl-1 title">TM FPA WHEN @ HOME</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-success pl-1 title">TM FPS RANK WHEN @ HOME</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-success pl-1 title">TM FPS WHEN @ HOME</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-</div>
-<div class="row mt-3">
+  
   <div class="col-md-3 team-stat">
     <div class="text-success pl-1 title">TM POS RANK WHEN @ HOME</div>
     <table>
@@ -231,30 +169,35 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.home_stat.PG_rank }}</td>
+        <td>{{ teams.home_stat.SG_rank }}</td>
+        <td>{{ teams.home_stat.SF_rank }}</td>
+        <td>{{ teams.home_stat.PF_rank }}</td>
+        <td>{{ teams.home_stat.C_rank }}</td>
       </tr>
     </table>
   </div>
+
   <div class="col-md-3 team-stat">
-    <div class="text-success pl-1 title">TM POS WHEN @ HOME</div>
+    <div class="text-success pl-1 title">TM FPS RANK WHEN @ HOME</div>
     <table>
       <tr>
-        <th>PG</th>
-        <th>SG</th>
-        <th>SF</th>
-        <th>PF</th>
-        <th>C</th>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.home_stat.s_rpg_rank }}</td>
+        <td>{{ teams.home_stat.s_apg_rank }}</td>
+        <td>{{ teams.home_stat.s_spg_rank }}</td>
+        <td>{{ teams.home_stat.s_bpg_rank }}</td>
+        <td>{{ teams.home_stat.s_tpg_rank }}</td>
+        <td>{{ teams.home_stat.s_ppg_rank }}</td>
+        <td>{{ teams.home_stat.s_total_rank }}</td>
       </tr>
     </table>
   </div>
@@ -269,14 +212,83 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.home_stat.s_PG_rank }}</td>
+        <td>{{ teams.home_stat.s_SG_rank }}</td>
+        <td>{{ teams.home_stat.s_SF_rank }}</td>
+        <td>{{ teams.home_stat.s_PF_rank }}</td>
+        <td>{{ teams.home_stat.s_C_rank }}</td>
+      </tr>
+    </table>
+  </div>  
+</div>
+<div class="row mt-3">
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPA WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>{{ teams.home_stat.rpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.apg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.spg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.bpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.tpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.ppg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.total|floatformat:1 }}</td>
       </tr>
     </table>
   </div>
+
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM POS WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>{{ teams.home_stat.PG|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.SG|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.SF|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.PF|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.C |floatformat:1 }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-success pl-1 title">TM FPS WHEN @ HOME</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>{{ teams.home_stat.s_rpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_apg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_spg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_bpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_tpg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_ppg|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_total|floatformat:1 }}</td>
+      </tr>
+    </table>
+  </div>
+
   <div class="col-md-3 team-stat">
     <div class="text-success pl-1 title">TM POS FPS WHEN @ HOME</div>
     <table>
@@ -288,11 +300,11 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.home_stat.s_PG|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_SG|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_SF|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_PF|floatformat:1 }}</td>
+        <td>{{ teams.home_stat.s_C |floatformat:1 }}</td>
       </tr>
     </table>
   </div>
@@ -307,84 +319,21 @@
         <th>APG</th>
         <th>SPG</th>
         <th>BPG</th>
+        <th>TOPG</th>
         <th>PPG</th>
         <th>Total</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.away_stat.rpg_rank }}</td>
+        <td>{{ teams.away_stat.apg_rank }}</td>
+        <td>{{ teams.away_stat.spg_rank }}</td>
+        <td>{{ teams.away_stat.bpg_rank }}</td>
+        <td>{{ teams.away_stat.tpg_rank }}</td>
+        <td>{{ teams.away_stat.ppg_rank }}</td>
+        <td>{{ teams.away_stat.total_rank }}</td>
       </tr>
     </table>
   </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-danger pl-1 title">TM FPA WHEN @ AWAY</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-danger pl-1 title">TM FPS RANK WHEN @ AWAY</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-  <div class="col-md-3 team-stat">
-    <div class="text-danger pl-1 title">TM FPS WHEN @ AWAY</div>
-    <table>
-      <tr>
-        <th>RPG</th>
-        <th>APG</th>
-        <th>SPG</th>
-        <th>BPG</th>
-        <th>PPG</th>
-        <th>Total</th>
-      </tr>
-      <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
-      </tr>
-    </table>
-  </div>
-</div>
-<div class="row mt-3 mb-5">
   <div class="col-md-3 team-stat">
     <div class="text-danger pl-1 title">TM POS RANK WHEN @ AWAY</div>
     <table>
@@ -396,30 +345,34 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.away_stat.PG_rank }}</td>
+        <td>{{ teams.away_stat.SG_rank }}</td>
+        <td>{{ teams.away_stat.SF_rank }}</td>
+        <td>{{ teams.away_stat.PF_rank }}</td>
+        <td>{{ teams.away_stat.C_rank }}</td>
       </tr>
     </table>
   </div>
   <div class="col-md-3 team-stat">
-    <div class="text-danger pl-1 title">TM POS WHEN @ AWAY</div>
+    <div class="text-danger pl-1 title">TM FPS RANK WHEN @ AWAY</div>
     <table>
       <tr>
-        <th>PG</th>
-        <th>SG</th>
-        <th>SF</th>
-        <th>PF</th>
-        <th>C</th>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.away_stat.s_rpg_rank }}</td>
+        <td>{{ teams.away_stat.s_apg_rank }}</td>
+        <td>{{ teams.away_stat.s_spg_rank }}</td>
+        <td>{{ teams.away_stat.s_bpg_rank }}</td>
+        <td>{{ teams.away_stat.s_tpg_rank }}</td>
+        <td>{{ teams.away_stat.s_ppg_rank }}</td>
+        <td>{{ teams.away_stat.s_total_rank }}</td>
       </tr>
     </table>
   </div>
@@ -434,11 +387,78 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.away_stat.s_PG_rank }}</td>
+        <td>{{ teams.away_stat.s_SG_rank }}</td>
+        <td>{{ teams.away_stat.s_SF_rank }}</td>
+        <td>{{ teams.away_stat.s_PF_rank }}</td>
+        <td>{{ teams.away_stat.s_C_rank }}</td>
+      </tr>
+    </table>
+  </div>
+</div>
+<div class="row mt-3 mb-5">
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPA WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>{{ teams.away_stat.rpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.apg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.spg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.bpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.tpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.ppg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.total|floatformat:1 }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM POS WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>PG</th>
+        <th>SG</th>
+        <th>SF</th>
+        <th>PF</th>
+        <th>C</th>
+      </tr>
+      <tr>
+        <td>{{ teams.away_stat.PG|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.SG|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.SF|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.PF|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.C |floatformat:1 }}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="col-md-3 team-stat">
+    <div class="text-danger pl-1 title">TM FPS WHEN @ AWAY</div>
+    <table>
+      <tr>
+        <th>RPG</th>
+        <th>APG</th>
+        <th>SPG</th>
+        <th>BPG</th>
+        <th>TOPG</th>
+        <th>PPG</th>
+        <th>Total</th>
+      </tr>
+      <tr>
+        <td>{{ teams.away_stat.s_rpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_apg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_spg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_bpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_tpg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_ppg|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_total|floatformat:1 }}</td>
       </tr>
     </table>
   </div>
@@ -453,11 +473,11 @@
         <th>C</th>
       </tr>
       <tr>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>17</td>
-        <td>27</td>
+        <td>{{ teams.away_stat.s_PG|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_SG|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_SF|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_PF|floatformat:1 }}</td>
+        <td>{{ teams.away_stat.s_C |floatformat:1 }}</td>
       </tr>
     </table>
   </div>

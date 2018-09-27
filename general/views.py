@@ -17,6 +17,9 @@ from general.lineup import *
 from general import html2text
 from general.color import *
 
+POSITION = ['PG', 'SG', 'SF', 'PF', 'C']
+
+
 def _get_game_slates():
     games = {}
     for slate in SLATES:
@@ -113,15 +116,67 @@ def teamSync(team):
     return conv[team] if team in conv else team
 
 
-def get_team_info(team):
+def get_team_games(team):
+    # get all games for the team last season
     season = current_season()
     q = Q(team__contains=team) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
 
-    # get all games for the team last season
-    team_games = PlayerGame.objects.filter(q)
-    wins = team_games.filter(game_result='W').count()
-    losses = team_games.filter(game_result='L').count()
+    return PlayerGame.objects.filter(q)
+
+
+def get_team_stat(team):
+    team_games = get_team_games(team)
+    sgames = team_games.filter(location='@')
+
+    rpg = team_games.aggregate(Avg('trb'))['trb__avg']
+    apg = team_games.aggregate(Avg('ast'))['ast__avg']
+    spg = team_games.aggregate(Avg('stl'))['stl__avg']
+    bpg = team_games.aggregate(Avg('blk'))['blk__avg']
+    tpg = team_games.aggregate(Avg('tov'))['tov__avg']
+    ppg = team_games.aggregate(Avg('pts'))['pts__avg']    
+    s_rpg = sgames.aggregate(Avg('trb'))['trb__avg']
+    s_apg = sgames.aggregate(Avg('ast'))['ast__avg']
+    s_spg = sgames.aggregate(Avg('stl'))['stl__avg']
+    s_bpg = sgames.aggregate(Avg('blk'))['blk__avg']
+    s_tpg = sgames.aggregate(Avg('tov'))['tov__avg']
+    s_ppg = sgames.aggregate(Avg('pts'))['pts__avg']    
+
+    res = {
+        'team': team,
+        'rpg': rpg,
+        'apg': apg,
+        'spg': spg,
+        'bpg': bpg,
+        'tpg': tpg,
+        'ppg': ppg,
+        'total': rpg+apg+spg+bpg+tpg+ppg,
+        's_rpg': s_rpg,
+        's_apg': s_apg,
+        's_spg': s_spg,
+        's_bpg': s_bpg,
+        's_tpg': s_tpg,
+        's_ppg': s_ppg,
+        's_total': s_rpg+s_apg+s_spg+s_bpg+s_tpg+s_ppg
+    }
+
+    for pos in POSITION:
+        players = Player.objects.filter(team=team, position=pos)
+        players = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players]
+        games = team_games.filter(name__in=players)
+        res[pos] = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
+        sgames = games.filter(location='@')
+        res['s_'+pos] = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
+
+    return res
+
+
+def get_team_info(team, min_afp, max_afp):
+    team_games = get_team_games(team)
+    # at most one game a day
+    game_results = team_games.values('date', 'game_result').distinct()
+    wins = game_results.filter(game_result='W').count()
+    losses = game_results.filter(game_result='L').count()
 
     # get distinct players
     players_ = team_games.order_by('name').values('name', 'team').distinct()
@@ -137,31 +192,31 @@ def get_team_info(team):
         if player:
             games = team_games.filter(name=ii['name'])
             ampg = games.aggregate(Avg('mp'))['mp__avg']
-            # smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
-            sfp = [ig.fpts for ig in games.order_by('-date')[1:4]]
-            # print (sfp)
-            sfp = sum(sfp)
 
-            players.append({
-                'avatar': player.avatar,
-                'id': player.id,
-                'name': ii['name'],
-                'pos': player.position,
-                'inj': html2text.html2text(player.injury) if player.injury else '-',
-                'salary': player.salary,
-                'gp': games.count(),
-                'rpg': games.aggregate(Avg('trb'))['trb__avg'],
-                'apg': games.aggregate(Avg('ast'))['ast__avg'],
-                'spg': games.aggregate(Avg('stl'))['stl__avg'],
-                'bpg': games.aggregate(Avg('blk'))['blk__avg'],
-                'ppg': games.aggregate(Avg('pts'))['pts__avg'],
-                'tpg': games.aggregate(Avg('tov'))['tov__avg'],
-                'ampg': ampg,
-                'afp': afp,
-                'sfp': sfp / 3,
-                'val': player.salary / 250 + 10
-            })
+            if min_afp <= afp <= max_afp:
+                sfp = [ig.fpts for ig in games.order_by('-date')[1:4]]
+                sfp = sum(sfp)
+
+                players.append({
+                    'avatar': player.avatar,
+                    'id': player.id,
+                    'name': ii['name'],
+                    'pos': player.position,
+                    'inj': html2text.html2text(player.injury) if player.injury else '-',
+                    'salary': player.salary,
+                    'gp': games.count(),
+                    'rpg': games.aggregate(Avg('trb'))['trb__avg'],
+                    'apg': games.aggregate(Avg('ast'))['ast__avg'],
+                    'spg': games.aggregate(Avg('stl'))['stl__avg'],
+                    'bpg': games.aggregate(Avg('blk'))['blk__avg'],
+                    'ppg': games.aggregate(Avg('pts'))['pts__avg'],
+                    'tpg': games.aggregate(Avg('tov'))['tov__avg'],
+                    'ampg': ampg,
+                    'afp': afp,
+                    'sfp': sfp / 3,
+                    'val': player.salary / 250 + 10
+                })
 
     return { 
         'players': players, 
@@ -173,12 +228,25 @@ def get_team_info(team):
 
 @csrf_exempt
 def team_match_up(request):
+    min_afp = float(request.POST.get('min_afp'))
+    max_afp = float(request.POST.get('max_afp'))
+
     game = request.POST.get('game')
     game = Game.objects.get(id=game)
 
+    team_stat = [ get_team_stat(ii['team']) 
+                  for ii in PlayerGame.objects.values('team').distinct()]
+    # print (team_stat)
+    attrs = team_stat[0].keys()
+    for attr in attrs:
+        team_stat, _ = get_ranking(team_stat, attr, attr+'_rank')
+    team_stat = { ii['team']: ii for ii in team_stat }
+
     teams = {
-        'home': get_team_info(game.home_team),
-        'away': get_team_info(game.visit_team)
+        'home': get_team_info(game.home_team, min_afp, max_afp),
+        'home_stat': team_stat[game.home_team],
+        'away': get_team_info(game.visit_team, min_afp, max_afp),
+        'away_stat': team_stat[game.visit_team]
     }
 
     return HttpResponse(render_to_string('team-board_.html', locals()))
@@ -257,8 +325,7 @@ def player_match_up(request):
 
     players, num_opr = get_ranking(players, 'opp', 'opr')
 
-    POSITION_ORDER = ['PG', 'SG', 'SF', 'PF', 'C']
-    groups = {ii: [] for ii in POSITION_ORDER}
+    groups = {ii: [] for ii in POSITION}
 
     colors = linear_gradient('#90EE90', '#137B13', num_opr)['hex']
 
@@ -267,13 +334,13 @@ def player_match_up(request):
         groups[ii['pos']].append(ii)
 
 
-    for ii in POSITION_ORDER:
+    for ii in POSITION:
         if groups[ii]:
             groups[ii], _ = get_ranking(groups[ii], 'sfp', 'ppr', -1)
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
 
     players = []
-    for ii in POSITION_ORDER:
+    for ii in POSITION:
         if groups[ii]:
             players += groups[ii] + [{}]
 

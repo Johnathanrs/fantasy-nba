@@ -1,3 +1,5 @@
+var game;
+
 $(document).ready(function () {
   $( ".slider-range" ).slider({
     range: true,
@@ -7,7 +9,7 @@ $(document).ready(function () {
     values: [ 1, 100 ],
     change: function( event, ui ) {
       $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
-      // loadBoard();
+      loadBoard();
     }
   });
 
@@ -16,7 +18,8 @@ $(document).ready(function () {
   $('.game-item').on('click', function() {
     $('.game-item').removeClass('active');
     $(this).addClass('active');
-    loadBoard($(this).data('game'));
+    game = $(this).data('game');
+    loadBoard();
   });
 
   $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
@@ -27,9 +30,16 @@ $(document).ready(function () {
   $('.nav-tabs.slate .nav-link:first').click();
 })
 
-function loadBoard(game) {
+function loadBoard() {
+  var data = { 
+          min_afp: $('.afp').slider("values")[0],
+          max_afp: $('.afp').slider("values")[1],
+          game: game
+      }
+
   $('.team-board').html('<div class="board-loading ml-1 mt-5">Loading ...</div>');
-  $.post( "/team-match-up", { game: game }, function( data ) {
+
+  $.post( "/team-match-up", data, function( data ) {
     $('.team-board').html(data);
   });
 }
