@@ -234,7 +234,7 @@ td.break {
 }
 
 .team-stat th {
-    padding: 4px 3px !important;
+    padding: 4px 5px !important;
     font-size: 11px;
     color: #555;
 }
@@ -243,7 +243,7 @@ td.break {
     font-weight: 700;
 }
 
-.team-stat table {
+.team-stat.p-0 table {
     width: 100%;
 }
 

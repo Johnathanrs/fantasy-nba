@@ -195,7 +195,7 @@ def get_team_info(team, min_afp, max_afp):
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
 
             if min_afp <= afp <= max_afp:
-                sfp = [ig.fpts for ig in games.order_by('-date')[1:4]]
+                sfp = [ig.fpts for ig in games.order_by('-date')[:3]]
                 sfp = sum(sfp)
 
                 players.append({

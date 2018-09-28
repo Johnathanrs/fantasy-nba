@@ -7,7 +7,9 @@ DATA_SOURCE = (
     ('FanDuel', 'FanDuel'),
     ('DraftKings', 'DraftKings'),
     ('Yahoo', 'Yahoo'),
-    ('Fanball', 'Fanball')
+    ('Head2Head', 'Head2Head'),
+    ('Fanball', 'Fanball'),
+    ('FantasyDraft', 'FantasyDraft')
 )
 
 class Player(models.Model):

@@ -144,8 +144,8 @@ function getStats() {
     cells = selection.split('\n').slice(selectColumn);
     for (var i in cells) {
       if (cells[i].trim()) {
-        num++;
         if (cells[i].trim() != '-') {
+          num++;
           sum += parseFloat(cells[i].trim());
         }        
       }
