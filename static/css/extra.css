@@ -217,15 +217,24 @@ td.break {
 }
 
 .team-board {
-    font-size: 14px;
+    font-size: 13px;
+}
+
+.team-board th, .team-board td {
+    padding: 3px 4px !important;
+}
+
+.team td {
+    padding: 2px 4px !important;
 }
 
 .team-stat {
     font-size: 12px;
+    margin-bottom: 10px;
 }
 
 .team-stat th {
-    padding: 4px !important;
+    padding: 4px 3px !important;
     font-size: 11px;
     color: #555;
 }

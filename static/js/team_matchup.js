@@ -18,10 +18,8 @@ $(document).ready(function () {
   $('.game-item').on('click', function() {
     $('.game-item').removeClass('active');
     $(this).addClass('active');
-    if (game != $(this).data('game')) {
-      game = $(this).data('game');
-      loadBoard();
-    }
+    game = $(this).data('game');
+    loadBoard();
   });
 
   $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {

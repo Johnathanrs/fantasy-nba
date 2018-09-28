@@ -236,7 +236,7 @@ def team_match_up(request):
 
     team_stat = [ get_team_stat(ii['team']) 
                   for ii in PlayerGame.objects.values('team').distinct()]
-    # print (team_stat)
+
     attrs = team_stat[0].keys()
     for attr in attrs:
         team_stat, _ = get_ranking(team_stat, attr, attr+'_rank')
