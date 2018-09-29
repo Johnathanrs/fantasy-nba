@@ -28,6 +28,15 @@ $(document).ready(function () {
   });
   
   $('.nav-tabs.slate .nav-link:first').click();
+
+  $('body').on('click','.team-stat table th',function() {
+    var cls = $(this).closest('table').attr("class"),
+        idx = $(this).index()+1;
+
+    $('.team-stat th, .team-stat td').removeClass('active');
+    var n_cls = `.team-stat .${cls} th:nth-child(${idx}), .team-stat .${cls} td:nth-child(${idx})`;
+    $(n_cls).addClass('active');
+  });
 })
 
 function loadBoard() {

@@ -10,7 +10,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import smart_str
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import Avg, Q
+from django.db.models import Avg, Q, Sum
 
 from general.models import *
 from general.lineup import *
@@ -125,22 +125,42 @@ def get_team_games(team):
     return PlayerGame.objects.filter(q)
 
 
-def get_team_stat(team):
-    team_games = get_team_games(team)
-    sgames = team_games.filter(location='@')
+def get_team_stat(team, loc='@'):
+    loc_ = '@' if loc == '' else ''
+    season = current_season()
+    q = Q(opp__contains=team) & Q(location=loc) & \
+        Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+    a_teams = PlayerGame.objects.filter(q)
+    a_teams_ = a_teams.values('date').annotate(trb=Sum('trb'), 
+                                               ast=Sum('ast'),
+                                               stl=Sum('stl'),
+                                               blk=Sum('blk'),
+                                               tov=Sum('tov'),
+                                               pts=Sum('pts'))
 
-    rpg = team_games.aggregate(Avg('trb'))['trb__avg']
-    apg = team_games.aggregate(Avg('ast'))['ast__avg']
-    spg = team_games.aggregate(Avg('stl'))['stl__avg']
-    bpg = team_games.aggregate(Avg('blk'))['blk__avg']
-    tpg = team_games.aggregate(Avg('tov'))['tov__avg']
-    ppg = team_games.aggregate(Avg('pts'))['pts__avg']    
-    s_rpg = sgames.aggregate(Avg('trb'))['trb__avg']
-    s_apg = sgames.aggregate(Avg('ast'))['ast__avg']
-    s_spg = sgames.aggregate(Avg('stl'))['stl__avg']
-    s_bpg = sgames.aggregate(Avg('blk'))['blk__avg']
-    s_tpg = sgames.aggregate(Avg('tov'))['tov__avg']
-    s_ppg = sgames.aggregate(Avg('pts'))['pts__avg']    
+    rpg = a_teams_.aggregate(Avg('trb'))['trb__avg']
+    apg = a_teams_.aggregate(Avg('ast'))['ast__avg']
+    spg = a_teams_.aggregate(Avg('stl'))['stl__avg']
+    bpg = a_teams_.aggregate(Avg('blk'))['blk__avg']
+    tpg = a_teams_.aggregate(Avg('tov'))['tov__avg']
+    ppg = a_teams_.aggregate(Avg('pts'))['pts__avg']
+
+    q = Q(team__contains=team) & Q(location=loc_) & \
+        Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+    s_teams = PlayerGame.objects.filter(q)
+    s_teams_ = s_teams.values('date').annotate(trb=Sum('trb'), 
+                                               ast=Sum('ast'),
+                                               stl=Sum('stl'),
+                                               blk=Sum('blk'),
+                                               tov=Sum('tov'),
+                                               pts=Sum('pts'))
+
+    s_rpg = s_teams_.aggregate(Avg('trb'))['trb__avg']
+    s_apg = s_teams_.aggregate(Avg('ast'))['ast__avg']
+    s_spg = s_teams_.aggregate(Avg('stl'))['stl__avg']
+    s_bpg = s_teams_.aggregate(Avg('blk'))['blk__avg']
+    s_tpg = s_teams_.aggregate(Avg('tov'))['tov__avg']
+    s_ppg = s_teams_.aggregate(Avg('pts'))['pts__avg']
 
     res = {
         'team': team,
@@ -160,13 +180,42 @@ def get_team_stat(team):
         's_total': s_rpg+s_apg+s_spg+s_bpg+s_tpg+s_ppg
     }
 
+    tm_pos = []
+    # for each distinct match
+    for ii in a_teams_:
+        # players (games) in a match
+        players = a_teams.filter(date=ii['date'])
+
+        tm_pos_ = {}
+        # for each position
+        for pos in POSITION:
+            # players in the position of the team
+            players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
+            players_ = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players_]
+            tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
+        tm_pos.append(tm_pos_)
+        
     for pos in POSITION:
-        players = Player.objects.filter(team=team, position=pos)
-        players = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players]
-        games = team_games.filter(name__in=players)
-        res[pos] = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
-        sgames = games.filter(location='@')
-        res['s_'+pos] = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
+        res[pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
+
+    # for FPS TM POS
+    tm_pos = []
+    # for each distinct match
+    for ii in s_teams_:
+        # players (games) in a match
+        players = s_teams.filter(date=ii['date'])
+
+        tm_pos_ = {}
+        # for each position
+        for pos in POSITION:
+            # players in the position of the team
+            players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
+            players_ = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players_]
+            tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
+        tm_pos.append(tm_pos_)
+        
+    for pos in POSITION:
+        res['s_'+pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
 
     return res
 
@@ -239,7 +288,8 @@ def team_match_up(request):
 
     attrs = team_stat[0].keys()
     for attr in attrs:
-        team_stat, _ = get_ranking(team_stat, attr, attr+'_rank')
+        order = -1 if attr.startswith('s_') else 1
+        team_stat, _ = get_ranking(team_stat, attr, attr+'_rank', order)
     team_stat = { ii['team']: ii for ii in team_stat }
 
     teams = {

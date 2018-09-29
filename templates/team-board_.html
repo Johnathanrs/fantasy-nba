@@ -36,7 +36,7 @@
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
-            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-success{% endif %}">
+            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
               {{ ii.sfp|floatformat:1 }}
             </td>
             <td>{{ ii.ampg|floatformat:1 }}</td>
@@ -50,12 +50,12 @@
     </tbody>
   </table>
 </div>
-<div class="col-md-5 pr-0" style="margin-top: 60px;">
+<div class="col-md-5 pr-0" style="margin-top: 64px;">
   <div class="row">
     <div class="offset-md-1 col-md-6">
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA RANK WHEN @ HOME</div>
-        <table>
+        <table class="fpa-rank">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -78,7 +78,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA WHEN @ HOME</div>
-        <table>
+        <table class="fpa">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -101,7 +101,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-success pl-1 title">TM FPS RANK WHEN @ HOME</div>
-        <table>
+        <table class="fps-rank">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -124,7 +124,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-success pl-1 title">TM FPS WHEN @ HOME</div>
-        <table>
+        <table class="fps">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -149,7 +149,7 @@
     <div class="col-md-5 p-0">
       <div class="col-md-12 team-stat p-0">
         <div class="text-danger pl-1 title">TM POS FPA RANK WHEN @ HOME</div>
-        <table>
+        <table class="pos-fpa-rank">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -168,7 +168,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-danger pl-1 title">TM POS FPA WHEN @ HOME</div>
-        <table>
+        <table class="pos-fpa">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -187,7 +187,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-success pl-1 title">TM POS FPS RANK WHEN @ HOME</div>
-        <table>
+        <table class="pos-fps-rank">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -206,7 +206,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-success pl-1 title">TM POS FPS WHEN @ HOME</div>
-        <table>
+        <table class="pos-fps">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -228,7 +228,7 @@
 </div>
 
 <div class="clearfix"></div>
-<div class="col-md-7 p-0">
+<div class="col-md-7 p-0 mb-4">
   <h6 class="text-warning pt-2 title">
     <img src="/static/img/team/{{ game.visit_team }}.jpg" width="50" class="mr-3">
     <strong>Away Team: {{ game.visit_team }} ( W: {{ teams.away.wins }}, L: {{ teams.away.losses }}, {{ teams.away.win_percent|floatformat:1 }} % )</strong>
@@ -266,7 +266,7 @@
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
-            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-success{% endif %}">
+            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
               {{ ii.sfp|floatformat:1 }}
             </td>
             <td>{{ ii.ampg|floatformat:1 }}</td>
@@ -280,12 +280,12 @@
     </tbody>
   </table>
 </div>
-<div class="col-md-5 pr-0" style="margin-top: 60px;">
+<div class="col-md-5 pr-0" style="margin-top: 64px;">
   <div class="row">
     <div class="offset-md-1 col-md-6">
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA RANK WHEN AWAY</div>
-        <table>
+        <table class="fps-rank">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -308,7 +308,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA WHEN AWAY</div>
-        <table>
+        <table class="fps">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -331,7 +331,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-success pl-1 title">TM FPS RANK WHEN AWAY</div>
-        <table>
+        <table class="fpa-rank">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -354,7 +354,7 @@
       </div>
       <div class="col-md-12 team-stat pl-0">
         <div class="text-success pl-1 title">TM FPS WHEN AWAY</div>
-        <table>
+        <table class="fpa">
           <tr>
             <th>RPG</th>
             <th>APG</th>
@@ -379,7 +379,7 @@
     <div class="col-md-5 p-0">
       <div class="col-md-12 team-stat p-0">
         <div class="text-danger pl-1 title">TM POS FPA RANK WHEN AWAY</div>
-        <table>
+        <table class="pos-fps-rank">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -398,7 +398,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-danger pl-1 title">TM POS FPA WHEN AWAY</div>
-        <table>
+        <table class="pos-fps">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -417,7 +417,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-success pl-1 title">TM POS FPS RANK WHEN AWAY</div>
-        <table>
+        <table class="pos-fpa-rank">
           <tr>
             <th>PG</th>
             <th>SG</th>
@@ -436,7 +436,7 @@
       </div>
       <div class="col-md-12 team-stat p-0">
         <div class="text-success pl-1 title">TM POS FPS WHEN AWAY</div>
-        <table>
+        <table class="pos-fpa">
           <tr>
             <th>PG</th>
             <th>SG</th>
