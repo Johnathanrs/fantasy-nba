@@ -180,6 +180,7 @@ def get_team_stat(team, loc='@'):
         's_total': s_rpg+s_apg+s_spg+s_bpg+s_tpg+s_ppg
     }
 
+    # FPA TM POS
     tm_pos = []
     # for each distinct match
     for ii in a_teams_:
@@ -191,13 +192,15 @@ def get_team_stat(team, loc='@'):
         for pos in POSITION:
             # players in the position of the team
             players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
-            players_ = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players_]
+            players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
         tm_pos.append(tm_pos_)
+        print ii['date'], players[0].team, players[0].opp, players[0].location, tm_pos_
         
     for pos in POSITION:
         res[pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
 
+    print '----------------------------'
     # for FPS TM POS
     tm_pos = []
     # for each distinct match
@@ -210,10 +213,11 @@ def get_team_stat(team, loc='@'):
         for pos in POSITION:
             # players in the position of the team
             players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
-            players_ = ['{} {}'.format(ii.first_name, ii.last_name) for ii in players_]
+            players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
         tm_pos.append(tm_pos_)
-        
+        print ii['date'], players[0].team, players[0].opp, players[0].location, tm_pos_
+    print '----------------------------'
     for pos in POSITION:
         res['s_'+pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
 
@@ -283,7 +287,7 @@ def team_match_up(request):
     game = request.POST.get('game')
     game = Game.objects.get(id=game)
 
-    team_stat = [ get_team_stat(ii['team']) 
+    team_stat = [ get_team_stat(ii['team'], '') 
                   for ii in PlayerGame.objects.values('team').distinct()]
 
     attrs = team_stat[0].keys()
