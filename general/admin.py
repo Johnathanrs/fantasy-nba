@@ -27,7 +27,7 @@ class GameAdmin(admin.ModelAdmin):
 
 
 class TMSCacheAdmin(admin.ModelAdmin):
-    list_display = ['team', 'type']
+    list_display = ['team', 'type', 'created_at']
 
 
 admin.site.register(Player, PlayerAdmin)

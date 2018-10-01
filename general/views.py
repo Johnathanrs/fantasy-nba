@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 import os
+import json
 import mimetypes
 import datetime
 from wsgiref.util import FileWrapper
@@ -224,7 +225,7 @@ def get_team_stat(team, loc='@'):
     return res
 
 
-def get_team_info(team, min_afp, max_afp):
+def get_team_info(team, min_afp=0, max_afp=100):
     team_games = get_team_games(team)
     # at most one game a day
     game_results = team_games.values('date', 'game_result').distinct()
@@ -275,7 +276,7 @@ def get_team_info(team, min_afp, max_afp):
         'players': players, 
         'wins': wins,
         'losses': losses,
-        'win_percent': wins * 100 / (wins + losses)
+        'win_percent': wins * 100.0 / (wins + losses)
     }
 
 
@@ -487,3 +488,30 @@ def update_point(request):
     points = request.POST.get('val')
     Player.objects.filter(id=pid).update(proj_points=points)
     return HttpResponse('')
+
+def build_TMS_cache(request):
+    games = [33]
+
+    all_teams = [ii['team'] for ii in PlayerGame.objects.values('team').distinct()]
+    stat_home = [get_team_stat(ii, '@') for ii in all_teams]
+    stat_away = [get_team_stat(ii, '') for ii in all_teams]
+
+    attrs = stat_home[0].keys()
+    for attr in attrs:
+        if attr != 'team':
+            order = -1 if attr.startswith('s_') else 1
+            stat_home, _ = get_ranking(stat_home, attr, attr+'_rank', order)
+            stat_away, _ = get_ranking(stat_away, attr, attr+'_rank', order)
+
+    stat_home = { ii['team']: ii for ii in stat_home }
+    stat_away = { ii['team']: ii for ii in stat_away }
+
+    TMSCache.objects.all().delete()
+    for game in Game.objects.filter(id__in=games):
+        for team in [game.home_team, game.visit_team]:
+            TMSCache.objects.create(team=team, type=1, body=json.dumps(get_team_info(team)))
+
+        TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home(game.home_team)))
+        TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away(game.visit_team)))
+
+    return HttpResponse('success')

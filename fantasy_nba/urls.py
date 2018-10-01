@@ -33,5 +33,6 @@ urlpatterns = [
     url(r'^player-match-up-board', player_match_up_board, name="player_match_up_board"),
     url(r'^player-match-up', player_match_up, name="player_match_up"),
     url(r'^team-match-up-board', team_match_up_board, name="team_match_up_board"),
-    url(r'^team-match-up', team_match_up, name="team_match_up")
+    url(r'^team-match-up', team_match_up, name="team_match_up"),
+    url(r'^__tmscache', build_TMS_cache, name="build_TMS_cache")
 ]
