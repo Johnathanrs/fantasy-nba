@@ -109,3 +109,13 @@ class Game(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(self.home_team, self.visit_team)
+
+
+# Team Matchup Sheet Cache
+class TMSCache(models.Model):
+    team = models.CharField(max_length=10)
+    type = models.IntegerField()
+    body = models.TextField()
+
+    def __str__(self):
+        return self.team

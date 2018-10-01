@@ -26,6 +26,11 @@ class GameAdmin(admin.ModelAdmin):
     list_filter = ['slate', 'game_status']
 
 
+class TMSCacheAdmin(admin.ModelAdmin):
+    list_display = ['team', 'type']
+
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(PlayerGame, PlayerGameAdmin)
 admin.site.register(Game, GameAdmin)
+admin.site.register(TMSCache, TMSCacheAdmin)
