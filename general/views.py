@@ -511,7 +511,7 @@ def build_TMS_cache(request):
         for team in [game.home_team, game.visit_team]:
             TMSCache.objects.create(team=team, type=1, body=json.dumps(get_team_info(team)))
 
-        TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home(game.home_team)))
-        TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away(game.visit_team)))
+        TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
+        TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
 
     return HttpResponse('success')
