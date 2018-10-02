@@ -507,7 +507,8 @@ def build_TMS_cache(request):
     stat_away = { ii['team']: ii for ii in stat_away }
 
     TMSCache.objects.all().delete()
-    for game in Game.objects.filter(id__in=games):
+    for game in Game.objects.all():
+    # for game in Game.objects.filter(id__in=games):
         for team in [game.home_team, game.visit_team]:
             TMSCache.objects.create(team=team, type=1, body=json.dumps(get_team_info(team)))
 
