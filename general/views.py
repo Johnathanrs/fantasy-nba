@@ -225,7 +225,7 @@ def get_team_stat(team, loc='@'):
     return res
 
 
-def get_team_info(team, min_afp=0, max_afp=100):
+def get_team_info(team):
     team_games = get_team_games(team)
     # at most one game a day
     game_results = team_games.values('date', 'game_result').distinct()
@@ -248,29 +248,28 @@ def get_team_info(team, min_afp=0, max_afp=100):
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
 
-            if min_afp <= afp <= max_afp:
-                sfp = [ig.fpts for ig in games.order_by('-date')[:3]]
-                sfp = sum(sfp)
+            sfp = [ig.fpts for ig in games.order_by('-date')[:3]]
+            sfp = sum(sfp)
 
-                players.append({
-                    'avatar': player.avatar,
-                    'id': player.id,
-                    'name': ii['name'],
-                    'pos': player.position,
-                    'inj': html2text.html2text(player.injury) if player.injury else '-',
-                    'salary': player.salary,
-                    'gp': games.count(),
-                    'rpg': games.aggregate(Avg('trb'))['trb__avg'],
-                    'apg': games.aggregate(Avg('ast'))['ast__avg'],
-                    'spg': games.aggregate(Avg('stl'))['stl__avg'],
-                    'bpg': games.aggregate(Avg('blk'))['blk__avg'],
-                    'ppg': games.aggregate(Avg('pts'))['pts__avg'],
-                    'tpg': games.aggregate(Avg('tov'))['tov__avg'],
-                    'ampg': ampg,
-                    'afp': afp,
-                    'sfp': sfp / 3,
-                    'val': player.salary / 250 + 10
-                })
+            players.append({
+                'avatar': player.avatar,
+                'id': player.id,
+                'name': ii['name'],
+                'pos': player.position,
+                'inj': html2text.html2text(player.injury) if player.injury else '-',
+                'salary': player.salary,
+                'gp': games.count(),
+                'rpg': games.aggregate(Avg('trb'))['trb__avg'],
+                'apg': games.aggregate(Avg('ast'))['ast__avg'],
+                'spg': games.aggregate(Avg('stl'))['stl__avg'],
+                'bpg': games.aggregate(Avg('blk'))['blk__avg'],
+                'ppg': games.aggregate(Avg('pts'))['pts__avg'],
+                'tpg': games.aggregate(Avg('tov'))['tov__avg'],
+                'ampg': ampg,
+                'afp': afp,
+                'sfp': sfp / 3,
+                'val': player.salary / 250 + 10
+            })
 
     return { 
         'players': players, 
@@ -278,6 +277,18 @@ def get_team_info(team, min_afp=0, max_afp=100):
         'losses': losses,
         'win_percent': wins * 100.0 / (wins + losses)
     }
+
+
+def filter_players_fpa(team, min_afp, max_afp):
+    info = json.loads(TMSCache.objects.filter(team=team, type=1).first().body)
+    players = []
+
+    for ii in range(len(info['players'])):
+        afp = info['players'][ii]['afp']
+        if min_afp <= afp <= max_afp:
+            players.append(info['players'][ii])
+    info['players'] = players
+    return info
 
 
 @csrf_exempt
@@ -288,20 +299,11 @@ def team_match_up(request):
     game = request.POST.get('game')
     game = Game.objects.get(id=game)
 
-    team_stat = [ get_team_stat(ii['team'], '') 
-                  for ii in PlayerGame.objects.values('team').distinct()]
-
-    attrs = team_stat[0].keys()
-    for attr in attrs:
-        order = -1 if attr.startswith('s_') else 1
-        team_stat, _ = get_ranking(team_stat, attr, attr+'_rank', order)
-    team_stat = { ii['team']: ii for ii in team_stat }
-
     teams = {
-        'home': get_team_info(game.home_team, min_afp, max_afp),
-        'home_stat': team_stat[game.home_team],
-        'away': get_team_info(game.visit_team, min_afp, max_afp),
-        'away_stat': team_stat[game.visit_team]
+        'home': filter_players_fpa(game.home_team, min_afp, max_afp),
+        'home_stat': json.loads(TMSCache.objects.filter(team=game.home_team, type=2).first().body),
+        'away': filter_players_fpa(game.visit_team, min_afp, max_afp),
+        'away_stat': json.loads(TMSCache.objects.filter(team=game.visit_team, type=2).first().body)
     }
 
     return HttpResponse(render_to_string('team-board_.html', locals()))
@@ -489,9 +491,8 @@ def update_point(request):
     Player.objects.filter(id=pid).update(proj_points=points)
     return HttpResponse('')
 
-def build_TMS_cache(request):
-    games = [33]
 
+def build_TMS_cache(request):
     all_teams = [ii['team'] for ii in PlayerGame.objects.values('team').distinct()]
     stat_home = [get_team_stat(ii, '@') for ii in all_teams]
     stat_away = [get_team_stat(ii, '') for ii in all_teams]
@@ -506,13 +507,25 @@ def build_TMS_cache(request):
     stat_home = { ii['team']: ii for ii in stat_home }
     stat_away = { ii['team']: ii for ii in stat_away }
 
+    team_1 = []
+    team_2 = []
+
     TMSCache.objects.all().delete()
     for game in Game.objects.all():
-    # for game in Game.objects.filter(id__in=games):
-        for team in [game.home_team, game.visit_team]:
-            TMSCache.objects.create(team=team, type=1, body=json.dumps(get_team_info(team)))
+        if not game.home_team in team_1:
+            TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(get_team_info(game.home_team)))
+            team_1.append(game.home_team)
 
-        TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
-        TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
+        if not game.visit_team in team_1:
+            TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(get_team_info(game.visit_team)))
+            team_1.append(game.visit_team)
+
+        if not game.home_team in team_2:
+            TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
+            team_2.append(game.home_team)
+
+        if not game.visit_team in team_2:
+            TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
+            team_2.append(game.visit_team)
 
     return HttpResponse('success')
