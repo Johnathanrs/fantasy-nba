@@ -29,9 +29,14 @@ def _get_game_slates():
 
 
 def players(request):
+    players = Player.objects.filter(data_source='FanDuel').order_by('first_name')
+    return render(request, 'players.html', locals())
+
+
+def lineup(request):
     data_sources = DATA_SOURCE
     games = _get_game_slates()
-    return render(request, 'players.html', locals())
+    return render(request, 'lineup.html', locals())
 
 
 @csrf_exempt

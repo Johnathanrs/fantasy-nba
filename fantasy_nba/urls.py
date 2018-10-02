@@ -23,7 +23,7 @@ admin.site.site_header = "Fantasy NBA"
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', players, name="players"),
-    url(r'^players$', players, name="players"),
+    url(r'^lineup$', lineup, name="lineup"),
     url(r'^players/(?P<pid>\d+)$', player_detail, name="player_detail"),
     url(r'^gen-lineups', gen_lineups, name="gen_lineups"),
     url(r'^get-players', get_players, name="get_players"),
@@ -34,5 +34,6 @@ urlpatterns = [
     url(r'^player-match-up', player_match_up, name="player_match_up"),
     url(r'^team-match-up-board', team_match_up_board, name="team_match_up_board"),
     url(r'^team-match-up', team_match_up, name="team_match_up"),
+    
     url(r'^__tmscache', build_TMS_cache, name="build_TMS_cache")
 ]

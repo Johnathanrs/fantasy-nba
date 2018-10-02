@@ -8,99 +8,74 @@
     <div class="row">
       <div class="col-md-12 mb-4">
         <h5 class="mb-4">Player List</h5>
-
-        <ul class="nav nav-tabs slate">
-          {% for slate, values in games.items %}
-            <li class="nav-item">
-              <a class="nav-link" data-toggle="tab" href="#tab-{{ slate }}">{{ slate }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-
-        <!-- Tab panes -->
-        <div class="tab-content mb-2">
-          {% for slate, values in games.items %}
-            <div class="tab-pane container slate pl-3 pt-3 pb-5" id="tab-{{ slate }}">
-              {% for game in values %}
-                <div class="float-left mr-5">
-                  <div class="form-check">
-                    <label class="form-check-label">
-                      <input type="checkbox" class="form-check-input" checked="" value="{{ game.home_team }}-{{ game.visit_team }}">{{ game.home_team }} @ {{ game.visit_team }}
-                    </label>
-                  </div>
-                  <div class="ml-4 text-secondary">( {{ game.date|date:"H:i" }} )</div>
-                </div>
-              {% endfor %}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="col-md-7 mb-4">
-        <ul class="nav nav-tabs ds">
-          {% for ds in data_sources %}  
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#home">{{ ds.0 }}</a>
-          </li>
-          {% endfor %}
-        </ul>
-        <div class="tab-content players-pane p-2">
-          <ul class="nav nav-pills position-filter p-2">
-            <li class="nav-item">
-              <a class="nav-link active" href="#">All</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">PG</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">SG</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">SF</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">PF</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">C</a>
-            </li>
-          </ul>
+        <div class="p-2" style="border: 1px solid #eee;">
+          <div class="col-md-6 p-0">
+            <ul class="nav nav-pills position-filter p-2">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">All</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">PG</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">SG</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">SF</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">PF</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">C</a>
+              </li>
+            </ul>
+          </div>
           <input class="form-control m-2 mb-3" id="search-player" type="text" placeholder="Search Player Name">
-          <div id="div-players"></div>
+          <div class="col-md-12 games player-board player-list">
+            <table class="table table-hover table-responsive-md">
+            <thead>
+              <tr>
+                <th>Player</th><th>&nbsp;</th><th>&nbsp;</th>
+                <th>POS</th>
+                <th>TM</th>
+                <th>Salary</th><th>&nbsp;</th>
+                <th>MIN</th>
+                <th title="Ceiling">CEIL</th>
+                <th title="Floor">FL</th>
+                <th title="Original">OGL</th>
+                <th title="Points">PTS</th>
+                <th title="Roto Wire">RTW</th>
+                <th>SITE</th>
+                <th title="Floor">VAL</th>
+                <th>INJ</th>
+              </tr>
+            </thead>
+              <tbody>
+                {% for ii in players %}
+                  <tr>
+                    <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.first_name }} {{ ii.last_name }}</a></td>
+                    <td>{{ ii.position }}</td>
+                    <td>{{ ii.team }}</td>
+                    <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+                    <td>{{ ii.minutes|floatformat:1 }}</td>
+                    <td>{{ ii.proj_ceiling|floatformat:1 }}</td>
+                    <td>{{ ii.proj_floor|floatformat:1 }}</td>
+                    <td>{{ ii.proj_original|floatformat:1 }}</td>
+                    <td>{{ ii.proj_points|floatformat:1 }}</td>
+                    <td>{{ ii.proj_rotowire|floatformat:1 }}</td>
+                    <td>{{ ii.proj_site|floatformat:1 }}</td>
+                    <td>{{ ii.value|floatformat:1 }}</td>
+                    <td class="text-danger">{{ ii|get_injury }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
-
-      <div class="col-md-5 pl-4" id="div-result"></div>
-      <div class="pl-4 col-md-10 mb-5">
-        <button class="btn btn-sm btn-success btn-export">Export</button>
-        <a class="btn btn-sm btn-success btn-calc">Calculate</a>
-        <a class="btn btn-sm btn-success btn-clear">Clear</a>
-        <input type="number" class="mr-3 num-lineups float-right" name="num-lineups" value="30" min="1">
-        <span class="float-right pt-1 mr-2">Number of Lineups:</span>
       </div>
     </div>
   </form>
-  <div class="modal fade" id="dlg-export">
-    <div class="modal-dialog">
-      <div class="modal-content">
-
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">Exporting Lineups</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-
-        <!-- Modal body -->
-        <div class="modal-body">
-          The csv file will be downloaded shortly.
-        </div>
-
-        <!-- Modal footer -->
-        <div class="modal-footer">
-          <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
 </div>  
 {% endblock %}
 
