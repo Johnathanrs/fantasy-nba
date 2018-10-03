@@ -11,12 +11,8 @@ def percent(val):
 
 @register.filter
 def get_injury(player):
-	return html2text.html2text(player.injury) if player.injury else '-'
-
-@register.filter
-def fav_players(user):
-	return FavPlayer.objects.all()
+    return html2text.html2text(player.injury) if player.injury else '-'
 
 @register.filter
 def liked(uid):
-	return 'done' if FavPlayer.objects.filter(player__uid=uid).exists() else ''
+    return 'done' if uid and FavPlayer.objects.filter(player__uid=uid).exists() else ''

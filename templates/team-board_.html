@@ -1,3 +1,4 @@
+{% load extra %}
 <div class="col-md-7 p-0">
   <h6 class="text-success title">
     <img src="/static/img/team/{{ game.home_team }}.jpg" width="50" class="mr-3">
@@ -20,6 +21,7 @@
         <th>MPG</th>
         <th>AFP</th>
         <th>VAL</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -42,6 +44,7 @@
             <td>{{ ii.ampg|floatformat:1 }}</td>
             <td>{{ ii.afp|floatformat:1 }}</td>
             <td>{{ ii.val|floatformat:1 }}</td>
+            <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
           {% else %}
             <td colspan="17" class="break">&nbsp;</td>
           {% endif %}
@@ -250,6 +253,7 @@
         <th>MPG</th>
         <th>AFP</th>
         <th>VAL</th>
+        <th></th>
       </tr>
     </thead>
     <tbody>
@@ -272,6 +276,7 @@
             <td>{{ ii.ampg|floatformat:1 }}</td>
             <td>{{ ii.afp|floatformat:1 }}</td>
             <td>{{ ii.val|floatformat:1 }}</td>
+            <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
           {% else %}
             <td colspan="17" class="break">&nbsp;</td>
           {% endif %}

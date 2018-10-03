@@ -39,13 +39,15 @@ def lineup(request):
 @csrf_exempt
 def fav_player(request):
     uid = request.POST.get('uid')
-    player = Player.objects.filter(uid=uid).first()
-    if FavPlayer.objects.filter(player=player).exists():
-        FavPlayer.objects.filter(player=player).delete()
-    else:
-        FavPlayer.objects.create(player=player)
+    if uid:
+        player = Player.objects.filter(uid=uid).first()
+        if FavPlayer.objects.filter(player=player).exists():
+            FavPlayer.objects.filter(player=player).delete()
+        else:
+            FavPlayer.objects.create(player=player)
 
-    return HttpResponse('ok')
+    players = FavPlayer.objects.all()
+    return HttpResponse(render_to_string('fav-body.html', locals()))
 
 
 @csrf_exempt
@@ -268,6 +270,7 @@ def get_team_info(team):
             players.append({
                 'avatar': player.avatar,
                 'id': player.id,
+                'uid': player.uid,
                 'name': ii['name'],
                 'pos': player.position,
                 'inj': html2text.html2text(player.injury) if player.injury else '-',
@@ -374,6 +377,7 @@ def player_match_up(request):
                     players.append({
                         'avatar': player.avatar,
                         'id': player.id,
+                        'uid': player.uid,
                         'name': ii.name,
                         'team': team,
                         'loc': ii.location,

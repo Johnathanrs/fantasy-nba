@@ -1,3 +1,4 @@
+{% load extra %}
 <table class="table table-hover table-responsive-md">
 <thead>
   <tr>
@@ -18,6 +19,7 @@
     <th>VAL</th>
     <th>PPR</th>
     <th>INJ</th>
+    <th></th>
   </tr>
 </thead>
   <tbody>
@@ -45,6 +47,7 @@
           <td>{{ ii.val|floatformat:1 }}</td>
           <td>{{ ii.ppr }}</td>
           <td class="{% if ii.inj != '-' %}text-danger{% endif %}">{{ ii.inj }}</td>
+          <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
         {% else %}
           <td colspan="17" class="break">&nbsp;</td>
         {% endif %}

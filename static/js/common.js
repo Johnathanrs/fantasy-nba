@@ -8,6 +8,12 @@ $('body').on('click','.fav',function() {
   var self = this;
   $.post( "/fav-player", { uid: $(this).data('uid') }, function( data ) {
     $(self).toggleClass('done');
-    location.reload();
+    $('.fav-body').html(data);
   });
 });
+
+$(document).ready(function () {
+  $.post( "/fav-player", {}, function( data ) {
+    $('.fav-body').html(data);
+  });  
+})
