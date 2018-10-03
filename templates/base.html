@@ -36,10 +36,27 @@
 <div class="container-fluid">
   {% block content %}
   {% endblock %}
+  <div class="fav-wrapper">
+    <div class="fav-header">
+      <div class="fav-title"><i class="fa fa-thumbs-up"></i> Favorites</div>
+      <div class="fav-close"><i class="fa fa-window-maximize"></i><i class="fa fa-window-minimize d-none"></i></div>
+    </div>
+    <div class="fav-body">
+      <iframe class="fav-frame" src="/static/fav/index.html?uid={{ user.email }}"></iframe>
+    </div>
+  </div> 
 </div>
 
 {% block script %}
 {% endblock %}
+
+<script type="text/javascript">
+  $('.fav-header').on('click', function() {
+    $('.fa-window-maximize').toggleClass('d-none');
+    $('.fa-window-minimize').toggleClass('d-none');
+    $('.fav-wrapper').toggleClass('show-fav');
+  });
+</script>
 </body>
 </html>
 
