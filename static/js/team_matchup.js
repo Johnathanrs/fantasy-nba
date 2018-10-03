@@ -21,13 +21,8 @@ $(document).ready(function () {
     game = $(this).data('game');
     loadBoard();
   });
-
-  $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
-    var slate = $(event.target).text();
-    $('#tab-'+slate+' .game-item:first').click();
-  });
   
-  $('.nav-tabs.slate .nav-link:first').click();
+  $('.slate .game-item:first').click();
 
   $('body').on('click','.team-stat table th',function() {
     var cls = $(this).closest('table').attr("class"),
@@ -41,9 +36,9 @@ $(document).ready(function () {
 
 function loadBoard() {
   var data = { 
-          min_afp: $('.afp').slider("values")[0],
-          max_afp: $('.afp').slider("values")[1],
-          game: game
+        min_afp: $('.afp').slider("values")[0],
+        max_afp: $('.afp').slider("values")[1],
+        game: game
       }
 
   $('.team-board').html('<div class="board-loading ml-1 mt-5">Loading ...</div>');

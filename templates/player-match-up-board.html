@@ -12,28 +12,16 @@
     <div class="col-md-12">
       <h5 class="mb-3">Player Match-Up Board</h5>
 
-      <ul class="nav nav-tabs slate">
-        {% for slate, values in games.items %}
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#tab-{{ slate }}">{{ slate }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-
-      <!-- Tab panes -->
-      <div class="tab-content">
-        {% for slate, values in games.items %}
-          <div class="tab-pane container slate pl-3 pt-3 pb-5" id="tab-{{ slate }}">
-            {% for game in values %}
-              <div class="float-left mr-5">
-                <div class="form-check">
-                  <label class="form-check-label">
-                    <input type="checkbox" class="form-check-input" checked="" value="{{ game.home_team }}-{{ game.visit_team }}">{{ game.home_team }} @ {{ game.visit_team }}
-                  </label>
-                </div>
-                <div class="ml-4 text-secondary">( {{ game.date|date:"H:i" }} )</div>
-              </div>
-            {% endfor %}
+      <h6 class="text-success">- Game Slates</h6>
+      <div class="slate pl-3 pt-1 mb-2">
+        {% for game in games %}
+          <div class="float-left mr-5">
+            <div class="form-check">
+              <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" checked="" value="{{ game.home_team }}-{{ game.visit_team }}">{{ game.home_team }} @ {{ game.visit_team }}
+              </label>
+            </div>
+            <div class="ml-4 text-secondary">( {{ game.date|date:"H:i" }} )</div>
           </div>
         {% endfor %}
       </div>

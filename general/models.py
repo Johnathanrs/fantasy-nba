@@ -85,12 +85,6 @@ class PlayerGame(models.Model):
         return self.name
 
 
-SLATES = (
-    ('Thu-Mon', 'Thu-Mon'),
-    ('Express', 'Express'),
-    ('Main', 'Main'),
-)
-
 GAME_STATUS = (
     ('started', 'Started'),
     ('upcomming', 'Upcomming')
@@ -105,7 +99,6 @@ class Game(models.Model):
     ml = models.CharField(max_length=20)
     date = models.DateTimeField()
     game_status = models.CharField(max_length=50, choices=GAME_STATUS, default='started')
-    slate = models.CharField(max_length=50, choices=SLATES)
 
     def __str__(self):
         return '{} - {}'.format(self.home_team, self.visit_team)

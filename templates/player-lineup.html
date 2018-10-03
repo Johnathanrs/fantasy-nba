@@ -1,6 +1,6 @@
 {% load humanize %}
 
-<div class="jumbotron p-4" style="margin-top: 41px;margin-bottom: 15px;">
+<div class="jumbotron p-4" style="margin-top: 36px;margin-bottom: 15px;">
   <span>Selected Players: </span><span class="font-weight-bold"> {{ players.count }}</span><br>
   <span>Lineup Projection Average: </span><span class="font-weight-bold"> {{ avg_points|floatformat:2 }}</span>
 </div>
@@ -19,7 +19,7 @@
           <tr>
             <td>
               <a href="/players/{{ ii.id }}">
-                <img src="{{ ii.avatar }}" height="35" class="mr-2">{{ ii.name }}
+                <img src="{{ ii.avatar }}" height="33" class="mr-2">{{ ii.name }}
               </a>
             </td>
             <td>{{ ii.team }}</td>

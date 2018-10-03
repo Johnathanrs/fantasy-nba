@@ -130,7 +130,7 @@ table th {
 
 div.lineups {
     overflow-y: scroll; 
-    height: calc(98vh - 294px)
+    height: calc(98vh - 293px)
 }
 
 #search-player {

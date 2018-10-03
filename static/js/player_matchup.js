@@ -1,5 +1,3 @@
-var slate, games;
-
 $(document).ready(function () {
   $( ".slider-range" ).slider({
     range: true,
@@ -15,12 +13,7 @@ $(document).ready(function () {
 
   $( ".slider-val" ).val("1 - 100");
 
-  $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
-    slate = $(event.target).text();         // active tab
-    loadBoard();
-  });
-
-  $('.tab-pane.slate input').on('change', function() {
+  $('.slate input').on('change', function() {
     loadBoard();
   });
 
@@ -29,13 +22,11 @@ $(document).ready(function () {
     $(this).toggleClass('active');
     loadBoard();
   });
-
-  $('.nav-tabs.slate .nav-link:first').click();
 })
 
 function loadBoard() {
-  games = '';
-  $('#tab-'+slate).find('input:checked').each(function() {
+  var games = '';
+  $('.slate').find('input:checked').each(function() {
     games += $(this).val()+';';
   })
 

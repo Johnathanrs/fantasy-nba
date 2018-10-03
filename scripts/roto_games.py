@@ -12,10 +12,10 @@ django.setup()
 from general.models import *
 import pdb
 
-def get_games(slate):
+def get_games():
     try:
-        url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NFL&' + \
-              'site=FanDuel&type=main&slate={}'.format(slate)
+        url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NBA&' + \
+              'site=FanDuel&type=main&slate=all'
 
         games = requests.get(url).json()
         for ii in games:
@@ -26,11 +26,9 @@ def get_games(slate):
           ii['date'] = datetime.datetime.strptime(ii['date'].split(' ')[1], '%I:%M%p')
           ii['date'] = datetime.datetime.combine(datetime.date.today(), ii['date'].time())
           ii['ou'] = float(ii['ou']) if ii['ou'] else 0
-          ii['slate'] = slate
           Game.objects.create(**ii)
     except:
         pass
 
 if __name__ == "__main__":
-    for slate in SLATES:
-        get_games(slate[0])
+    get_games()

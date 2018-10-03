@@ -1,7 +1,7 @@
 <div class="col-md-7 p-0">
   <h6 class="text-success title">
     <img src="/static/img/team/{{ game.home_team }}.jpg" width="50" class="mr-3">
-    <strong>Home Team: {{ game.home_team }} ( W: {{ teams.home.wins }}, L: {{ teams.home.losses }}, {{ teams.home.win_percent|floatformat:1 }} % )</strong>
+    <strong>Home Team: {{ game.home_team }} <span class="text-body">( W: {{ teams.home.wins }}, L: {{ teams.home.losses }}, {{ teams.home.win_percent|floatformat:1 }} % )</span></strong>
   </h6>
   <table class="table table-hover table-responsive-md team">
     <thead>
@@ -229,9 +229,9 @@
 
 <div class="clearfix"></div>
 <div class="col-md-7 p-0 mb-4">
-  <h6 class="text-warning pt-2 title">
+  <h6 class="text-danger pt-2 title">
     <img src="/static/img/team/{{ game.visit_team }}.jpg" width="50" class="mr-3">
-    <strong>Away Team: {{ game.visit_team }} ( W: {{ teams.away.wins }}, L: {{ teams.away.losses }}, {{ teams.away.win_percent|floatformat:1 }} % )</strong>
+    <strong>Away Team: {{ game.visit_team }} <span class="text-body">( W: {{ teams.away.wins }}, L: {{ teams.away.losses }}, {{ teams.away.win_percent|floatformat:1 }} % )</span></strong>
   </h6>
   <table class="table table-hover table-responsive-md team">
     <thead>

@@ -21,9 +21,9 @@ class PlayerGameAdmin(admin.ModelAdmin):
 
 
 class GameAdmin(admin.ModelAdmin):
-    list_display = ['home_team', 'visit_team', 'ou', 'ml', 'game_status', 'date', 'slate']
+    list_display = ['home_team', 'visit_team', 'ou', 'ml', 'game_status', 'date']
     search_fields = ['home_team', 'visit_team']
-    list_filter = ['slate', 'game_status']
+    list_filter = ['game_status']
 
 
 class TMSCacheAdmin(admin.ModelAdmin):

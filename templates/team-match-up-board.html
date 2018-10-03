@@ -12,25 +12,13 @@
     <div class="col-md-7 pl-0">
       <h5 class="mb-3">Team Match-Up Sheet</h5>
 
-      <ul class="nav nav-tabs slate">
-        {% for slate, values in games.items %}
-          <li class="nav-item">
-            <a class="nav-link" data-toggle="tab" href="#tab-{{ slate }}">{{ slate }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-
-      <!-- Tab panes -->
-      <div class="tab-content">
-        {% for slate, values in games.items %}
-          <div class="tab-pane container slate pl-2 pt-3 pb-5" id="tab-{{ slate }}">
-            {% for game in values %}
-              <div class="game-item text-center float-left mr-3" data-game="{{ game.id }}">
-                <div class="">{{ game.home_team }} ( 35.0 )</div>
-                <div class="time">@ ( {{ game.date|date:"H:i" }} )</div>
-                <div class="">{{ game.visit_team }} ( -213 )</div>
-              </div>
-            {% endfor %}
+      <h6 class="text-success">- Game Slates</h6>
+      <div class="slate pl-3 pt-1 mb-2">
+        {% for game in games %}
+          <div class="game-item text-center float-left mr-3" data-game="{{ game.id }}">
+            <div class="">{{ game.home_team }} ( 35.0 )</div>
+            <div class="time">@ ( {{ game.date|date:"H:i" }} )</div>
+            <div class="">{{ game.visit_team }} ( -213 )</div>
           </div>
         {% endfor %}
       </div>

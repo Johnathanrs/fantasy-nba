@@ -21,11 +21,8 @@ from general.color import *
 POSITION = ['PG', 'SG', 'SF', 'PF', 'C']
 
 
-def _get_game_slates():
-    games = {}
-    for slate in SLATES:
-        games[str(slate[0])] = Game.objects.filter(slate=slate[0])
-    return games
+def _get_game_today():
+    return Game.objects.all()
 
 
 def players(request):
@@ -35,7 +32,7 @@ def players(request):
 
 def lineup(request):
     data_sources = DATA_SOURCE
-    games = _get_game_slates()
+    games = _get_game_today()
     return render(request, 'lineup.html', locals())
 
 
@@ -87,12 +84,12 @@ def player_detail(request, pid):
 
 
 def player_match_up_board(request):
-    games = _get_game_slates()
+    games = _get_game_today()
     return render(request, 'player-match-up-board.html', locals())
 
 
 def team_match_up_board(request):
-    games = _get_game_slates()
+    games = _get_game_today()
     return render(request, 'team-match-up-board.html', locals())
 
 

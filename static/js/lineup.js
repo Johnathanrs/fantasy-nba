@@ -1,21 +1,13 @@
-var slate, games;
-
 $(function() {
-  $('.nav-tabs.slate a').on('shown.bs.tab', function(event) {
-    slate = $(event.target).text();         // active tab
-    getPlayers();
-  });
-
   $('.nav-tabs.ds a').on('shown.bs.tab', function(event) {
     getPlayers();
   });
 
-  $('.tab-pane.slate input').on('change', function() {
+  $('.slate input').on('change', function() {
     getPlayers();
   });
 
   $('.nav-tabs.ds .nav-link:first').click();
-  $('.nav-tabs.slate .nav-link:first').click();
 
   $('.btn-export').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;
@@ -89,8 +81,8 @@ function change_point (obj) {
 }
 
 function getPlayers () {
-  games = '';
-  $('#tab-'+slate).find('input:checked').each(function() {
+  var games = '';
+  $('.slate').find('input:checked').each(function() {
     games += $(this).val()+';';
   })
 
