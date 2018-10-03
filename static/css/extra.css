@@ -190,6 +190,10 @@ td.break {
     padding: 5px 14px;
 }
 
+.slate .form-check-label {
+    cursor: pointer;
+}
+
 .ds a {
     /*font-weight: 700;*/
     font-size: 15px;
