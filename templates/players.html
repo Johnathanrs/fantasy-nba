@@ -38,17 +38,17 @@
               <tr>
                 <th>Player</th><th>&nbsp;</th><th>&nbsp;</th>
                 <th>POS</th>
-                <th>TM</th>
+                <th>Team</th>
                 <th>Salary</th><th>&nbsp;</th>
                 <th>MIN</th>
-                <th title="Ceiling">CEIL</th>
-                <th title="Floor">FL</th>
+                <th title="Ceiling">Ceiling</th>
+                <th title="Floor">Floor</th>
                 <th title="Original">OGL</th>
                 <th title="Points">PTS</th>
-                <th title="Roto Wire">RTW</th>
                 <th>SITE</th>
                 <th title="Floor">VAL</th>
                 <th>INJ</th>
+                <th></th>
               </tr>
             </thead>
               <tbody>
@@ -63,10 +63,10 @@
                     <td>{{ ii.proj_floor|floatformat:1 }}</td>
                     <td>{{ ii.proj_original|floatformat:1 }}</td>
                     <td>{{ ii.proj_points|floatformat:1 }}</td>
-                    <td>{{ ii.proj_rotowire|floatformat:1 }}</td>
                     <td>{{ ii.proj_site|floatformat:1 }}</td>
                     <td>{{ ii.value|floatformat:1 }}</td>
                     <td class="text-danger">{{ ii|get_injury }}</td>
+                    <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
                   </tr>
                 {% endfor %}
               </tbody>

@@ -1,3 +1,5 @@
+{% load extra %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -36,13 +38,34 @@
 <div class="container-fluid">
   {% block content %}
   {% endblock %}
-  <div class="fav-wrapper">
+  <div class="fav-wrapper show-fav">
     <div class="fav-header">
       <div class="fav-title"><i class="fa fa-thumbs-up"></i> Favorites</div>
-      <div class="fav-close"><i class="fa fa-window-maximize"></i><i class="fa fa-window-minimize d-none"></i></div>
+      <div class="fav-close"><i class="fa fa-window-maximize d-none"></i><i class="fa fa-window-minimize"></i></div>
     </div>
     <div class="fav-body">
-      <iframe class="fav-frame" src="/static/fav/index.html?uid={{ user.email }}"></iframe>
+      <table class="table table-striped table-hover table-responsive-md">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Position</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ii in user|fav_players %}
+            <tr>
+              <td>
+                <a href="/players/{{ ii.player.id }}">
+                  <img src="{{ ii.player.avatar }}" height="33" class="mr-2">{{ ii.player.first_name }} {{ ii.player.last_name }}
+                </a>
+              </td>
+              <td>{{ ii.player.team }}</td>
+              <td>{{ ii.player.position }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>  
+      </table>
     </div>
   </div> 
 </div>
@@ -50,13 +73,7 @@
 {% block script %}
 {% endblock %}
 
-<script type="text/javascript">
-  $('.fav-header').on('click', function() {
-    $('.fa-window-maximize').toggleClass('d-none');
-    $('.fa-window-minimize').toggleClass('d-none');
-    $('.fav-wrapper').toggleClass('show-fav');
-  });
-</script>
+<script type="text/javascript" src="/static/js/common.js"></script>
 </body>
 </html>
 

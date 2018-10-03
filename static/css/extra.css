@@ -29,11 +29,13 @@ th {
 
 .fav-wrapper.show-fav .fav-body {
     display: block;
+    background: white;
 }
 
 .fav-body {
     height: 400px;
     border: solid 1px #4080ff;
+    font-size: 15px;
 }
 
 .fav-header {
@@ -58,6 +60,14 @@ th {
     cursor: pointer;
 }
 
+.fav {
+    cursor: pointer;
+    color: #aaa;
+}
+
+.fav.done {
+    color: gold;
+}
 
 #frm-player {
     width: 100%;

@@ -24,6 +24,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', players, name="players"),
     url(r'^lineup$', lineup, name="lineup"),
+    url(r'^fav-player$', fav_player, name="fav_player"),
     url(r'^players/(?P<pid>\d+)$', player_detail, name="player_detail"),
     url(r'^gen-lineups', gen_lineups, name="gen_lineups"),
     url(r'^get-players', get_players, name="get_players"),

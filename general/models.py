@@ -49,6 +49,13 @@ class Player(models.Model):
         return '{} {}'.format(self.first_name, self.last_name)
 
 
+class FavPlayer(models.Model):
+    player = models.ForeignKey(Player)
+
+    def __str__(self):
+        return '{} {}'.format(self.player.first_name, self.player.last_name)
+
+
 GAME_RESULT = (
     ('W', 'Win'),
     ('L', 'Loss'),

@@ -37,6 +37,18 @@ def lineup(request):
 
 
 @csrf_exempt
+def fav_player(request):
+    uid = request.POST.get('uid')
+    player = Player.objects.filter(uid=uid).first()
+    if FavPlayer.objects.filter(player=player).exists():
+        FavPlayer.objects.filter(player=player).delete()
+    else:
+        FavPlayer.objects.create(player=player)
+
+    return HttpResponse('ok')
+
+
+@csrf_exempt
 def get_players(request):
     ds = request.POST.get('ds')
     games = request.POST.get('games').split(';')
