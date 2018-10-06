@@ -5,6 +5,7 @@ import json
 import mimetypes
 import datetime
 from wsgiref.util import FileWrapper
+import pdb
 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -15,7 +16,6 @@ from django.db.models import Avg, Q, Sum
 
 from general.models import *
 from general.lineup import *
-from general import html2text
 from general.color import *
 
 POSITION = ['PG', 'SG', 'SF', 'PF', 'C']
@@ -144,6 +144,7 @@ def get_team_games(team):
 
 def get_team_stat(team, loc='@'):
     loc_ = '@' if loc == '' else ''
+    # pdb.set_trace()
     season = current_season()
     q = Q(opp__contains=team) & Q(location=loc) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
@@ -273,7 +274,7 @@ def get_team_info(team):
                 'uid': player.uid,
                 'name': ii['name'],
                 'pos': player.position,
-                'inj': html2text.html2text(player.injury) if player.injury else '-',
+                'inj': player.injury,
                 'salary': player.salary,
                 'gp': games.count(),
                 'rpg': games.aggregate(Avg('trb'))['trb__avg'],
@@ -383,7 +384,7 @@ def player_match_up(request):
                         'loc': ii.location,
                         'vs': vs,
                         'pos': player.position,
-                        'inj': html2text.html2text(player.injury) if player.injury else '-',
+                        'inj': player.injury,
                         'salary': player.salary,
                         'ampg': ampg,
                         'smpg': smpg,

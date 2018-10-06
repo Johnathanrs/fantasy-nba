@@ -10,6 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
+from general import html2text
 import pdb
 
 def get_players(data_source):
@@ -19,14 +20,17 @@ def get_players(data_source):
 
         players = requests.get(url).json()
 
-        fields = ['first_name', 'last_name', 'injury', 'minutes', 'money_line', 
+        fields = ['first_name', 'last_name', 'minutes', 'money_line', 
                   'over_under', 'point_spread', 'position', 'proj_ceiling', 'opponent',
                   'proj_custom', 'proj_floor', 'proj_original', 'proj_points', 'proj_rotowire', 
-                  'proj_site', 'proj_third_party_one', 'proj_third_party_two', 'real_position', 
+                  'proj_site', 'proj_third_party_one', 'proj_third_party_two', 'actual_position', 
                   'salary', 'salary_custom', 'salary_original', 'team', 'team_points', 'value']
 
         for ii in players:
             defaults = { key: str(ii[key]).replace(',', '') for key in fields }
+            defaults['injury'] = html2text.html2text(ii['injury']).strip()
+            if data_source == 'FantasyDraft':
+                defaults['position'] = defaults['actual_position']
             obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
                                                   defaults=defaults)
     except:

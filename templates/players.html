@@ -65,7 +65,7 @@
                     <td>{{ ii.proj_points|floatformat:1 }}</td>
                     <td>{{ ii.proj_site|floatformat:1 }}</td>
                     <td>{{ ii.value|floatformat:1 }}</td>
-                    <td class="text-danger">{{ ii|get_injury }}</td>
+                    <td class="text-danger">{{ ii.injury }}</td>
                     <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
                   </tr>
                 {% endfor %}
