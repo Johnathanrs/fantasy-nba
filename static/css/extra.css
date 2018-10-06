@@ -138,7 +138,7 @@ table th {
 }
 
 .player-board tbody {
-    max-height: calc(100vh - 350px); 
+    max-height: calc(100vh - 390px); 
     overflow-x: hidden;
     display: block;
 }
