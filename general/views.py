@@ -49,7 +49,7 @@ def fav_player(request):
     players = [ii for ii in FavPlayer.objects.all()]
     rs = Roster()
     players = sorted(players, key=rs.fav_position_order)
-    print (players)
+
     return HttpResponse(render_to_string('fav-body.html', locals()))
 
 
@@ -356,31 +356,31 @@ def player_match_up(request):
     max_sfp = float(request.POST.get('max_sfp'))
     games = request.POST.get('games').split(';')
 
-    if len(games) > 1:
-        q = Q()
-        for game in games:
-            if game:
-                teams = game.split('-')
-                q |= (Q(team__contains=teams[0]) & Q(opp__contains=teams[1])) | \
-                     (Q(team__contains=teams[1]) & Q(opp__contains=teams[0])) 
-    else:
-        q = Q(name=-1)   # no result
-
     last_game = PlayerGame.objects.all().order_by('-date').first()
+
+    players_ = []
+    for game in games:
+        if game:
+            q = Q(location=loc) if loc != 'all' else Q()
+            teams = game.split('-')
+            q &= (Q(team__contains=teams[0]) & Q(opp__contains=teams[1])) | \
+                 (Q(team__contains=teams[1]) & Q(opp__contains=teams[0]))
+            
+            # get the date of last game between the teams
+            last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
+            # get games
+            players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
+            players_ += [ii for ii in players__]
+
     players = []
-    games = PlayerGame.objects.filter(Q(date=last_game.date) & q)
-
-    if loc != 'all':
-        games = games.filter(location=loc)
-
-    for ii in games:
+    for ii in players_:
         names = ii.name.split(' ')
         team = teamSync(ii.team)
         vs = teamSync(ii.opp)
         # print (names[0], names[1], team, ds, vs)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
                                        team=team, data_source=ds, opponent__contains=vs).first()
-        if player and pos in player.actual_position:
+        if player and pos in player.position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']
@@ -411,7 +411,7 @@ def player_match_up(request):
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
                         'opp': PlayerGame.objects.filter(team__contains=player.team, 
-                                                         date__gte=datetime.date.today()+datetime.timedelta(-145),
+                                                         date__gte=last_game.date+datetime.timedelta(-90),
                                                          name__in=fellows) \
                                                  .order_by('-fpts').first().fpts
                     })

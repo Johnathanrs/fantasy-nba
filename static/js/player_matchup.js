@@ -22,6 +22,8 @@ $(document).ready(function () {
     $(this).toggleClass('active');
     loadBoard();
   });
+
+  loadBoard();
 })
 
 function loadBoard() {
