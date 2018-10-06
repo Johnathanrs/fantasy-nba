@@ -10,6 +10,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
+from general.views import *
 from general import html2text
 import pdb
 
@@ -39,3 +40,5 @@ def get_players(data_source):
 if __name__ == "__main__":
     for ds in DATA_SOURCE:
         get_players(ds[0])
+
+    # build_TMS_cache()

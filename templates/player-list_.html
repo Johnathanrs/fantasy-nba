@@ -1,4 +1,4 @@
-<table class="table table-striped table-hover table-responsive-md">
+<table class="table table-hover table-responsive-md">
   <thead>
     <tr>
       <th><input type="checkbox" id="chk-all" checked="" onclick="choose_all(this)"></th>
@@ -12,7 +12,7 @@
       <tr>
         <td><input type="checkbox" name="ids" checked="" value="{{ ii.id }}"></td>
         <td style="cursor: pointer;" onclick="pr_click(this)">
-          <img src="{{ ii.avatar }}" height="33" class="mr-2"> {{ ii.position }}
+          <img src="{{ ii.avatar }}" height="30" class="mr-2"> {{ ii.position }}
         </td>
         <td>
           <a href="/players/{{ ii.id }}">

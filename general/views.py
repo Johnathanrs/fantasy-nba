@@ -46,7 +46,10 @@ def fav_player(request):
         else:
             FavPlayer.objects.create(player=player)
 
-    players = FavPlayer.objects.all()
+    players = [ii for ii in FavPlayer.objects.all()]
+    rs = Roster()
+    players = sorted(players, key=rs.fav_position_order)
+    print (players)
     return HttpResponse(render_to_string('fav-body.html', locals()))
 
 
@@ -209,14 +212,16 @@ def get_team_stat(team, loc='@'):
         # for each position
         for pos in POSITION:
             # players in the position of the team
-            players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
+            q = Q(actual_position__icontains=pos) | Q(position=pos)
+            players_ = Player.objects.filter(Q(team=teamSync(players[0].team)) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
-        tm_pos.append(tm_pos_)
+        if tm_pos_['PG'] > 0 and tm_pos_['SG'] > 0:
+            tm_pos.append(tm_pos_)
         print ii['date'], players[0].team, players[0].opp, players[0].location, tm_pos_
         
     for pos in POSITION:
-        res[pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
+        res[pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos) if len(tm_pos) else -1
 
     print '----------------------------'
     # for FPS TM POS
@@ -230,16 +235,32 @@ def get_team_stat(team, loc='@'):
         # for each position
         for pos in POSITION:
             # players in the position of the team
-            players_ = Player.objects.filter(team=teamSync(players[0].team), position=pos)
+            q = Q(actual_position__icontains=pos) | Q(position=pos)
+            players_ = Player.objects.filter(Q(team=teamSync(players[0].team)) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
-        tm_pos.append(tm_pos_)
+        if tm_pos_['PG'] > 0 and tm_pos_['SG'] > 0:
+            tm_pos.append(tm_pos_)
         print ii['date'], players[0].team, players[0].opp, players[0].location, tm_pos_
     print '----------------------------'
     for pos in POSITION:
-        res['s_'+pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos)
+        res['s_'+pos] = sum(ii[pos] for ii in tm_pos) / len(tm_pos) if len(tm_pos) else -1
 
     return res
+
+
+def get_player(full_name, team):
+    '''
+    FanDuel has top priority
+    '''
+    names = full_name.split(' ')
+    team = teamSync(team)
+    players = Player.objects.filter(first_name=names[0], last_name=names[1], team=team) \
+                            .order_by('data_source')
+    player = players.filter(data_source='FanDuel').first()
+    if not player:
+        player = players.first()
+    return player
 
 
 def get_team_info(team):
@@ -255,11 +276,7 @@ def get_team_info(team):
     players = []
 
     for ii in players_:
-        names = ii['name'].split(' ')
-        team = teamSync(ii['team'])
-        # print (names[0], names[1], team, ds, vs)
-        player = Player.objects.filter(first_name=names[0], last_name=names[1], 
-                                       team=team).first()
+        player = get_player(ii['name'], ii['team'])
         if player:
             games = team_games.filter(name=ii['name'])
             ampg = games.aggregate(Avg('mp'))['mp__avg']
@@ -363,7 +380,7 @@ def player_match_up(request):
         # print (names[0], names[1], team, ds, vs)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
                                        team=team, data_source=ds, opponent__contains=vs).first()
-        if player and pos in player.position:
+        if player and pos in player.actual_position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']

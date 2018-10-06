@@ -35,6 +35,12 @@ class Roster:
     def position_order(self, player):
         return self.POSITION_ORDER[player.position]
 
+    def fav_position_order(self, obj):
+        if obj.player.position in self.POSITION_ORDER:
+            return self.POSITION_ORDER[obj.player.position]
+        else:
+            return 100
+
     def sorted_players(self):
         return sorted(self.players, key=self.position_order)
 

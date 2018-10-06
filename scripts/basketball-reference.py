@@ -21,6 +21,7 @@ def main():
     response = urllib2.urlopen(dp)
     r = response.read()
 
+    is_new = True
     soup = BeautifulSoup(r, "html.parser")
     # pdb.set_trace()
 
@@ -29,7 +30,7 @@ def main():
         date = datetime.strptime(date, '%b %d, %Y')
         last_game = PlayerGame.objects.all().order_by('-date').first()
         if last_game and last_game.date == date.date():
-            return
+            is_new = False
 
         table = soup.find("table", {"id":"stats"})
         player_rows = table.find("tbody")
@@ -49,47 +50,47 @@ def main():
                 player_ = Player.objects.filter(first_name__iexact=name.split(' ')[0],
                                                 last_name__iexact=name.split(' ')[1],
                                                 team=team)
+                # update avatar for possible new players
+                avatar = 'https://d2cwpp38twqe55.cloudfront.net/req/201808311/images/players/{}.jpg'.format(uid)
+                player_.update(avatar=avatar)
 
-                if player_ and 'nba.ico' in player_.first().avatar:
-                    avatar = 'https://d2cwpp38twqe55.cloudfront.net/req/201808311/images/players/{}.jpg'.format(uid)
-                    player_.update(avatar=avatar)
+                if is_new:
+                    fg3 = int(player.find("td", {"data-stat":"fg3"}).text)
+                    fg = int(player.find("td", {"data-stat":"fg"}).text)
+                    ft = int(player.find("td", {"data-stat":"ft"}).text)
+                    trb = int(player.find("td", {"data-stat":"trb"}).text)
+                    ast = int(player.find("td", {"data-stat":"ast"}).text)
+                    blk = int(player.find("td", {"data-stat":"blk"}).text)
+                    stl = int(player.find("td", {"data-stat":"stl"}).text)
+                    tov = int(player.find("td", {"data-stat":"tov"}).text)
+                    fpts = 3 * fg3 + 2 * fg + ft + 1.2 * trb + 1.5 * ast + 3 * blk + 3 *stl - tov
 
-                fg3 = int(player.find("td", {"data-stat":"fg3"}).text)
-                fg = int(player.find("td", {"data-stat":"fg"}).text)
-                ft = int(player.find("td", {"data-stat":"ft"}).text)
-                trb = int(player.find("td", {"data-stat":"trb"}).text)
-                ast = int(player.find("td", {"data-stat":"ast"}).text)
-                blk = int(player.find("td", {"data-stat":"blk"}).text)
-                stl = int(player.find("td", {"data-stat":"stl"}).text)
-                tov = int(player.find("td", {"data-stat":"tov"}).text)
-                fpts = 3 * fg3 + 2 * fg + ft + 1.2 * trb + 1.5 * ast + 3 * blk + 3 *stl - tov
-
-                obj = PlayerGame.objects.create(
-                    name = name,
-                    team = team,
-                    location = player.find("td", {"data-stat":"game_location"}).text,
-                    opp = player.find("td", {"data-stat":"opp_id"}).text,
-                    game_result = player.find("td", {"data-stat":"game_result"}).text,
-                    mp = float(mp[0])+float(mp[1])/60,
-                    fg = fg,
-                    fga = player.find("td", {"data-stat":"fga"}).text,
-                    fg_pct = player.find("td", {"data-stat":"fg_pct"}).text or None,
-                    fg3 = fg3,
-                    fg3a = player.find("td", {"data-stat":"fg3a"}).text,
-                    fg3_pct = player.find("td", {"data-stat":"fg3_pct"}).text or None,
-                    ft = ft,
-                    fta = player.find("td", {"data-stat":"fta"}).text,
-                    ft_pct = player.find("td", {"data-stat":"ft_pct"}).text or None,
-                    trb = trb,
-                    ast = ast,
-                    stl = stl,
-                    blk = blk,
-                    tov = tov,
-                    pf = player.find("td", {"data-stat":"pf"}).text,
-                    pts = player.find("td", {"data-stat":"pts"}).text,
-                    fpts = fpts,
-                    date = date
-                )
+                    obj = PlayerGame.objects.create(
+                        name = name,
+                        team = team,
+                        location = player.find("td", {"data-stat":"game_location"}).text,
+                        opp = player.find("td", {"data-stat":"opp_id"}).text,
+                        game_result = player.find("td", {"data-stat":"game_result"}).text,
+                        mp = float(mp[0])+float(mp[1])/60,
+                        fg = fg,
+                        fga = player.find("td", {"data-stat":"fga"}).text,
+                        fg_pct = player.find("td", {"data-stat":"fg_pct"}).text or None,
+                        fg3 = fg3,
+                        fg3a = player.find("td", {"data-stat":"fg3a"}).text,
+                        fg3_pct = player.find("td", {"data-stat":"fg3_pct"}).text or None,
+                        ft = ft,
+                        fta = player.find("td", {"data-stat":"fta"}).text,
+                        ft_pct = player.find("td", {"data-stat":"ft_pct"}).text or None,
+                        trb = trb,
+                        ast = ast,
+                        stl = stl,
+                        blk = blk,
+                        tov = tov,
+                        pf = player.find("td", {"data-stat":"pf"}).text,
+                        pts = player.find("td", {"data-stat":"pts"}).text,
+                        fpts = fpts,
+                        date = date
+                    )
         except (Exception) as e:
             print (e)
     
