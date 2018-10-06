@@ -20,7 +20,7 @@ th {
     bottom: 0;
     right: 5px;
     width: calc(100% - 10px);
-    max-width: 340px;
+    max-width: 310px;
 }
 
 .fav-wrapper .fav-body {
@@ -35,7 +35,7 @@ th {
 .fav-body {
     height: 400px;
     border: solid 1px #4080ff;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .fav-header {
@@ -120,13 +120,17 @@ table th {
     cursor: pointer;
 }
 
+.player-list {
+    max-height: calc(100vh - 285px) !important; 
+}
+
+.player-list tbody {
+    max-height: calc(100vh - 345px); 
+}
+
 .player-board {
     max-height: calc(100vh - 330px); 
     overflow-x: hidden;
-}
-
-.player-list {
-    max-height: calc(100vh - 285px) !important; 
 }
 
 .player-board table th {
@@ -134,13 +138,9 @@ table th {
 }
 
 .player-board tbody {
-    max-height: calc(100vh - 390px); 
+    max-height: calc(100vh - 350px); 
     overflow-x: hidden;
     display: block;
-}
-
-.player-list tbody {
-    max-height: calc(100vh - 345px); 
 }
 
 .player-board thead, .player-board tbody tr {
@@ -151,6 +151,26 @@ table th {
 
 .player-board thead {
     width: calc(100% - 10px);
+}
+
+.fav-inner thead, .fav-inner tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.fav-inner th {
+    padding: .4rem .6rem !important;
+}
+
+.fav-inner thead {
+    width: calc(100% - 14px);
+}
+
+.fav-inner tbody {
+    max-height: 345px; 
+    overflow-x: hidden;
+    display: block;
 }
 
 .fas.lock {
