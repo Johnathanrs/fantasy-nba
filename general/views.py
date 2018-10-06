@@ -47,8 +47,7 @@ def fav_player(request):
             FavPlayer.objects.create(player=player)
 
     players = [ii for ii in FavPlayer.objects.all()]
-    rs = Roster()
-    players = sorted(players, key=rs.fav_position_order)
+    players = sorted(players, key=Roster().fav_position_order)
 
     return HttpResponse(render_to_string('fav-body.html', locals()))
 
@@ -271,7 +270,7 @@ def get_team_info(team):
     losses = game_results.filter(game_result='L').count()
 
     # get distinct players
-    players_ = team_games.order_by('name').values('name', 'team').distinct()
+    players_ = team_games.values('name', 'team').distinct()
 
     players = []
 
@@ -307,7 +306,7 @@ def get_team_info(team):
             })
 
     return { 
-        'players': players, 
+        'players': sorted(players, key=Roster().dict_position_order), 
         'wins': wins,
         'losses': losses,
         'win_percent': wins * 100.0 / (wins + losses)

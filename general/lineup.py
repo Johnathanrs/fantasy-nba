@@ -41,6 +41,12 @@ class Roster:
         else:
             return 100
 
+    def dict_position_order(self, player):
+        if player['pos'] in self.POSITION_ORDER:
+            return self.POSITION_ORDER[player['pos']]
+        else:
+            return 100
+
     def sorted_players(self):
         return sorted(self.players, key=self.position_order)
 
