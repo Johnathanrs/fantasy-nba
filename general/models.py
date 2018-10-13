@@ -7,7 +7,6 @@ DATA_SOURCE = (
     ('FanDuel', 'FanDuel'),
     ('DraftKings', 'DraftKings'),
     ('Yahoo', 'Yahoo'),
-    ('Head2Head', 'Head2Head'),
     ('Fanball', 'Fanball'),
     ('FantasyDraft', 'FantasyDraft')
 )
