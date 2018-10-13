@@ -502,11 +502,11 @@ def gen_lineups(request):
 
 def export_lineups(request):
     lineups, _ = _get_lineups(request)
-    # csv_fields = ['FWD', 'FWD', 'MID', 'MID', 'MID', 'DEF', 'DEF', 'GK', 'Projected', 'Salary']
+    csv_fields = ['PG', 'PG', 'SG', 'SG', 'SF', 'SF', 'PF', 'PF', 'C']
     path = "/tmp/.fantasy_nba.csv"
 
     with open(path, 'w') as f:
-        # f.write(','.join(csv_fields)+'\n')
+        f.write(','.join(csv_fields)+'\n')
         for ii in lineups:
             f.write(ii.get_csv())
     
