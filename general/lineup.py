@@ -63,14 +63,14 @@ class Roster:
 
 
 POSITION_LIMITS = [
-    ["PG", 1, 3],
-    ["SG", 1, 3],
-    ["SF", 1, 3],
-    ["PF", 1, 3],
-    ["C", 1, 2]
+    ["PG", 2, 2],
+    ["SG", 2, 2],
+    ["SF", 2, 2],
+    ["PF", 2, 2],
+    ["C", 1, 1]
 ]
 
-ROSTER_SIZE = 8
+ROSTER_SIZE = 9
 
 
 def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
