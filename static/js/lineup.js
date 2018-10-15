@@ -7,6 +7,11 @@ $(function() {
     getPlayers();
   });
 
+  $('.nav-tabs.ds .nav-link').click(function () {
+    console.log($(this).text());
+    $('#ds').val($(this).text());
+  });
+
   $('.nav-tabs.ds .nav-link:first').click();
 
   $('.btn-export').click(function() {

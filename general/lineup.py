@@ -1,6 +1,5 @@
 import operator as op
 from ortools.linear_solver import pywraplp
-
 from general.models import *
 
 
@@ -50,9 +49,21 @@ class Roster:
     def sorted_players(self):
         return sorted(self.players, key=self.position_order)
 
-    def get_csv(self):
-        s = ','.join(str(x) for x in self.sorted_players())+'\n'
-        # s += ",{},{}\n".format(self.projected(), self.spent())
+    def get_csv(self, ds):
+        s = ''
+        if ds == 'DraftKings': 
+            players = list(self.players)
+            pos = ['PG', 'SG', 'SF', 'PF', 'C', 'PG,SG', 'SF,PF']
+            for ii in pos:
+                for jj in players:
+                    if jj.position in ii:
+                        s += str(jj) + ','
+                        players.remove(jj)
+                        break
+            s += str(players[0])+'\n'
+        else:
+            s = ','.join(str(x) for x in self.sorted_players())+'\n'
+
         return s
 
     def __repr__(self):
@@ -62,18 +73,45 @@ class Roster:
         return s
 
 
-POSITION_LIMITS = [
-    ["PG", 2, 2],
-    ["SG", 2, 2],
-    ["SF", 2, 2],
-    ["PF", 2, 2],
-    ["C", 1, 1]
-]
+POSITION_LIMITS = {
+    'FanDuel': [
+                   ["PG", 2, 2],
+                   ["SG", 2, 2],
+                   ["SF", 2, 2],
+                   ["PF", 2, 2],
+                   ["C", 1, 1]
+               ],
+    'DraftKings': [
+                      ["PG", 1, 3],
+                      ["SG", 1, 3],
+                      ["SF", 1, 3],
+                      ["PF", 1, 3],
+                      ["C", 1, 2],
+                      ["PG,SG", 3, 4],
+                      ["SF,PF", 3, 4]
+                  ]
+}
 
-ROSTER_SIZE = 9
+SALARY_CAP = {
+    'FanDuel': 60000,
+    'DraftKings': 50000,
+
+    'Yahoo': 60000,
+    'Fanball': 60000,
+    'FantasyDraft': 60000
+}
+
+ROSTER_SIZE = {
+    'FanDuel': 9,
+    'DraftKings': 8,
+
+    'Yahoo': 8,
+    'Fanball': 9,
+    'FantasyDraft': 9
+}
 
 
-def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
+def get_lineup(ds, players, teams, locked, max_point):
     solver = pywraplp.Solver('nba-lineup', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     variables = []
@@ -90,19 +128,20 @@ def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
     for i, player in enumerate(players):
         objective.SetCoefficient(variables[i], player.proj_points)
 
-    salary_cap = solver.Constraint(0, SALARY_CAP)
+    salary_cap = solver.Constraint(0, SALARY_CAP[ds])
     for i, player in enumerate(players):
         salary_cap.SetCoefficient(variables[i], player.salary)
 
-    point_cap = solver.Constraint(0, MAX_POINT)
+    point_cap = solver.Constraint(0, max_point)
     for i, player in enumerate(players):
         point_cap.SetCoefficient(variables[i], player.proj_points)
 
-    for position, min_limit, max_limit in POSITION_LIMITS:
+    position_limits = POSITION_LIMITS[ds] if ds in POSITION_LIMITS else POSITION_LIMITS['FanDuel']
+    for position, min_limit, max_limit in position_limits:
         position_cap = solver.Constraint(min_limit, max_limit)
 
         for i, player in enumerate(players):
-            if position == player.position:
+            if player.position in position:
                 position_cap.SetCoefficient(variables[i], 1)
 
     for team in teams:
@@ -111,7 +150,7 @@ def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
             if team == player.team:
                 team_cap.SetCoefficient(variables[i], 1)
 
-    size_cap = solver.Constraint(ROSTER_SIZE, ROSTER_SIZE)
+    size_cap = solver.Constraint(ROSTER_SIZE[ds], ROSTER_SIZE[ds])
     for variable in variables:
         size_cap.SetCoefficient(variable, 1)
 
@@ -127,17 +166,17 @@ def get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked):
         return roster
 
 
-def calc_lineups(players, num_lineups, locked=[]):
+def calc_lineups(players, num_lineups, locked=[], ds='FanDuel'):
     result = []
-    SALARY_CAP = 60000
-    MAX_POINT = 10000
+
+    max_point = 10000
     teams = set([ii.team for ii in players])
 
     while True:
-        roster = get_lineup(players, teams, SALARY_CAP, MAX_POINT, locked)
+        roster = get_lineup(ds, players, teams, locked, max_point)
         if not roster:
             break
-        MAX_POINT = roster.projected() - 0.001
+        max_point = roster.projected() - 0.001
         if roster.get_num_teams() > 2:
             result.append(roster)
             if len(result) == num_lineups:

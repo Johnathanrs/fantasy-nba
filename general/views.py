@@ -469,12 +469,13 @@ def _get_lineups(request):
     ids = request.POST.getlist('ids')
     locked = request.POST.getlist('locked')
     num_lineups = int(request.POST.get('num-lineups'))
+    ds = request.POST.get('ds')
 
     ids = [int(ii) for ii in ids]
     locked = [int(ii) for ii in locked]
 
     players = Player.objects.filter(id__in=ids)
-    lineups = calc_lineups(players, num_lineups, locked)
+    lineups = calc_lineups(players, num_lineups, locked, ds)
     return lineups, players
 
 
@@ -502,13 +503,19 @@ def gen_lineups(request):
 
 def export_lineups(request):
     lineups, _ = _get_lineups(request)
-    csv_fields = ['PG', 'PG', 'SG', 'SG', 'SF', 'SF', 'PF', 'PF', 'C']
+    ds = request.POST.get('ds')
+    CSV_FIELDS = {
+        'FanDuel': ['PG', 'PG', 'SG', 'SG', 'SF', 'SF', 'PF', 'PF', 'C'],
+        'DraftKings': ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL'],
+    }
+
+    csv_fields = CSV_FIELDS[ds] if ds in CSV_FIELDS else CSV_FIELDS['FanDuel']
     path = "/tmp/.fantasy_nba.csv"
 
     with open(path, 'w') as f:
         f.write(','.join(csv_fields)+'\n')
         for ii in lineups:
-            f.write(ii.get_csv())
+            f.write(ii.get_csv(ds))
     
     wrapper = FileWrapper( open( path, "r" ) )
     content_type = mimetypes.guess_type( path )[0]
