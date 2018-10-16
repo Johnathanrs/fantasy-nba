@@ -86,7 +86,7 @@ def get_games_(pid, loc, opp, season):
 
 def current_season():
     today = datetime.date.today()
-    return today.year if today > datetime.date(today.year, 10, 15) else today.year - 1
+    return today.year if today > datetime.date(today.year, 10, 17) else today.year - 1
 
 
 def player_detail(request, pid):
@@ -370,13 +370,11 @@ def player_match_up(request):
             # get games
             players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
             players_ += [ii for ii in players__]
-
     players = []
     for ii in players_:
         names = ii.name.split(' ')
         team = teamSync(ii.team)
         vs = teamSync(ii.opp)
-        # print (names[0], names[1], team, ds, vs)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
                                        team=team, data_source=ds, opponent__contains=vs).first()
         if player and pos in player.position:
@@ -410,7 +408,7 @@ def player_match_up(request):
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
                         'opp': PlayerGame.objects.filter(team__contains=player.team, 
-                                                         date__gte=last_game.date+datetime.timedelta(-90),
+                                                         date__gte=last_game.date+datetime.timedelta(-120),
                                                          name__in=fellows) \
                                                  .order_by('-fpts').first().fpts
                     })
