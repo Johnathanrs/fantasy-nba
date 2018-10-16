@@ -12,8 +12,14 @@ $('body').on('click','.fav',function() {
   });
 });
 
+$('body').on('click','.fav-remove',function() {
+  $.post( "/fav-player", { uid: -1 }, function( data ) {
+    location.reload();
+  });  
+});
+
 $(document).ready(function () {
   $.post( "/fav-player", {}, function( data ) {
     $('.fav-body').html(data);
-  });  
+  });
 })

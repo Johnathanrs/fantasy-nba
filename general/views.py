@@ -40,11 +40,14 @@ def lineup(request):
 def fav_player(request):
     uid = request.POST.get('uid')
     if uid:
-        player = Player.objects.filter(uid=uid).first()
-        if FavPlayer.objects.filter(player=player).exists():
-            FavPlayer.objects.filter(player=player).delete()
+        if uid == "-1":
+            FavPlayer.objects.all().delete()
         else:
-            FavPlayer.objects.create(player=player)
+            player = Player.objects.filter(uid=uid).first()
+            if FavPlayer.objects.filter(player=player).exists():
+                FavPlayer.objects.filter(player=player).delete()
+            else:
+                FavPlayer.objects.create(player=player)
 
     players = [ii for ii in FavPlayer.objects.all()]
     players = sorted(players, key=Roster().fav_position_order)
