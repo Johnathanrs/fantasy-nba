@@ -370,12 +370,14 @@ def player_match_up(request):
             
             # get the date of last game between the teams
             last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
+            # print last_game_.date, game
             # get games
             players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
             players_ += [ii for ii in players__]
     players = []
     for ii in players_:
         names = ii.name.split(' ')
+        # print ii.name
         team = teamSync(ii.team)
         vs = teamSync(ii.opp)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
@@ -387,6 +389,7 @@ def player_match_up(request):
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
             sfp = games.filter(location='@').aggregate(Avg('fpts'))['fpts__avg']
 
+            # print player, afp
             if min_afp <= afp <= max_afp:
                 if min_sfp <= sfp <= max_sfp:
                     fellows = Player.objects.filter(position=player.position, team=player.team)

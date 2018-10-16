@@ -13,9 +13,12 @@ $('body').on('click','.fav',function() {
 });
 
 $('body').on('click','.fav-remove',function() {
-  $.post( "/fav-player", { uid: -1 }, function( data ) {
-    location.reload();
-  });  
+  var r = confirm("Are you sure to remove all favourites?");
+  if (r == true) {
+    $.post( "/fav-player", { uid: -1 }, function( data ) {
+      location.reload();
+    });
+  }
 });
 
 $(document).ready(function () {
