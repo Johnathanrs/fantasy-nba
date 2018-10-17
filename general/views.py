@@ -265,7 +265,7 @@ def get_player(full_name, team):
     return player
 
 
-def get_team_info(team):
+def get_team_info(team, loc):
     team_games = get_team_games(team)
     # at most one game a day
     game_results = team_games.values('date', 'game_result').distinct()
@@ -559,11 +559,11 @@ def build_TMS_cache(request):
     TMSCache.objects.all().delete()
     for game in Game.objects.all():
         if not game.home_team in team_1:
-            TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(get_team_info(game.home_team)))
+            TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(get_team_info(game.home_team, '@')))
             team_1.append(game.home_team)
 
         if not game.visit_team in team_1:
-            TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(get_team_info(game.visit_team)))
+            TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(get_team_info(game.visit_team, '')))
             team_1.append(game.visit_team)
 
         if not game.home_team in team_2:
