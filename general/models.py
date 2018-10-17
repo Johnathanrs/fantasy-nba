@@ -99,8 +99,6 @@ GAME_STATUS = (
 class Game(models.Model):
     home_team = models.CharField(max_length=20)
     visit_team = models.CharField(max_length=20)
-    home_logo = models.CharField(max_length=120, null=True, blank=True)
-    visit_logo = models.CharField(max_length=120, null=True, blank=True)
     ou = models.FloatField()
     ml = models.CharField(max_length=20)
     date = models.DateTimeField()

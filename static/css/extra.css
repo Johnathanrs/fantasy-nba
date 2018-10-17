@@ -277,6 +277,13 @@ td.break {
     cursor: pointer;
 }
 
+.slate-item {
+    float: left;
+    margin-right: 18px;
+    margin-bottom: 10px;
+    width: 100px;
+}
+
 .ds a {
     /*font-weight: 700;*/
     font-size: 15px;
@@ -294,6 +301,8 @@ td.break {
     border-radius: 10px;
     padding: 11px 17px;
     cursor: pointer;
+    width: 115px;
+    margin-bottom: 8px;
 }
 
 .game-item.active {

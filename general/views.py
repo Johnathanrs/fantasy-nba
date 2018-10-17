@@ -280,7 +280,7 @@ def get_team_info(team, loc):
     for ii in players_:
         player = get_player(ii['name'], ii['team'])
         if player:
-            games = team_games.filter(name=ii['name'])
+            games = team_games.filter(name=ii['name'], location=loc)
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
 
@@ -317,16 +317,18 @@ def get_team_info(team, loc):
 
 
 def filter_players_fpa(team, min_afp, max_afp):
-    info = json.loads(TMSCache.objects.filter(team=team, type=1).first().body)
-    players = []
+    try:
+        info = json.loads(TMSCache.objects.filter(team=team, type=1).first().body)
+        players = []
 
-    for ii in range(len(info['players'])):
-        afp = info['players'][ii]['afp']
-        if min_afp <= afp <= max_afp:
-            players.append(info['players'][ii])
-    info['players'] = players
-    return info
-
+        for ii in range(len(info['players'])):
+            afp = info['players'][ii]['afp']
+            if min_afp <= afp <= max_afp:
+                players.append(info['players'][ii])
+        info['players'] = players
+        return info
+    except Exception as e:
+        return {}
 
 @csrf_exempt
 def team_match_up(request):
@@ -336,11 +338,14 @@ def team_match_up(request):
     game = request.POST.get('game')
     game = Game.objects.get(id=game)
 
+    home_stat = TMSCache.objects.filter(team=game.home_team, type=2).first()
+    away_stat = TMSCache.objects.filter(team=game.visit_team, type=2).first()
+
     teams = {
         'home': filter_players_fpa(game.home_team, min_afp, max_afp),
-        'home_stat': json.loads(TMSCache.objects.filter(team=game.home_team, type=2).first().body),
+        'home_stat': json.loads(home_stat.body) if home_stat else {},
         'away': filter_players_fpa(game.visit_team, min_afp, max_afp),
-        'away_stat': json.loads(TMSCache.objects.filter(team=game.visit_team, type=2).first().body)
+        'away_stat': json.loads(away_stat.body) if away_stat else {}
     }
 
     return HttpResponse(render_to_string('team-board_.html', locals()))
@@ -553,25 +558,16 @@ def build_TMS_cache(request):
     stat_home = { ii['team']: ii for ii in stat_home }
     stat_away = { ii['team']: ii for ii in stat_away }
 
-    team_1 = []
-    team_2 = []
+    team_info = {}
+    for game in Game.objects.all():
+        team_info[game.home_team] = get_team_info(game.home_team, '@')
+        team_info[game.visit_team] = get_team_info(game.visit_team, '')
 
     TMSCache.objects.all().delete()
     for game in Game.objects.all():
-        if not game.home_team in team_1:
-            TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(get_team_info(game.home_team, '@')))
-            team_1.append(game.home_team)
-
-        if not game.visit_team in team_1:
-            TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(get_team_info(game.visit_team, '')))
-            team_1.append(game.visit_team)
-
-        if not game.home_team in team_2:
-            TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
-            team_2.append(game.home_team)
-
-        if not game.visit_team in team_2:
-            TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
-            team_2.append(game.visit_team)
+        TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(team_info[game.home_team]))
+        TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(team_info[game.visit_team]))
+        TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
+        TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
 
     return HttpResponse('success')
