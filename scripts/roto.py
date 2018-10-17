@@ -15,7 +15,7 @@ from general import html2text
 import pdb
 
 def get_players(data_source):
-    try:
+    # try:
         url = 'https://www.rotowire.com/daily/tables/optimizer-nba.php?sport=NBA&' + \
               'site={}&projections=&type=main&slate=all'.format(data_source)
 
@@ -26,7 +26,7 @@ def get_players(data_source):
                   'proj_custom', 'proj_floor', 'proj_original', 'proj_points', 'proj_rotowire', 
                   'proj_site', 'proj_third_party_one', 'proj_third_party_two', 'actual_position', 
                   'salary', 'salary_custom', 'salary_original', 'team', 'team_points', 'value']
-
+        print data_source, len(players)
         for ii in players:
             defaults = { key: str(ii[key]).replace(',', '') for key in fields }
             defaults['injury'] = html2text.html2text(ii['injury']).strip()
@@ -34,8 +34,8 @@ def get_players(data_source):
                 defaults['position'] = defaults['actual_position']
             obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
                                                   defaults=defaults)
-    except:
-        pass
+    # except:
+    #     pass
 
 if __name__ == "__main__":
     for ds in DATA_SOURCE:
