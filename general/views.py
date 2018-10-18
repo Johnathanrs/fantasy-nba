@@ -313,7 +313,7 @@ def get_team_info(team, loc):
         'players': sorted(players, key=Roster().dict_position_order), 
         'wins': wins,
         'losses': losses,
-        'win_percent': wins * 100.0 / (wins + losses)
+        'win_percent': wins * 100.0 / (wins + losses) if wins + losses > 0 else 0
     }
 
 
