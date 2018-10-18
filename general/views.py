@@ -162,12 +162,12 @@ def get_team_stat(team, loc='@'):
                                                tov=Sum('tov'),
                                                pts=Sum('pts'))
 
-    rpg = a_teams_.aggregate(Avg('trb'))['trb__avg']
-    apg = a_teams_.aggregate(Avg('ast'))['ast__avg']
-    spg = a_teams_.aggregate(Avg('stl'))['stl__avg']
-    bpg = a_teams_.aggregate(Avg('blk'))['blk__avg']
-    tpg = a_teams_.aggregate(Avg('tov'))['tov__avg']
-    ppg = a_teams_.aggregate(Avg('pts'))['pts__avg']
+    rpg = a_teams_.aggregate(Avg('trb'))['trb__avg'] or 0
+    apg = a_teams_.aggregate(Avg('ast'))['ast__avg'] or 0
+    spg = a_teams_.aggregate(Avg('stl'))['stl__avg'] or 0
+    bpg = a_teams_.aggregate(Avg('blk'))['blk__avg'] or 0
+    tpg = a_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
+    ppg = a_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
     q = Q(team__contains=team) & Q(location=loc_) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
@@ -179,12 +179,12 @@ def get_team_stat(team, loc='@'):
                                                tov=Sum('tov'),
                                                pts=Sum('pts'))
 
-    s_rpg = s_teams_.aggregate(Avg('trb'))['trb__avg']
-    s_apg = s_teams_.aggregate(Avg('ast'))['ast__avg']
-    s_spg = s_teams_.aggregate(Avg('stl'))['stl__avg']
-    s_bpg = s_teams_.aggregate(Avg('blk'))['blk__avg']
-    s_tpg = s_teams_.aggregate(Avg('tov'))['tov__avg']
-    s_ppg = s_teams_.aggregate(Avg('pts'))['pts__avg']
+    s_rpg = s_teams_.aggregate(Avg('trb'))['trb__avg'] or 0 
+    s_apg = s_teams_.aggregate(Avg('ast'))['ast__avg'] or 0
+    s_spg = s_teams_.aggregate(Avg('stl'))['stl__avg'] or 0
+    s_bpg = s_teams_.aggregate(Avg('blk'))['blk__avg'] or 0
+    s_tpg = s_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
+    s_ppg = s_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
     res = {
         'team': team,

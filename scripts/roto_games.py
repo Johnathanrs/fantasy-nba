@@ -14,7 +14,7 @@ from general.views import *
 import pdb
 
 def get_games():
-    try:
+    # try:
         url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NBA&' + \
               'site=FanDuel&type=main&slate=Main'
 
@@ -33,8 +33,8 @@ def get_games():
                 ii['ou'] = float(ii['ou']) if ii['ou'] else 0
                 Game.objects.create(**ii)
             build_TMS_cache(None)
-    except:
-        pass
+    # except:
+    #     pass
 
 if __name__ == "__main__":
     get_games()
