@@ -63,10 +63,7 @@ def get_players(request):
     if len(games) > 1:
         q = Q()
         for game in games:
-            if game:
-                teams = game.split('-')
-                q |= (Q(team=teams[0]) & Q(opponent__contains=teams[1])) | \
-                     (Q(team=teams[1]) & Q(opponent__contains=teams[0])) 
+            q |= Q(team__in=game.split('-'))
     else:
         q = Q(uid=-1)   # no result
 
