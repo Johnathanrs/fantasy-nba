@@ -387,7 +387,7 @@ def player_match_up(request):
         team = teamSync(ii.team)
         vs = teamSync(ii.opp)
         player = Player.objects.filter(first_name=names[0], last_name=names[1], 
-                                       team=team, data_source=ds, opponent__contains=vs).first()
+                                       team=team, data_source=ds).first()
         if player and pos in player.position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
@@ -426,15 +426,12 @@ def player_match_up(request):
                     })
 
     players, num_opr = get_ranking(players, 'opp', 'opr')
-
     groups = {ii: [] for ii in POSITION}
-
     colors = linear_gradient('#90EE90', '#137B13', num_opr)['hex']
 
     for ii in players:
         ii['color'] = str(colors[ii['opr']-1])
         groups[ii['pos']].append(ii)
-
 
     for ii in POSITION:
         if groups[ii]:
