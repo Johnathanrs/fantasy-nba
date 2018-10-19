@@ -1,6 +1,6 @@
 {% load extra %}
 <div class="col-md-7 p-0">
-  <h5 class="text-center">Overall Averages</h5>
+  <h5 class="text-center">Player Situational Averages</h5>
   <h6 class="text-success title">
     <img src="/static/img/team/{{ game.home_team }}.jpg" width="50" class="mr-3">
     <strong>Home Team: {{ game.home_team }} <span class="text-body">( W: {{ teams.home.wins }}, L: {{ teams.home.losses }}, {{ teams.home.win_percent|floatformat:1 }} % )</span></strong>
@@ -57,7 +57,7 @@
 <div class="col-md-5 pr-0">
   <div class="row">
     <div class="offset-md-1 col-md-11 mt-1">
-      <h5 class="text-center">Situational Averages</h5>
+      <h5 class="text-center">Team Situational Averages</h5>
     </div>
   </div>
   <div class="clearfix"></div>

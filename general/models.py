@@ -8,7 +8,7 @@ DATA_SOURCE = (
     ('DraftKings', 'DraftKings'),
     ('Yahoo', 'Yahoo'),
     ('Fanball', 'Fanball'),
-    ('FantasyDraft', 'FantasyDraft')
+    # ('FantasyDraft', 'FantasyDraft')
 )
 
 class Player(models.Model):
