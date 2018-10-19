@@ -63,6 +63,10 @@ $(function() {
     filterTable();
   });  
 
+  $("#search-player").on("search", function() {
+    filterTable();
+  });
+
   $('.position-filter .nav-item a').on('click', function() {
     $('.position-filter .nav-item a').removeClass('active');
     $(this).toggleClass('active');

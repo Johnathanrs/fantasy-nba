@@ -359,3 +359,7 @@ td.break {
 .team-stat tr {
     table-layout: fixed;
 }
+
+input[type="search"]::-webkit-search-cancel-button {
+    -webkit-appearance: searchfield-cancel-button;
+}

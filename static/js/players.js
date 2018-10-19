@@ -23,7 +23,11 @@ $(function() {
   // filter players
   $("#search-player").on("keyup", function() {
     filterTable();
-  });  
+  });
+
+  $("#search-player").on("search", function() {
+    filterTable();
+  });
 
   $('.position-filter .nav-item a').on('click', function() {
     $('.position-filter .nav-item a').removeClass('active');
