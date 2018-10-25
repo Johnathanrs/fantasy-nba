@@ -131,9 +131,13 @@ def get_ranking(players, sattr, dattr, order=1):
     return players, ranking
 
 def teamSync(team):
+    # bball -> roto
     team = team.strip().strip('@')
     conv = {
-        'GSW': 'GS'
+        'GSW': 'GS',
+        'CHO': 'CHA',
+        'NOP': 'NO',
+        'SAS': 'SA'
     }
 
     return conv[team] if team in conv else team
