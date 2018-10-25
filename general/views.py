@@ -79,7 +79,7 @@ def get_games_(pid, loc, opp, season):
     player = Player.objects.get(id=pid)
     games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
                                       team=player.team,
-                                      opp__contains=opp,
+                                      opp=opp,
                                       date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)]) \
                               .order_by('-date')
     if loc != 'all':
@@ -147,7 +147,7 @@ def teamSync(team):
 def get_team_games(team):
     # get all games for the team last season
     season = current_season()
-    q = Q(team__contains=team) & \
+    q = Q(team=team) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
 
     return PlayerGame.objects.filter(q)
@@ -157,7 +157,7 @@ def get_team_stat(team, loc='@'):
     loc_ = '@' if loc == '' else ''
     # pdb.set_trace()
     season = current_season()
-    q = Q(opp__contains=team) & Q(location=loc) & \
+    q = Q(opp=team) & Q(location=loc) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
     a_teams = PlayerGame.objects.filter(q)
     a_teams_ = a_teams.values('date').annotate(trb=Sum('trb'), 
@@ -174,7 +174,7 @@ def get_team_stat(team, loc='@'):
     tpg = a_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
     ppg = a_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
-    q = Q(team__contains=team) & Q(location=loc_) & \
+    q = Q(team=team) & Q(location=loc_) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
     s_teams = PlayerGame.objects.filter(q)
     s_teams_ = s_teams.values('date').annotate(trb=Sum('trb'), 
@@ -376,8 +376,8 @@ def player_match_up(request):
         if game:
             q = Q(location=loc) if loc != 'all' else Q()
             teams = game.split('-')
-            q &= (Q(team__contains=teams[0]) & Q(opp__contains=teams[1])) | \
-                 (Q(team__contains=teams[1]) & Q(opp__contains=teams[0]))
+            q &= (Q(team=teams[0]) & Q(opp=teams[1])) | \
+                 (Q(team=teams[1]) & Q(opp=teams[0]))
             
             # get the date of last game between the teams
             last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
@@ -424,7 +424,7 @@ def player_match_up(request):
                         'sfp': sfp,
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
-                        'opp': PlayerGame.objects.filter(team__contains=player.team, 
+                        'opp': PlayerGame.objects.filter(team=player.team, 
                                                          date__gte=last_game.date+datetime.timedelta(-120),
                                                          name__in=fellows) \
                                                  .order_by('-fpts').first().fpts
