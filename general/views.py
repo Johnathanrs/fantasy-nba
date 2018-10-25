@@ -137,7 +137,8 @@ def teamSync(team):
         'GSW': 'GS',
         'CHO': 'CHA',
         'NOP': 'NO',
-        'SAS': 'SA'
+        'SAS': 'SA',
+        'NYK': 'NY'
     }
 
     return conv[team] if team in conv else team
