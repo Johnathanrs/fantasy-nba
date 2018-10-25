@@ -46,6 +46,8 @@ def main():
                 name = player.find("td", {"data-stat":"player"}).text.strip()
                 team = player.find("td", {"data-stat":"team_id"}).text.strip()
                 team = teamSync(team)
+                opp = player.find("td", {"data-stat":"opp_id"}).text
+                opp = teamSync(opp)
                 uid = player.find("td", {"data-stat":"player"}).get('data-append-csv')
                 player_ = Player.objects.filter(first_name__iexact=name.split(' ')[0],
                                                 last_name__iexact=name.split(' ')[1],
@@ -69,7 +71,7 @@ def main():
                         name = name,
                         team = team,
                         location = player.find("td", {"data-stat":"game_location"}).text,
-                        opp = player.find("td", {"data-stat":"opp_id"}).text,
+                        opp = opp,
                         game_result = player.find("td", {"data-stat":"game_result"}).text,
                         mp = float(mp[0])+float(mp[1])/60,
                         fg = fg,
