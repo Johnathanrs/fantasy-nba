@@ -66,8 +66,8 @@ def get_players(request):
             q |= Q(team__in=game.split('-'))
             # if game:
             #     teams = game.split('-')
-            #     q |= (Q(team=teams[0]) & Q(opponent__contains=teams[1])) | \
-            #          (Q(team=teams[1]) & Q(opponent__contains=teams[0])) 
+            #     q |= (Q(team=teams[0]) & Q(opponent=teams[1])) | \
+            #          (Q(team=teams[1]) & Q(opponent=teams[0])) 
     else:
         q = Q(uid=-1)   # no result
 
@@ -77,15 +77,16 @@ def get_players(request):
 
 def get_games_(pid, loc, opp, season):
     player = Player.objects.get(id=pid)
-    games = PlayerGame.objects.filter(name='{} {}'.format(player.first_name, player.last_name),
-                                      team=player.team,
-                                      opp=opp,
-                                      date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)]) \
-                              .order_by('-date')
-    if loc != 'all':
-        games = games.filter(location=loc).order_by('-date')
+    q = Q(name='{} {}'.format(player.first_name, player.last_name)) \
+      & Q(team=player.team) \
+      & Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
 
-    return games
+    if opp:
+        q &= Q(opp=opp)
+    if loc != 'all':
+        q &= Q(location=loc)
+
+    return PlayerGame.objects.filter(q).order_by('-date')
 
 
 def current_season():
