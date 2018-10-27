@@ -520,6 +520,7 @@ def export_lineups(request):
     CSV_FIELDS = {
         'FanDuel': ['PG', 'PG', 'SG', 'SG', 'SF', 'SF', 'PF', 'PF', 'C'],
         'DraftKings': ['PG', 'SG', 'SF', 'PF', 'C', 'G', 'F', 'UTIL'],
+        'Yahoo': ['PG', 'SG', 'G', 'SF', 'PF', 'F', 'C', 'UTIL'],
     }
 
     csv_fields = CSV_FIELDS[ds] if ds in CSV_FIELDS else CSV_FIELDS['FanDuel']

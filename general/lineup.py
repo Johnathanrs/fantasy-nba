@@ -51,9 +51,11 @@ class Roster:
 
     def get_csv(self, ds):
         s = ''
-        if ds == 'DraftKings': 
+        if ds in ['DraftKings', 'Yahoo']: 
             players = list(self.players)
             pos = ['PG', 'SG', 'SF', 'PF', 'C', 'PG,SG', 'SF,PF']
+            if ds == 'Yahoo':
+                pos = ['PG', 'SG', 'PG,SG', 'SF', 'PF', 'SF,PF', 'C']
             for ii in pos:
                 for jj in players:
                     if jj.position in ii:
@@ -89,25 +91,32 @@ POSITION_LIMITS = {
                       ["C", 1, 2],
                       ["PG,SG", 3, 4],
                       ["SF,PF", 3, 4]
+                  ],
+    'Yahoo': [
+                      ["PG", 1, 3],
+                      ["SG", 1, 3],
+                      ["SF", 1, 3],
+                      ["PF", 1, 3],
+                      ["C", 1, 2],
+                      ["PG,SG", 3, 4],
+                      ["SF,PF", 3, 4]
                   ]
 }
 
 SALARY_CAP = {
     'FanDuel': 60000,
     'DraftKings': 50000,
+    'Yahoo': 200,
 
-    'Yahoo': 60000,
-    'Fanball': 60000,
-    'FantasyDraft': 60000
+    'Fanball': 60000
 }
 
 ROSTER_SIZE = {
     'FanDuel': 9,
     'DraftKings': 8,
-
     'Yahoo': 8,
-    'Fanball': 9,
-    'FantasyDraft': 9
+
+    'Fanball': 9
 }
 
 
@@ -144,8 +153,9 @@ def get_lineup(ds, players, teams, locked, max_point):
             if player.position in position:
                 position_cap.SetCoefficient(variables[i], 1)
 
+    # at most 4 players from one team (yahoo)
     for team in teams:
-        team_cap = solver.Constraint(0, 4)
+        team_cap = solver.Constraint(0, 6)
         for i, player in enumerate(players):
             if team == player.team:
                 team_cap.SetCoefficient(variables[i], 1)
@@ -177,6 +187,7 @@ def calc_lineups(players, num_lineups, locked=[], ds='FanDuel'):
         if not roster:
             break
         max_point = roster.projected() - 0.001
+        # min number of teams - 3 (yahoo)
         if roster.get_num_teams() > 2:
             result.append(roster)
             if len(result) == num_lineups:
