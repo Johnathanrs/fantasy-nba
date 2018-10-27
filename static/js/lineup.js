@@ -8,7 +8,7 @@ $(function() {
   });
 
   $('.nav-tabs.ds .nav-link').click(function () {
-    console.log($(this).text());
+    $('#div-result').html('');
     $('#ds').val($(this).text());
   });
 

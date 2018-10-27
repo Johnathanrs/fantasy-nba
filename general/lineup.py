@@ -51,11 +51,16 @@ class Roster:
 
     def get_csv(self, ds):
         s = ''
-        if ds in ['DraftKings', 'Yahoo']: 
+        if ds == 'FanDuel': 
+            s = ','.join(str(x) for x in self.sorted_players())+'\n'
+        else:
+            pos = {
+                'DraftKings': ['PG', 'SG', 'SF', 'PF', 'C', 'PG,SG', 'SF,PF'],
+                'Yahoo': ['PG', 'SG', 'PG,SG', 'SF', 'PF', 'SF,PF', 'C'],
+                'Fanball': ['PG', 'SG', 'SF', 'PF', 'C', 'PG,SG', 'SF,PF,C']
+            }
+            pos = pos[ds]
             players = list(self.players)
-            pos = ['PG', 'SG', 'SF', 'PF', 'C', 'PG,SG', 'SF,PF']
-            if ds == 'Yahoo':
-                pos = ['PG', 'SG', 'PG,SG', 'SF', 'PF', 'SF,PF', 'C']
             for ii in pos:
                 for jj in players:
                     if jj.position in ii:
@@ -63,8 +68,6 @@ class Roster:
                         players.remove(jj)
                         break
             s += str(players[0])+'\n'
-        else:
-            s = ','.join(str(x) for x in self.sorted_players())+'\n'
 
         return s
 
@@ -93,30 +96,37 @@ POSITION_LIMITS = {
                       ["SF,PF", 3, 4]
                   ],
     'Yahoo': [
-                      ["PG", 1, 3],
-                      ["SG", 1, 3],
-                      ["SF", 1, 3],
-                      ["PF", 1, 3],
-                      ["C", 1, 2],
-                      ["PG,SG", 3, 4],
-                      ["SF,PF", 3, 4]
-                  ]
+                ["PG", 1, 3],
+                ["SG", 1, 3],
+                ["SF", 1, 3],
+                ["PF", 1, 3],
+                ["C", 1, 2],
+                ["PG,SG", 3, 4],
+                ["SF,PF", 3, 4]
+            ],
+    'Fanball': [
+                ["PG", 1, 3],
+                ["SG", 1, 3],
+                ["SF", 1, 3],
+                ["PF", 1, 3],
+                ["C", 1, 3],
+                ["PG,SG", 3, 4],
+                ["SF,PF", 3, 4]
+            ]
 }
 
 SALARY_CAP = {
     'FanDuel': 60000,
     'DraftKings': 50000,
     'Yahoo': 200,
-
-    'Fanball': 60000
+    'Fanball': 55000
 }
 
 ROSTER_SIZE = {
     'FanDuel': 9,
     'DraftKings': 8,
     'Yahoo': 8,
-
-    'Fanball': 9
+    'Fanball': 8
 }
 
 
@@ -145,7 +155,7 @@ def get_lineup(ds, players, teams, locked, max_point):
     for i, player in enumerate(players):
         point_cap.SetCoefficient(variables[i], player.proj_points)
 
-    position_limits = POSITION_LIMITS[ds] if ds in POSITION_LIMITS else POSITION_LIMITS['FanDuel']
+    position_limits = POSITION_LIMITS[ds]
     for position, min_limit, max_limit in position_limits:
         position_cap = solver.Constraint(min_limit, max_limit)
 
