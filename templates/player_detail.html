@@ -8,7 +8,7 @@
       <div class="mr-3 float-left" style="height: 200px;">
         <img src="{{ player.avatar }}" width="120" style="clip-path: inset(0 0 15px 0);">
       </div>
-      <h3>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}</small></h3>
+      <h3>{{ player.first_name }} {{ player.last_name }} <small class="text-secondary">{{ player.position }}&nbsp;&nbsp;<i class="far fa-thumbs-up fav {{ player.uid|liked }}" data-uid="{{ player.uid }}"></i></small></h3>
 
       <h6 class="text-success">{{ player.team }}</h6>
       <h6 class="text-secondary">

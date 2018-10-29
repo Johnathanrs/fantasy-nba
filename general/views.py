@@ -555,8 +555,8 @@ def update_point(request):
 
 def build_TMS_cache(request):
     all_teams = [ii['team'] for ii in PlayerGame.objects.values('team').distinct()]
-    stat_home = [get_team_stat(ii, '@') for ii in all_teams]
-    stat_away = [get_team_stat(ii, '') for ii in all_teams]
+    stat_home = [get_team_stat(ii, '') for ii in all_teams]
+    stat_away = [get_team_stat(ii, '@') for ii in all_teams]
 
     attrs = stat_home[0].keys()
     for attr in attrs:
@@ -570,8 +570,8 @@ def build_TMS_cache(request):
 
     team_info = {}
     for game in Game.objects.all():
-        team_info[game.home_team] = get_team_info(game.home_team, '@')
-        team_info[game.visit_team] = get_team_info(game.visit_team, '')
+        team_info[game.home_team] = get_team_info(game.home_team, '')
+        team_info[game.visit_team] = get_team_info(game.visit_team, '@')
 
     TMSCache.objects.all().delete()
     for game in Game.objects.all():
