@@ -44,6 +44,7 @@ def main():
             if not player.get('class'): # ignore header
                 mp = player.find("td", {"data-stat":"mp"}).text.split(':')
                 name = player.find("td", {"data-stat":"player"}).text.strip()
+                name = nameSync(name)
                 team = player.find("td", {"data-stat":"team_id"}).text.strip()
                 team = teamSync(team)
                 opp = player.find("td", {"data-stat":"opp_id"}).text

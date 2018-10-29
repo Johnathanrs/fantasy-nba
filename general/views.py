@@ -144,6 +144,14 @@ def teamSync(team):
 
     return conv[team] if team in conv else team
 
+def nameSync(name):
+    # bball -> roto
+    conv = {
+        'Juan Hernangomez': 'Juancho Hernangomez',
+        'CJ McCollum': 'C.J. McCollum'
+    }
+
+    return conv[name] if name in conv else name
 
 def get_team_games(team):
     # get all games for the team last season
