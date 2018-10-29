@@ -2,7 +2,7 @@ $(document).ready(function () {
   $( ".slider-range" ).slider({
     range: true,
     min: 1,
-    step: 0.1,
+    step: 0.5,
     max: 100,
     values: [ 1, 100 ],
     change: function( event, ui ) {
