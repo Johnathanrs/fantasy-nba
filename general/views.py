@@ -119,8 +119,8 @@ def formated_diff(val):
     return fm.format(abs(val))
 
 
-# order = 1: ascending, -1: descending
 def get_ranking(players, sattr, dattr, order=1):
+    # order = 1: ascending, -1: descending
     players = sorted(players, key=lambda k: k[sattr]*order)
     ranking = 0
     prev_val = None
@@ -431,18 +431,22 @@ def player_match_up(request):
                                                  .order_by('-fpts').first().fpts
                     })
 
-    players, num_opr = get_ranking(players, 'opp', 'opr')
     groups = {ii: [] for ii in POSITION}
-    colors = linear_gradient('#90EE90', '#137B13', num_opr)['hex']
-
     for ii in players:
-        ii['color'] = str(colors[ii['opr']-1])
         groups[ii['pos']].append(ii)
 
+    num_oprs = []
     for ii in POSITION:
         if groups[ii]:
+            groups[ii], num_opr = get_ranking(groups[ii], 'opp', 'opr')
+            num_oprs.append(num_opr)
             groups[ii], _ = get_ranking(groups[ii], 'sfp', 'ppr', -1)
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
+
+    colors = linear_gradient('#90EE90', '#137B13', max(num_oprs))['hex']
+    for ii in POSITION:
+        for jj in groups[ii]:
+            jj['color'] = str(colors[jj['opr']-1])
 
     players = []
     for ii in POSITION:
