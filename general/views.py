@@ -139,6 +139,7 @@ def teamSync(team):
         'CHO': 'CHA',
         'NOP': 'NO',
         'SAS': 'SA',
+        'BRK': 'BKN',
         'NYK': 'NY'
     }
 
