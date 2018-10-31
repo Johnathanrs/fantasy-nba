@@ -14,7 +14,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
-from general.views import teamSync
+from general.views import teamSync, nameSync
 
 def main():
     dp = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"
