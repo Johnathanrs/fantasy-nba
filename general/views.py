@@ -395,6 +395,7 @@ def player_match_up(request):
             # get games
             players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
             players_ += [ii for ii in players__]
+            
     players = []
     for ii in players_:
         names = ii.name.split(' ')

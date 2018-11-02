@@ -38,7 +38,7 @@
             <td>{{ ii.spg|floatformat:1 }}</td>
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
-            <td>{{ ii.ppg|floatformat:1 }}</td>
+            <td>{{ ii.tov|floatformat:1 }}</td>
             <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
               {{ ii.sfp|floatformat:1 }}
             </td>
@@ -276,7 +276,7 @@
             <td>{{ ii.spg|floatformat:1 }}</td>
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
-            <td>{{ ii.ppg|floatformat:1 }}</td>
+            <td>{{ ii.tov|floatformat:1 }}</td>
             <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
               {{ ii.sfp|floatformat:1 }}
             </td>
