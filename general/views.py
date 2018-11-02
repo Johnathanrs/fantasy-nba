@@ -181,7 +181,7 @@ def get_team_stat(team, loc='@'):
     apg = a_teams_.aggregate(Avg('ast'))['ast__avg'] or 0
     spg = a_teams_.aggregate(Avg('stl'))['stl__avg'] or 0
     bpg = a_teams_.aggregate(Avg('blk'))['blk__avg'] or 0
-    tpg = a_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
+    tov = a_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
     ppg = a_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
     q = Q(team=team) & Q(location=loc_) & \
@@ -198,7 +198,7 @@ def get_team_stat(team, loc='@'):
     s_apg = s_teams_.aggregate(Avg('ast'))['ast__avg'] or 0
     s_spg = s_teams_.aggregate(Avg('stl'))['stl__avg'] or 0
     s_bpg = s_teams_.aggregate(Avg('blk'))['blk__avg'] or 0
-    s_tpg = s_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
+    s_tov = s_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
     s_ppg = s_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
     res = {
@@ -207,16 +207,16 @@ def get_team_stat(team, loc='@'):
         'apg': apg,
         'spg': spg,
         'bpg': bpg,
-        'tpg': tpg,
+        'tov': tov,
         'ppg': ppg,
-        'total': rpg+apg+spg+bpg+tpg+ppg,
+        'total': rpg+apg+spg+bpg+tov+ppg,
         's_rpg': s_rpg,
         's_apg': s_apg,
         's_spg': s_spg,
         's_bpg': s_bpg,
-        's_tpg': s_tpg,
+        's_tov': s_tov,
         's_ppg': s_ppg,
-        's_total': s_rpg+s_apg+s_spg+s_bpg+s_tpg+s_ppg
+        's_total': s_rpg+s_apg+s_spg+s_bpg+s_tov+s_ppg
     }
 
     # FPA TM POS
@@ -317,7 +317,7 @@ def get_team_info(team, loc):
                 'spg': games.aggregate(Avg('stl'))['stl__avg'],
                 'bpg': games.aggregate(Avg('blk'))['blk__avg'],
                 'ppg': games.aggregate(Avg('pts'))['pts__avg'],
-                'tpg': games.aggregate(Avg('tov'))['tov__avg'],
+                'tov': games.aggregate(Avg('tov'))['tov__avg'],
                 'ampg': ampg,
                 'afp': afp,
                 'sfp': sfp / 3,
