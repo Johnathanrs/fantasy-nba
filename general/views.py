@@ -355,8 +355,9 @@ def build_OPR_cache():
                 q = Q(actual_position__icontains=pos) | Q(position=pos)
                 players_ = Player.objects.filter(Q(team__in=opp_teams) & q)
                 players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
-                opp = games.filter(name__in=players_).aggregate(Avg('fpts'))['fpts__avg'] or 0
-                
+                games = games.filter(name__in=players_).values('date').annotate(fpts=Sum('fpts'))
+                opp = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
+
                 pos_opr.append({ 
                     'team': team, 
                     'opp': opp 
@@ -385,8 +386,8 @@ def player_match_up(request):
     teams_ = []
     for game in games:
         teams = game.split('-') # home-away
-        game_info[teams[0]] = [teams[1], '']
-        game_info[teams[1]] = [teams[0], '@']
+        game_info[teams[0]] = [teams[1], '', '@']   # vs, loc, loc_
+        game_info[teams[1]] = [teams[0], '@', '']
 
         if loc == '' or loc == 'all':
             teams_.append(teams[0])
@@ -411,7 +412,11 @@ def player_match_up(request):
 
             if min_afp <= afp <= max_afp:
                 if min_sfp <= sfp <= max_sfp:
+                    vs = game_info[player.team][0]
                     loc = game_info[player.team][1]
+                    loc_ = game_info[player.team][2]
+                    opr_info_ = opr_info[loc_][player.position][vs]
+
                     players_.append({
                         'avatar': player.avatar,
                         'id': player.id,
@@ -419,7 +424,7 @@ def player_match_up(request):
                         'name': '{} {}'.format(player.first_name, player.last_name),
                         'team': player.team,
                         'loc': loc,
-                        'vs': game_info[player.team][0],
+                        'vs': vs,
                         'pos': player.position,
                         'inj': player.injury,
                         'salary': player.salary,
@@ -430,9 +435,9 @@ def player_match_up(request):
                         'sfp': sfp,
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
-                        'opp': opr_info[loc][player.position][player.team]['opp'],
-                        'opr': opr_info[loc][player.position][player.team]['opr'],
-                        'color': opr_info[loc][player.position][player.team]['color']
+                        'opp': opr_info_['opp'],
+                        'opr': opr_info_['opr'],
+                        'color': opr_info_['color']
                     })
 
     groups = { ii: [] for ii in POSITION }
