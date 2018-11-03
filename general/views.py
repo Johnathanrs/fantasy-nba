@@ -377,25 +377,24 @@ def player_match_up(request):
     min_sfp = float(request.POST.get('min_sfp'))
     max_afp = float(request.POST.get('max_afp'))
     max_sfp = float(request.POST.get('max_sfp'))
-    games = request.POST.get('games').split(';')
+    games = request.POST.get('games').strip(';').split(';')
 
     last_game = PlayerGame.objects.all().order_by('-date').first()
 
     players_ = []
     for game in games:
-        if game:
-            q = Q(location=loc) if loc != 'all' else Q()
-            teams = game.split('-')
-            q &= (Q(team=teams[0]) & Q(opp=teams[1])) | \
-                 (Q(team=teams[1]) & Q(opp=teams[0]))
-            
-            # get the date of last game between the teams
-            last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
-            # print last_game_.date, game
-            # get games
-            players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
-            players_ += [ii for ii in players__]
-            
+        q = Q(location=loc) if loc != 'all' else Q()
+        teams = game.split('-') # home-away
+        q &= (Q(team=teams[0]) & Q(opp=teams[1]) & Q(location='')) | \
+             (Q(team=teams[1]) & Q(opp=teams[0]) & Q(location='@'))
+        
+        # get the date of last game between the teams
+        last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
+        # print last_game_.date, game
+        # get games
+        players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
+        players_ += [ii for ii in players__]
+
     players = []
     for ii in players_:
         names = ii.name.split(' ')
@@ -436,7 +435,7 @@ def player_match_up(request):
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
                         'opp': PlayerGame.objects.filter(team=player.team, 
-                                                         date__gte=last_game.date+datetime.timedelta(-120),
+                                                         date__gte=last_game.date+datetime.timedelta(-30),
                                                          name__in=fellows) \
                                                  .order_by('-fpts').first().fpts
                     })

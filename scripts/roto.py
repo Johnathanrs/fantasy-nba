@@ -28,6 +28,8 @@ def get_players(data_source):
         print data_source, len(players)
         for ii in players:
             defaults = { key: str(ii[key]).replace(',', '') for key in fields }
+            defaults['play_today'] = True
+
             defaults['injury'] = html2text.html2text(ii['injury']).strip()
             if data_source == 'FantasyDraft':
                 defaults['position'] = defaults['actual_position']
@@ -37,5 +39,6 @@ def get_players(data_source):
         pass
 
 if __name__ == "__main__":
+    Player.objects.all().update(play_today=False)
     for ds in DATA_SOURCE:
         get_players(ds[0])

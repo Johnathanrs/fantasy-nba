@@ -39,7 +39,8 @@ class Player(models.Model):
     team = models.CharField(max_length=50)
     team_points = models.FloatField()
     value = models.FloatField()
-
+    play_today = models.BooleanField(default=False)
+    
     data_source = models.CharField(max_length=30, choices=DATA_SOURCE, default='FanDuel')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
