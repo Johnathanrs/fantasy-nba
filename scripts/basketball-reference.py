@@ -14,7 +14,27 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
-from general.views import teamSync, nameSync
+
+def teamSync(team):
+    # bball -> roto
+    team = team.strip().strip('@')
+    conv = {
+        'GSW': 'GS',
+        'CHO': 'CHA',
+        'NOP': 'NO',
+        'SAS': 'SA',
+        'BRK': 'BKN',
+        'NYK': 'NY'
+    }
+    return conv[team] if team in conv else team
+
+def nameSync(name):
+    # bball -> roto
+    conv = {
+        'Juan Hernangomez': 'Juancho Hernangomez',
+        'CJ McCollum': 'C.J. McCollum'
+    }
+    return conv[name] if name in conv else name
 
 def main():
     dp = "https://www.basketball-reference.com/friv/dailyleaders.fcgi"

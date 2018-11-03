@@ -58,20 +58,11 @@ def fav_player(request):
 @csrf_exempt
 def get_players(request):
     ds = request.POST.get('ds')
-    games = request.POST.get('games').split(';')
-
-    if len(games) > 1:
-        q = Q()
-        for game in games:
-            q |= Q(team__in=game.split('-'))
-            # if game:
-            #     teams = game.split('-')
-            #     q |= (Q(team=teams[0]) & Q(opponent=teams[1])) | \
-            #          (Q(team=teams[1]) & Q(opponent=teams[0])) 
-    else:
-        q = Q(uid=-1)   # no result
-
-    players = Player.objects.filter(Q(data_source=ds) & q).order_by('-proj_points')
+    teams = request.POST.get('games').strip(';').replace(';', '-').split('-')
+    players = Player.objects.filter(data_source=ds, 
+                                    team__in=teams,
+                                    play_today=True) \
+                            .order_by('-proj_points')
     return HttpResponse(render_to_string('player-list_.html', locals()))
 
 
@@ -131,28 +122,6 @@ def get_ranking(players, sattr, dattr, order=1):
         ii[dattr] = ranking
     return players, ranking
 
-def teamSync(team):
-    # bball -> roto
-    team = team.strip().strip('@')
-    conv = {
-        'GSW': 'GS',
-        'CHO': 'CHA',
-        'NOP': 'NO',
-        'SAS': 'SA',
-        'BRK': 'BKN',
-        'NYK': 'NY'
-    }
-
-    return conv[team] if team in conv else team
-
-def nameSync(name):
-    # bball -> roto
-    conv = {
-        'Juan Hernangomez': 'Juancho Hernangomez',
-        'CJ McCollum': 'C.J. McCollum'
-    }
-
-    return conv[name] if name in conv else name
 
 def get_team_games(team):
     # get all games for the team last season
@@ -231,7 +200,7 @@ def get_team_stat(team, loc='@'):
         for pos in POSITION:
             # players in the position of the team
             q = Q(actual_position__icontains=pos) | Q(position=pos)
-            players_ = Player.objects.filter(Q(team=teamSync(players[0].team)) & q)
+            players_ = Player.objects.filter(Q(team=players[0].team) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
         if tm_pos_['PG'] > 0 and tm_pos_['SG'] > 0:
@@ -254,7 +223,7 @@ def get_team_stat(team, loc='@'):
         for pos in POSITION:
             # players in the position of the team
             q = Q(actual_position__icontains=pos) | Q(position=pos)
-            players_ = Player.objects.filter(Q(team=teamSync(players[0].team)) & q)
+            players_ = Player.objects.filter(Q(team=players[0].team) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
         if tm_pos_['PG'] > 0 and tm_pos_['SG'] > 0:
@@ -272,7 +241,6 @@ def get_player(full_name, team):
     FanDuel has top priority
     '''
     names = full_name.split(' ')
-    team = teamSync(team)
     players = Player.objects.filter(first_name=names[0], last_name=names[1], team=team) \
                             .order_by('data_source')
     player = players.filter(data_source='FanDuel').first()
@@ -367,6 +335,40 @@ def team_match_up(request):
     return HttpResponse(render_to_string('team-board_.html', locals()))
 
 
+def build_OPR_cache():
+    season = current_season()
+    opr_info = { '': {}, '@': {} }
+    all_teams = [ii['team'] for ii in Player.objects.values('team').distinct()]
+
+    colors = linear_gradient('#90EE90', '#137B13', len(all_teams))['hex']
+
+    for loc in ['', '@']:
+        for pos in POSITION:
+            pos_opr = []
+            for team in all_teams:
+                # opponent's games
+                q = Q(opp=team) & Q(location=loc) & \
+                    Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+                games = PlayerGame.objects.filter(q)
+                opp_teams = [jj['team'] for jj in games.values('team').distinct()]
+                # filter with pos
+                q = Q(actual_position__icontains=pos) | Q(position=pos)
+                players_ = Player.objects.filter(Q(team__in=opp_teams) & q)
+                players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
+                opp = games.filter(name__in=players_).aggregate(Avg('fpts'))['fpts__avg'] or 0
+                
+                pos_opr.append({ 
+                    'team': team, 
+                    'opp': opp 
+                })
+            pos_opr, _ = get_ranking(pos_opr, 'opp', 'opr')
+            opr_info[loc][pos] = { 
+                                    ii['team']: { 'opp': ii['opp'], 'opr': ii['opr'], 'color': colors[ii['opr']-1] } 
+                                    for ii in pos_opr 
+                                 }
+    TMSCache.objects.create(team='TM_OPR', type=3, body=json.dumps(opr_info))
+
+
 @csrf_exempt
 def player_match_up(request):
     loc = request.POST.get('loc')
@@ -379,51 +381,45 @@ def player_match_up(request):
     max_sfp = float(request.POST.get('max_sfp'))
     games = request.POST.get('games').strip(';').split(';')
 
-    last_game = PlayerGame.objects.all().order_by('-date').first()
-
-    players_ = []
+    game_info = {}
+    teams_ = []
     for game in games:
-        q = Q(location=loc) if loc != 'all' else Q()
         teams = game.split('-') # home-away
-        q &= (Q(team=teams[0]) & Q(opp=teams[1]) & Q(location='')) | \
-             (Q(team=teams[1]) & Q(opp=teams[0]) & Q(location='@'))
-        
-        # get the date of last game between the teams
-        last_game_ = PlayerGame.objects.filter(q).order_by('-date').first()
-        # print last_game_.date, game
-        # get games
-        players__ = PlayerGame.objects.filter(Q(date=last_game_.date) & q)
-        players_ += [ii for ii in players__]
+        game_info[teams[0]] = [teams[1], '']
+        game_info[teams[1]] = [teams[0], '@']
 
-    players = []
-    for ii in players_:
-        names = ii.name.split(' ')
-        # print ii.name
-        team = teamSync(ii.team)
-        vs = teamSync(ii.opp)
-        player = Player.objects.filter(first_name=names[0], last_name=names[1], 
-                                       team=team, data_source=ds).first()
-        if player and pos in player.position:
+        if loc == '' or loc == 'all':
+            teams_.append(teams[0])
+
+        if loc == '@' or loc == 'all':
+            teams_.append(teams[1])
+
+    opr_info = json.loads(TMSCache.objects.filter(team='TM_OPR').first().body)
+
+    players = Player.objects.filter(data_source=ds,
+                                    play_today=True, 
+                                    team__in=teams_) \
+                            .order_by('-proj_points')
+    players_ = []
+    for player in players:
+        if pos in player.position:
             games = get_games_(player.id, 'all', '', current_season())
             ampg = games.aggregate(Avg('mp'))['mp__avg']
-            smpg = games.filter(location='@').aggregate(Avg('mp'))['mp__avg']
+            smpg = games.filter(location=game_info[player.team][1]).aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
-            sfp = games.filter(location='@').aggregate(Avg('fpts'))['fpts__avg']
+            sfp = games.filter(location=game_info[player.team][1]).aggregate(Avg('fpts'))['fpts__avg']
 
-            # print player, afp
             if min_afp <= afp <= max_afp:
                 if min_sfp <= sfp <= max_sfp:
-                    fellows = Player.objects.filter(position=player.position, team=player.team)
-                    fellows = ['{} {}'.format(jj.first_name, jj.last_name) for jj in fellows]
-
-                    players.append({
+                    loc = game_info[player.team][1]
+                    players_.append({
                         'avatar': player.avatar,
                         'id': player.id,
                         'uid': player.uid,
-                        'name': ii.name,
-                        'team': team,
-                        'loc': ii.location,
-                        'vs': vs,
+                        'name': '{} {}'.format(player.first_name, player.last_name),
+                        'team': player.team,
+                        'loc': loc,
+                        'vs': game_info[player.team][0],
                         'pos': player.position,
                         'inj': player.injury,
                         'salary': player.salary,
@@ -434,28 +430,20 @@ def player_match_up(request):
                         'sfp': sfp,
                         'pdiff': formated_diff(sfp-afp),
                         'val': player.salary / 250 + 10,
-                        'opp': PlayerGame.objects.filter(team=player.team, 
-                                                         date__gte=last_game.date+datetime.timedelta(-30),
-                                                         name__in=fellows) \
-                                                 .order_by('-fpts').first().fpts
+                        'opp': opr_info[loc][player.position][player.team]['opp'],
+                        'opr': opr_info[loc][player.position][player.team]['opr'],
+                        'color': opr_info[loc][player.position][player.team]['color']
                     })
 
-    groups = {ii: [] for ii in POSITION}
-    for ii in players:
+    groups = { ii: [] for ii in POSITION }
+    for ii in players_:
         groups[ii['pos']].append(ii)
 
     num_oprs = []
     for ii in POSITION:
         if groups[ii]:
-            groups[ii], num_opr = get_ranking(groups[ii], 'opp', 'opr')
-            num_oprs.append(num_opr)
             groups[ii], _ = get_ranking(groups[ii], 'sfp', 'ppr', -1)
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
-
-    colors = linear_gradient('#90EE90', '#137B13', max(num_oprs))['hex']
-    for ii in POSITION:
-        for jj in groups[ii]:
-            jj['color'] = str(colors[jj['opr']-1])
 
     players = []
     for ii in POSITION:

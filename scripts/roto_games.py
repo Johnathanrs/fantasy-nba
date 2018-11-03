@@ -33,6 +33,7 @@ def get_games():
                 ii['ou'] = float(ii['ou']) if ii['ou'] else 0
                 Game.objects.create(**ii)
             build_TMS_cache(None)
+            build_OPR_cache()
     # except:
     #     pass
 
