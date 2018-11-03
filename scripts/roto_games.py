@@ -32,7 +32,7 @@ def get_games():
                 ii['date'] = datetime.datetime.combine(datetime.date.today(), ii['date'].time())
                 ii['ou'] = float(ii['ou']) if ii['ou'] else 0
                 Game.objects.create(**ii)
-            build_TMS_cache(None)
+            build_TMS_cache()
             build_OPR_cache()
     # except:
     #     pass

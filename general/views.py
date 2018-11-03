@@ -550,7 +550,7 @@ def update_point(request):
     return HttpResponse('')
 
 
-def build_TMS_cache(request):
+def build_TMS_cache():
     all_teams = [ii['team'] for ii in PlayerGame.objects.values('team').distinct()]
     stat_home = [get_team_stat(ii, '') for ii in all_teams]
     stat_away = [get_team_stat(ii, '@') for ii in all_teams]
@@ -576,5 +576,3 @@ def build_TMS_cache(request):
         TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(team_info[game.visit_team]))
         TMSCache.objects.create(team=game.home_team, type=2, body=json.dumps(stat_home[game.home_team]))
         TMSCache.objects.create(team=game.visit_team, type=2, body=json.dumps(stat_away[game.visit_team]))
-
-    return HttpResponse('success')
