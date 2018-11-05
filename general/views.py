@@ -199,7 +199,7 @@ def get_team_stat(team, loc='@'):
         # for each position
         for pos in POSITION:
             # players in the position of the team
-            q = Q(actual_position__icontains=pos) | Q(position=pos)
+            q = Q(position=pos) & Q(data_source='FanDuel')
             players_ = Player.objects.filter(Q(team=players[0].team) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
@@ -222,7 +222,7 @@ def get_team_stat(team, loc='@'):
         # for each position
         for pos in POSITION:
             # players in the position of the team
-            q = Q(actual_position__icontains=pos) | Q(position=pos)
+            q = Q(position=pos) & Q(data_source='FanDuel')
             players_ = Player.objects.filter(Q(team=players[0].team) & q)
             players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
             tm_pos_[pos] = players.filter(name__in=players_).aggregate(Sum('fpts'))['fpts__sum'] or 0
@@ -352,7 +352,7 @@ def build_OPR_cache():
                 games = PlayerGame.objects.filter(q)
                 opp_teams = [jj['team'] for jj in games.values('team').distinct()]
                 # filter with pos
-                q = Q(actual_position__icontains=pos) | Q(position=pos)
+                q = Q(position=pos) & Q(data_source='FanDuel')
                 players_ = Player.objects.filter(Q(team__in=opp_teams) & q)
                 players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
                 games = games.filter(name__in=players_).values('date').annotate(fpts=Sum('fpts'))
