@@ -576,6 +576,10 @@ def build_TMS_cache():
         team_info[game.visit_team] = get_team_info(game.visit_team, '@')
 
     TMSCache.objects.all().delete()
+
+    TMSCache.objects.create(team='STAT_HOME', type=3, body=json.dumps(stat_home))
+    TMSCache.objects.create(team='STAT_AWAY', type=3, body=json.dumps(stat_away))
+
     for game in Game.objects.all():
         TMSCache.objects.create(team=game.home_team, type=1, body=json.dumps(team_info[game.home_team]))
         TMSCache.objects.create(team=game.visit_team, type=1, body=json.dumps(team_info[game.visit_team]))

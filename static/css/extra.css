@@ -21,6 +21,7 @@ th {
     right: 5px;
     width: calc(100% - 10px);
     max-width: 310px;
+    z-index: 3;
 }
 
 .fav-wrapper .fav-body {
