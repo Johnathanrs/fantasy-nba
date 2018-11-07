@@ -86,7 +86,8 @@ def main():
                     blk = int(player.find("td", {"data-stat":"blk"}).text)
                     stl = int(player.find("td", {"data-stat":"stl"}).text)
                     tov = int(player.find("td", {"data-stat":"tov"}).text)
-                    fpts = 3 * fg3 + 2 * fg + ft + 1.2 * trb + 1.5 * ast + 3 * blk + 3 *stl - tov
+                    pts = int(player.find("td", {"data-stat":"pts"}).text)
+                    fpts = pts + 1.2 * trb + 1.5 * ast + 3 * blk + 3 *stl - tov
 
                     obj = PlayerGame.objects.create(
                         name = name,
@@ -110,7 +111,7 @@ def main():
                         blk = blk,
                         tov = tov,
                         pf = player.find("td", {"data-stat":"pf"}).text,
-                        pts = player.find("td", {"data-stat":"pts"}).text,
+                        pts = pts,
                         fpts = fpts,
                         date = date
                     )
