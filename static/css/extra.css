@@ -308,7 +308,7 @@ td.break {
 
 .game-item.active {
     color: white;
-    font-weight: 700;
+    font-weight: 600;
     background: #007bff;
 }
 
@@ -355,6 +355,10 @@ td.break {
 
 .team-stat .title {
     font-weight: 700;
+    overflow: hidden;
+    height: 18px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .team-stat.p-0 table {
