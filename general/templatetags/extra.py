@@ -12,6 +12,10 @@ def percent(val):
 def liked(uid):
     return 'done' if uid and FavPlayer.objects.filter(player__uid=uid).exists() else ''
 
+@register.filter 
+def hot_sfp(player):
+    return 'text-danger' if player['sfp'] >= player['afp'] + 5 else 'text-primary' 
+
 @register.filter
 def ou_ml(game, team):
     if not game.ml:

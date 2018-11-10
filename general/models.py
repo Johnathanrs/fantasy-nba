@@ -33,7 +33,7 @@ class Player(models.Model):
     proj_site = models.FloatField()
     proj_third_party_one = models.FloatField()
     proj_third_party_two = models.FloatField()
-    salary = models.FloatField()
+    salary = models.IntegerField()
     salary_custom = models.FloatField()
     salary_original = models.FloatField()
     team = models.CharField(max_length=50)

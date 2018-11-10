@@ -42,7 +42,7 @@ class Roster:
 
     def dict_position_order(self, player):
         if player['pos'] in self.POSITION_ORDER:
-            return self.POSITION_ORDER[player['pos']]
+            return self.POSITION_ORDER[player['pos']] + 10.0 / player['salary']
         else:
             return 100
 

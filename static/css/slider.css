@@ -3,7 +3,7 @@
 }
 
 .fpts-filter {
-    width: 240px;
+    width: 220px;
     height: 6px;
 }
 
@@ -12,8 +12,8 @@
 }
 
 .ui-slider .ui-slider-handle {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
     cursor: pointer;
     border: none;
@@ -26,4 +26,5 @@
     border: 0; 
     color: #007bff; 
     font-weight: bold;
+    font-size: 15px;
 }

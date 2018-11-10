@@ -6,8 +6,10 @@ $(document).ready(function () {
     max: 100,
     values: [ 1, 100 ],
     change: function( event, ui ) {
-      $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
       loadBoard();
+    },
+    slide: function( event, ui ) {
+      $(this).parent().find('.slider-val').val(ui.values[ 0 ] + " - " + ui.values[ 1 ]);
     }
   });
 
@@ -33,7 +35,7 @@ function loadBoard() {
   })
 
   var data = { 
-        loc: $('.filters select.loc').val(), 
+        loc: 'all', // $('.filters select.loc').val(), 
         ds: $('.filters select.ds').val(),
         pos: $('.position-filter .nav-item a.active').html(),
         min_afp: $('.afp').slider("values")[0],

@@ -26,12 +26,12 @@
     {% for ii in players %}
       <tr>
         {% if ii %}
-          <td colspan="5"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
+          <td colspan="5"><a href="/players/{{ ii.id }}" style="font-size: 14px;"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
           <td>{{ ii.pos }}</td>
           <td>{{ ii.team }}</td>
           <td>{{ ii.loc }}</td>
           <td><a href="#/team-match-up-board/{{ ii.vs }}">{{ ii.vs }}</a></td>
-          <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+          <td colspan="2">$ {{ ii.salary|floatformat:0 }}</td>
           <td>{{ ii.ampg|floatformat:1 }}</td>
           <td>{{ ii.smpg|floatformat:1 }}</td>
           <td class="{% if '(' in ii.mdiff %}text-danger{% else %}text-success{% endif %}">

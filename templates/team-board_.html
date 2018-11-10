@@ -1,4 +1,5 @@
 {% load extra %}
+
 <div class="col-md-7 p-0 mb-4">
   <h5 class="text-center">Player Situational Averages</h5>
   <h6 class="text-danger title">
@@ -18,9 +19,9 @@
         <th>BPG</th>
         <th>PPG</th>
         <th>TOV</th>
+        <th>AFP</th>
         <th>SFP</th>
         <th>MPG</th>
-        <th>AFP</th>
         <th>VAL</th>
         <th></th>
       </tr>
@@ -30,7 +31,7 @@
         <tr>
           {% if ii %}
             <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
-            <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+            <td colspan="2">$ {{ ii.salary|floatformat:0 }}</td>
             <td>{{ ii.pos }}</td>
             <td>{{ ii.gp }}</td>
             <td>{{ ii.rpg|floatformat:1 }}</td>
@@ -39,11 +40,11 @@
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
             <td>{{ ii.tov|floatformat:1 }}</td>
-            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
+            <td>{{ ii.afp|floatformat:1 }}</td>
+            <td class="{{ ii|hot_sfp }}">
               {{ ii.sfp|floatformat:1 }}
             </td>
             <td>{{ ii.ampg|floatformat:1 }}</td>
-            <td>{{ ii.afp|floatformat:1 }}</td>
             <td>{{ ii.val|floatformat:1 }}</td>
             <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
           {% else %}
@@ -62,7 +63,7 @@
   </div>
   <div class="clearfix"></div>
   <div class="row" style="margin-top: 60px;">
-    <div class="offset-md-1 col-md-6">
+    <div class="u0954g9j45">
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA RANK WHEN AWAY</div>
         <table class="fps-rank">
@@ -256,9 +257,9 @@
         <th>BPG</th>
         <th>PPG</th>
         <th>TOV</th>
+        <th>AFP</th>
         <th>SFP</th>
         <th>MPG</th>
-        <th>AFP</th>
         <th>VAL</th>
         <th></th>
       </tr>
@@ -268,7 +269,7 @@
         <tr>
           {% if ii %}
             <td colspan="3"><a href="/players/{{ ii.id }}"><img src="{{ ii.avatar }}" height="24" class="mr-2">{{ ii.name }}</a></td>
-            <td colspan="2">$ {{ ii.salary|floatformat:2 }}</td>
+            <td colspan="2">$ {{ ii.salary|floatformat:0 }}</td>
             <td>{{ ii.pos }}</td>
             <td>{{ ii.gp }}</td>
             <td>{{ ii.rpg|floatformat:1 }}</td>
@@ -277,11 +278,11 @@
             <td>{{ ii.bpg|floatformat:1 }}</td>
             <td>{{ ii.ppg|floatformat:1 }}</td>
             <td>{{ ii.tov|floatformat:1 }}</td>
-            <td class="{% if ii.sfp > ii.afp|add:5 %}text-danger{% else %}text-primary{% endif %}">
+            <td>{{ ii.afp|floatformat:1 }}</td>
+            <td class="{{ ii|hot_sfp }}">
               {{ ii.sfp|floatformat:1 }}
             </td>
             <td>{{ ii.ampg|floatformat:1 }}</td>
-            <td>{{ ii.afp|floatformat:1 }}</td>
             <td>{{ ii.val|floatformat:1 }}</td>
             <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
           {% else %}
@@ -294,7 +295,7 @@
 </div>
 <div class="col-md-5 pr-0" style="margin-top: 64px;">
   <div class="row">
-    <div class="offset-md-1 col-md-6">
+    <div class="u0954g9j45">
       <div class="col-md-12 team-stat pl-0">
         <div class="text-danger pl-1 title">TM FPA RANK WHEN @ HOME</div>
         <table class="fpa-rank">

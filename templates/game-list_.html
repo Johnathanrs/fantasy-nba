@@ -19,6 +19,14 @@
     </td>
     <td>
       <table>
+        <tr><th>&nbsp;</th></tr>
+        {% for ii in games %}
+        <tr><td>{{ ii.game_result }}</td></tr>
+        {% endfor %}
+      </table>
+    </td>
+    <td>
+      <table>
         <tr><th class="num">Minutes</th></tr>
         {% for ii in games %}
         <tr><td>{{ ii.mp|floatformat:1 }}</td></tr>
