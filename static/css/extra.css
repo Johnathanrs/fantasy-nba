@@ -374,13 +374,18 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 .u0954g9j45 {
-    padding-left: 1.2rem!important;
-    padding-right: 5px !important;
+    padding-left: 4.8% !important;
     flex: 0 0 58.333333%;
     max-width: 58.333333%;
 }
 
-@media (min-width: 1550px) {
+@media (min-width: 1500px) {
+    .u0954g9j45 {
+        padding-left: 8.5% !important;
+    }
+}
+
+@media (min-width: 1750px) {
     .u0954g9j45 {
         margin-left: 8.333333%;
         flex: 0 0 50%;

@@ -15,9 +15,9 @@ def liked(uid):
 @register.filter 
 def hot_sfp(player):
     if player['sfp'] >= player['afp'] + 5:
-        return 'text-danger'  
+        return 'text-danger font-weight-bold'  
     elif player['sfp'] <= player['afp'] - 5:
-        return 'text-primary'
+        return 'text-primary font-weight-bold'
     else:
         return '' 
 
