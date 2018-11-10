@@ -14,12 +14,12 @@ def liked(uid):
 
 @register.filter 
 def hot_sfp(player):
-	if player['sfp'] >= player['afp'] + 5:
-    	return 'text-danger'  
+    if player['sfp'] >= player['afp'] + 5:
+        return 'text-danger'  
     elif player['sfp'] <= player['afp'] - 5:
-    	return 'text-primary'
-	else:
-		return '' 
+        return 'text-primary'
+    else:
+        return '' 
 
 @register.filter
 def ou_ml(game, team):
