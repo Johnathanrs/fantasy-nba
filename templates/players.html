@@ -39,12 +39,10 @@
                 <th>POS</th>
                 <th>Team</th>
                 <th>Salary</th><th>&nbsp;</th>
-                <th>MIN</th>
-                <th title="Ceiling">Ceiling</th>
-                <th title="Floor">Floor</th>
-                <th title="Original">OGL</th>
-                <th title="Points">PTS</th>
-                <th>SITE</th>
+                <th>AMPG</th>
+                <th title="Ceiling">SMPG</th>
+                <th title="Floor">AFP</th>
+                <th title="Original">SFP</th>
                 <th title="Floor">VAL</th>
                 <th>INJ</th>
                 <th></th>
@@ -58,11 +56,9 @@
                     <td>{{ ii.team }}</td>
                     <td colspan="2">$ {{ ii.salary|floatformat:0 }}</td>
                     <td>{{ ii.minutes|floatformat:1 }}</td>
-                    <td>{{ ii.proj_ceiling|floatformat:1 }}</td>
-                    <td>{{ ii.proj_floor|floatformat:1 }}</td>
-                    <td>{{ ii.proj_original|floatformat:1 }}</td>
-                    <td>{{ ii.proj_points|floatformat:1 }}</td>
-                    <td>{{ ii.proj_site|floatformat:1 }}</td>
+                    <td>{{ ii.over_under|floatformat:1 }}</td>
+                    <td>{{ ii.salary_custom|floatformat:1 }}</td>
+                    <td>{{ ii.salary_original|floatformat:1 }}</td>
                     <td>{{ ii.value|floatformat:1 }}</td>
                     <td class="text-danger">{{ ii.injury }}</td>
                     <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>

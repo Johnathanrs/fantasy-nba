@@ -111,7 +111,7 @@ def scrape(param):
     
 
 if __name__ == "__main__":
-    for delta in [0, 2]:
+    for delta in range(3):
         date = datetime.datetime.now() + datetime.timedelta(days=-delta)
         param = 'month={}&day={}&year={}&type=all'.format(date.month, date.day, date.year)
         scrape(param)

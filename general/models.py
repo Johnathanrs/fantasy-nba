@@ -17,10 +17,11 @@ class Player(models.Model):
     last_name = models.CharField(max_length=50)
     avatar = models.CharField(max_length=250, default="/static/img/nba.ico")
     injury = models.CharField(max_length=250, blank=True, null=True)
-    minutes = models.FloatField()
-    money_line = models.IntegerField()
     opponent = models.CharField(max_length=50)
-    over_under = models.FloatField()
+    
+    minutes = models.FloatField()              # ampg
+    money_line = models.IntegerField()
+    over_under = models.FloatField()           # smpg
     point_spread = models.FloatField()
     position = models.CharField(max_length=50)
     actual_position = models.CharField(max_length=50)
@@ -34,13 +35,13 @@ class Player(models.Model):
     proj_third_party_one = models.FloatField()
     proj_third_party_two = models.FloatField()
     salary = models.IntegerField()
-    salary_custom = models.FloatField()
-    salary_original = models.FloatField()
+    salary_custom = models.FloatField()        # afp
+    salary_original = models.FloatField()      # sfp
     team = models.CharField(max_length=50)
     team_points = models.FloatField()
     value = models.FloatField()
-    play_today = models.BooleanField(default=False)
     
+    play_today = models.BooleanField(default=False)
     data_source = models.CharField(max_length=30, choices=DATA_SOURCE, default='FanDuel')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -268,8 +268,16 @@ def get_team_info(team, loc):
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
 
-            sfp = [ig.fpts for ig in games.order_by('-date')[:3]]
-            sfp = sum(sfp)
+            sfp = sum([ig.fpts for ig in games.order_by('-date')[:3]]) / 3
+            smpg = sum([ig.mp for ig in games.order_by('-date')[:3]]) / 3
+            value = player.salary / 250 + 10
+
+            player.salary_custom = afp or 0.0
+            player.salary_original = sfp or 0.0
+            player.minutes = ampg or 0.0
+            player.over_under = smpg or 0.0
+            player.value = value
+            player.save()
 
             players.append({
                 'avatar': player.avatar,
@@ -288,8 +296,8 @@ def get_team_info(team, loc):
                 'tov': games.aggregate(Avg('tov'))['tov__avg'],
                 'ampg': ampg,
                 'afp': afp,
-                'sfp': sfp / 3,
-                'val': player.salary / 250 + 10
+                'sfp': sfp,
+                'val': value
             })
 
     return { 
