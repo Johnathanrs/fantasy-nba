@@ -456,6 +456,7 @@ def player_match_up(request):
     for ii in POSITION:
         if groups[ii]:
             groups[ii], _ = get_ranking(groups[ii], 'sfp', 'ppr', -1)
+            groups[ii] = sorted(groups[ii], key=lambda k: k['team'])
             groups[ii] = sorted(groups[ii], key=lambda k: -k['opr'])
 
     players = []
