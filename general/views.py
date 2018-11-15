@@ -5,7 +5,6 @@ import json
 import mimetypes
 import datetime
 from wsgiref.util import FileWrapper
-import pdb
 
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
@@ -132,11 +131,11 @@ def get_team_games(team):
     return PlayerGame.objects.filter(q)
 
 
-def get_team_stat(team, loc='@'):
+def get_team_stat(team, loc):
     loc_ = '@' if loc == '' else ''
-    # pdb.set_trace()
+    # allowance
     season = current_season()
-    q = Q(opp=team) & Q(location=loc) & \
+    q = Q(opp=team) & Q(location=loc_) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
     a_teams = PlayerGame.objects.filter(q)
     a_teams_ = a_teams.values('date').annotate(trb=Sum('trb'), 
@@ -153,7 +152,8 @@ def get_team_stat(team, loc='@'):
     tov = a_teams_.aggregate(Avg('tov'))['tov__avg'] or 0
     ppg = a_teams_.aggregate(Avg('pts'))['pts__avg'] or 0
 
-    q = Q(team=team) & Q(location=loc_) & \
+    # score
+    q = Q(team=team) & Q(location=loc) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
     s_teams = PlayerGame.objects.filter(q)
     s_teams_ = s_teams.values('date').annotate(trb=Sum('trb'), 
