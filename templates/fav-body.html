@@ -20,7 +20,7 @@
           </td>
           <td>{{ ii.player.team }}</td>
           <td>{{ ii.player.position }}</td>
-          <td>{% if ii.salary_original > -1 %}{{ ii.salary_original|floatformat:1 }}{% else %}-{% endif %}</td>
+          <td>{% if ii.player.salary_original > -1 %}{{ ii.player.salary_original|floatformat:1 }}{% else %}-{% endif %}</td>
         </tr>
       {% endfor %}
     </tbody>  

@@ -58,7 +58,7 @@
                     <td>{% if ii.minutes > -1 %}{{ ii.minutes|floatformat:1 }}{% else %}-{% endif %}</td>
                     <td>{% if ii.over_under > -1 %}{{ ii.over_under|floatformat:1 }}{% else %}-{% endif %}</td>
                     <td>{% if ii.salary_custom > -1 %}{{ ii.salary_custom|floatformat:1 }}{% else %}-{% endif %}</td>
-                    <td>{% if ii.salary_original > -1 %}{{ ii.salary_original|floatformat:1 }}{% else %}-{% endif %}</td>
+                    <td>{% if ii.proj_site > -1 %}{{ ii.proj_site|floatformat:1 }}{% else %}-{% endif %}</td>
                     <td>{% if ii.value > -1 %}{{ ii.value|floatformat:1 }}{% else %}-{% endif %}</td>
                     <td class="text-danger">{{ ii.injury }}</td>
                     <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>

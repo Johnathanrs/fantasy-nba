@@ -385,10 +385,10 @@ def build_OPR_cache():
 
     for player in players:
         games = get_games_(player.id, 'all', '', current_season())
-        ampg = games.aggregate(Avg('mp'))['mp__avg']
-        smpg = games.filter(location=game_info[player.team]).aggregate(Avg('mp'))['mp__avg']
-        afp = games.aggregate(Avg('fpts'))['fpts__avg']
-        sfp = games.filter(location=game_info[player.team]).aggregate(Avg('fpts'))['fpts__avg']
+        ampg = games.aggregate(Avg('mp'))['mp__avg'] or 0
+        smpg = games.filter(location=game_info[player.team]).aggregate(Avg('mp'))['mp__avg'] or 0
+        afp = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
+        sfp = games.filter(location=game_info[player.team]).aggregate(Avg('fpts'))['fpts__avg'] or 0
 
         Player.objects.filter(uid=player.uid).update(
             minutes=ampg,
