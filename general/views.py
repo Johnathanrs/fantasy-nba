@@ -272,12 +272,8 @@ def get_team_info(team, loc):
             smpg = sum([ig.mp for ig in games.order_by('-date')[:3]]) / 3
             value = player.salary / 250 + 10
 
-            player.salary_custom = afp or 0.0
-            player.salary_original = sfp or 0.0
-            player.minutes = ampg or 0.0
-            player.over_under = smpg or 0.0
-            player.value = value
-            player.save()
+            # update l3a for the player
+            Player.objects.filter(uid=player.uid).update(salary_original=sfp)
 
             players.append({
                 'avatar': player.avatar,
@@ -349,7 +345,7 @@ def build_OPR_cache():
     all_teams = [ii['team'] for ii in Player.objects.values('team').distinct()]
 
     colors = linear_gradient('#90EE90', '#137B13', len(all_teams))['hex']
-
+    # OPR info
     for loc in ['', '@']:
         for pos in POSITION:
             pos_opr = []
@@ -377,6 +373,30 @@ def build_OPR_cache():
                                  }
     TMSCache.objects.create(team='TM_OPR', type=3, body=json.dumps(opr_info))
 
+    # player info
+    players = Player.objects.filter(data_source='FanDuel',
+                                    play_today=True) \
+                            .order_by('-proj_points')
+
+    game_info = {}
+    for game in Game.objects.all():
+        game_info[game.home_team] = ''
+        game_info[game.visit_team] = '@'
+
+    for player in players:
+        games = get_games_(player.id, 'all', '', current_season())
+        ampg = games.aggregate(Avg('mp'))['mp__avg']
+        smpg = games.filter(location=game_info[player.team]).aggregate(Avg('mp'))['mp__avg']
+        afp = games.aggregate(Avg('fpts'))['fpts__avg']
+        sfp = games.filter(location=game_info[player.team]).aggregate(Avg('fpts'))['fpts__avg']
+
+        Player.objects.filter(uid=player.uid).update(
+            minutes=ampg,
+            over_under=smpg,
+            salary_custom=afp,
+            proj_site=sfp,
+            value=player.salary / 250 + 10
+        )
 
 @csrf_exempt
 def player_match_up(request):
@@ -412,14 +432,8 @@ def player_match_up(request):
     players_ = []
     for player in players:
         if pos in player.position:
-            games = get_games_(player.id, 'all', '', current_season())
-            ampg = games.aggregate(Avg('mp'))['mp__avg']
-            smpg = games.filter(location=game_info[player.team][1]).aggregate(Avg('mp'))['mp__avg']
-            afp = games.aggregate(Avg('fpts'))['fpts__avg']
-            sfp = games.filter(location=game_info[player.team][1]).aggregate(Avg('fpts'))['fpts__avg']
-
-            if min_afp <= afp <= max_afp:
-                if min_sfp <= sfp <= max_sfp:
+            if min_afp <= player.salary_custom <= max_afp:
+                if min_sfp <= player.proj_site <= max_sfp:
                     vs = game_info[player.team][0]
                     loc = game_info[player.team][1]
                     loc_ = game_info[player.team][2]
@@ -436,13 +450,13 @@ def player_match_up(request):
                         'pos': player.position,
                         'inj': player.injury,
                         'salary': player.salary,
-                        'ampg': ampg,
-                        'smpg': smpg,
-                        'mdiff': formated_diff(smpg-ampg),
-                        'afp': afp,
-                        'sfp': sfp,
-                        'pdiff': formated_diff(sfp-afp),
-                        'val': player.salary / 250 + 10,
+                        'ampg': player.minutes,
+                        'smpg': player.over_under,
+                        'mdiff': formated_diff(player.over_under-player.minutes,),
+                        'afp': player.salary_custom,
+                        'sfp': player.proj_site,
+                        'pdiff': formated_diff(player.proj_site-player.salary_custom),
+                        'val': player.salary / 250 + 10,    # exception
                         'opp': opr_info_['opp'],
                         'opr': opr_info_['opr'],
                         'color': opr_info_['color']
