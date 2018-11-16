@@ -31,12 +31,12 @@ class Player(models.Model):
     proj_original = models.FloatField()
     proj_points = models.FloatField()
     proj_rotowire = models.FloatField()
-    proj_site = models.FloatField()
+    proj_site = models.FloatField()            # sfp
     proj_third_party_one = models.FloatField()
-    proj_third_party_two = models.FloatField()
+    proj_third_party_two = models.FloatField()  
     salary = models.IntegerField()
     salary_custom = models.FloatField()        # afp
-    salary_original = models.FloatField()      # sfp
+    salary_original = models.FloatField()      # l3a
     team = models.CharField(max_length=50)
     team_points = models.FloatField()
     value = models.FloatField()
