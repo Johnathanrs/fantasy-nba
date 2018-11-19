@@ -68,7 +68,6 @@ def get_players(request):
 def get_games_(pid, loc, opp, season):
     player = Player.objects.get(id=pid)
     q = Q(name='{} {}'.format(player.first_name, player.last_name)) \
-      & Q(team=player.team) \
       & Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
 
     if opp:
@@ -92,6 +91,28 @@ def player_detail(request, pid):
     avg_fpts = games.aggregate(Avg('fpts'))
 
     return render(request, 'player_detail.html', locals())
+
+
+@csrf_exempt
+def player_games(request):
+    pid = request.POST.get('pid')
+    loc = request.POST.get('loc')
+    opp = request.POST.get('opp')
+    season = int(request.POST.get('season'))
+
+    games = get_games_(pid, loc, opp, season)
+
+    opps = '<option value="">All</option>'
+    for ii in sorted(set(games.values_list('opp', flat=True).distinct())):
+        opps += '<option>{}</option>'.format(ii)
+
+    result = {
+        'game_table': render_to_string('game-list_.html', locals()),
+        'chart': [[ii.date.strftime('%Y/%m/%d'), ii.fpts] for ii in games],
+        'opps': opps
+    }
+
+    return JsonResponse(result, safe=False)
 
 
 def player_match_up_board(request):
@@ -481,31 +502,8 @@ def player_match_up(request):
     return HttpResponse(render_to_string('player-board_.html', locals()))
 
 
-@csrf_exempt
-def player_games(request):
-    pid = request.POST.get('pid')
-    loc = request.POST.get('loc')
-    opp = request.POST.get('opp')
-    season = int(request.POST.get('season'))
-
-    games = get_games_(pid, loc, opp, season)
-
-    opps = '<option value="">All</option>'
-    for ii in sorted(set(games.values_list('opp', flat=True).distinct())):
-        opps += '<option>{}</option>'.format(ii)
-
-    result = {
-        'game_table': render_to_string('game-list_.html', locals()),
-        'chart': [[ii.date.strftime('%Y/%m/%d'), ii.fpts] for ii in games],
-        'opps': opps
-    }
-
-    return JsonResponse(result, safe=False)
-
-
 def mean(numbers):
     return float(sum(numbers)) / max(len(numbers), 1)
-
 
 def _get_lineups(request):
     ids = request.POST.getlist('ids')
