@@ -23,6 +23,8 @@ POSITION = ['PG', 'SG', 'SF', 'PF', 'C']
 def _get_game_today():
     return Game.objects.all()
 
+def _all_teams():
+    return [ii['team'] for ii in Player.objects.values('team').distinct()]
 
 def players(request):
     players = Player.objects.filter(data_source='FanDuel').order_by('first_name')
@@ -145,8 +147,11 @@ def get_ranking(players, sattr, dattr, order=1):
 
 def get_team_games(team):
     # get all games for the team last season
+    players_ = Player.objects.filter(team=team, data_source='FanDuel')
+    players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
+
     season = current_season()
-    q = Q(team=team) & \
+    q = Q(name__in=players_) & \
         Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
 
     return PlayerGame.objects.filter(q)
@@ -289,12 +294,11 @@ def get_team_info(team, loc):
             ampg = games.aggregate(Avg('mp'))['mp__avg']
             afp = games.aggregate(Avg('fpts'))['fpts__avg']
 
-            sfp = sum([ig.fpts for ig in games.order_by('-date')[:3]]) / 3
-            smpg = sum([ig.mp for ig in games.order_by('-date')[:3]]) / 3
+            l3a = sum([ig.fpts for ig in games.order_by('-date')[:3]]) / 3
             value = player.salary / 250 + 10
 
             # update l3a for the player
-            Player.objects.filter(uid=player.uid).update(salary_original=sfp)
+            Player.objects.filter(uid=player.uid).update(salary_original=l3a)
 
             players.append({
                 'avatar': player.avatar,
@@ -313,7 +317,7 @@ def get_team_info(team, loc):
                 'tov': games.aggregate(Avg('tov'))['tov__avg'],
                 'ampg': ampg,
                 'afp': afp,
-                'sfp': sfp,
+                'sfp': l3a,
                 'val': value
             })
 
@@ -363,7 +367,7 @@ def team_match_up(request):
 def build_OPR_cache():
     season = current_season()
     opr_info = { '': {}, '@': {} }
-    all_teams = [ii['team'] for ii in Player.objects.values('team').distinct()]
+    all_teams = _all_teams()
 
     colors = linear_gradient('#90EE90', '#137B13', len(all_teams))['hex']
     # OPR info
@@ -577,7 +581,7 @@ def update_point(request):
 
 
 def build_TMS_cache():
-    all_teams = [ii['team'] for ii in PlayerGame.objects.values('team').distinct()]
+    all_teams = _all_teams()
     stat_home = [get_team_stat(ii, '') for ii in all_teams]
     stat_away = [get_team_stat(ii, '@') for ii in all_teams]
 
