@@ -12,7 +12,7 @@
       </div>
       <h3>{{ player.first_name }} {{ player.last_name }} <br><small class="text-secondary">{{ player.position }}&nbsp;&nbsp;<i class="far fa-thumbs-up fav {{ player.uid|liked }}" data-uid="{{ player.uid }}"></i></small></h3>
 
-      <h6 class="text-success">{{ player.team }}</h6>
+      <h6><span class="text-success">{{ player.team }}</span> <span class="text-danger">{{ player.opponent }}</span></h6>
       <h6 class="text-secondary">
         <span class="text-body">Salary:</span> ${{ player.salary|floatformat:2 }}
       </h6>
