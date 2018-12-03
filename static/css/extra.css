@@ -215,7 +215,8 @@ table th {
 
 div.lineups {
     overflow-y: scroll; 
-    height: calc(98vh - 293px)
+    /*height: calc(98vh - 293px);*/
+    height: 547px;
 }
 
 #search-player {
