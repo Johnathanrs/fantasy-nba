@@ -1,3 +1,20 @@
+function inIframe () {
+    try {
+        return window.self !== window.top;
+    } catch (e) {
+        return true;
+    }
+}
+
+if(inIframe()) {
+} else {
+    // $('.container-fluid').remove();
+    // $('nav').toggleClass('d-none');
+    $('.lineups-container').toggleClass('container');
+    $('.lineups-container').toggleClass('container-iframe');
+}
+
+
 $('.fav-header').on('click', function() {
   $('.fa-window-maximize').toggleClass('d-none');
   $('.fa-window-minimize').toggleClass('d-none');
