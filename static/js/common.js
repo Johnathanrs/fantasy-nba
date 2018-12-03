@@ -8,11 +8,11 @@ function inIframe () {
 
 if(inIframe()) {
 } else {
-    // $('.container-fluid').remove();
-    $('nav').toggleClass('d-none');
-    $('.fav-wrapper').toggleClass('d-none');
-    $('.container-iframe').toggleClass('container');
-    $('.container-iframe').toggleClass('container-iframe');
+    $('.container-fluid').remove();
+    // $('nav').toggleClass('d-none');
+    // $('.fav-wrapper').toggleClass('d-none');
+    // $('.container-iframe').toggleClass('container');
+    // $('.container-iframe').toggleClass('container-iframe');
 }
 
 
