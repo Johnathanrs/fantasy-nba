@@ -7,11 +7,12 @@ function inIframe () {
 }
 
 if(inIframe()) {
+  $('.fav-wrapper').toggleClass('d-none');
 } else {
     // $('.container-fluid').remove();
-    // $('nav').toggleClass('d-none');
-    $('.lineups-container').toggleClass('container');
-    $('.lineups-container').toggleClass('container-iframe');
+    $('nav').toggleClass('d-none');
+    $('.container-iframe').toggleClass('container');
+    $('.container-iframe').toggleClass('container-iframe');
 }
 
 
