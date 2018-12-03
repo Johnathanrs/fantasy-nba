@@ -7,6 +7,7 @@ function inIframe () {
 }
 
 if(inIframe()) {
+  console.log('@@@@@@@@@@@@@@');
   $('.fav-wrapper').toggleClass('d-none');
 } else {
     // $('.container-fluid').remove();
