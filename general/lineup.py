@@ -191,14 +191,12 @@ def calc_lineups(players, num_lineups, locked=[], ds='FanDuel'):
 
     max_point = 10000
     teams = set([ii.team for ii in players])
-    cnt = 0
     while True:
         roster = get_lineup(ds, players, teams, locked, max_point)
-        cnt += 1
-
-        if not roster or cnt > 30:
-            break
         max_point = roster.projected() - 0.001
+
+        if not roster:
+            break
         
         if roster.get_num_teams() > 2 or ds != 'Yahoo': # min number of teams - 3 (Yahoo)
             result.append(roster)
