@@ -1,5 +1,11 @@
-body {
-    /*overflow: hidden;*/
+html {
+    font-size: 92%;
+}
+
+@media (min-width: 1600px) {
+    html {
+        font-size: 100%;
+    }
 }
 
 th {
