@@ -10,15 +10,6 @@ $('body').on('click','.fav',function() {
   });
 });
 
-$('body').on('click','.fav-remove',function() {
-  var r = confirm("Are you sure to remove all favorites?");
-  if (r == true) {
-    $.post( "/fav-player", { uid: -1 }, function( data ) {
-      location.reload();
-    });
-  }
-});
-
 $(document).ready(function () {
   var pos = $('.fav-title').position();
   $('.fav-wrapper').css({ 
