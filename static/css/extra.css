@@ -23,6 +23,10 @@ th {
     right: 5px;
     width: calc(100% - 10px);
     max-width: 310px;
+    z-index: -1;
+}
+
+.fav-wrapper.show-fav {
     z-index: 3;
 }
 
