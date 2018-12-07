@@ -8,7 +8,7 @@
         <th>Team</th>
         <th>POS</th>
         <th>&nbsp;&nbsp;&nbsp;L3A</th>
-        <th style="width: 25px;"></th>
+        <th class="ei3if8g" style="padding-left: 13px !important;"><i class="fas fa-trash-alt fav-remove"></i></th>
       </tr>
     </thead>
     <tbody>
@@ -22,7 +22,7 @@
           <td>{{ ii.player.team }}</td>
           <td>{{ ii.player.position }}</td>
           <td>{% if ii.player.salary_original > -1 %}{{ ii.player.salary_original|floatformat:1 }}{% else %}-{% endif %}</td>
-          <td style="width: 25px; padding-left: 0 !important;"><i class="fas fa-times"></i></td>
+          <td class="ei3if8g" style="padding-left: 0 !important;"><i class="fas fa-times fav" data-uid="{{ ii.player.uid }}"></i></td>
         </tr>
       {% endfor %}
     </tbody>  
