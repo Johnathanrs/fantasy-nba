@@ -8,6 +8,6 @@ function inIframe () {
 
 if(inIframe()) {
 } else {
-    $('.container-fluid').remove();
-    // $('nav').toggleClass('d-none');
+    // $('.container-fluid').remove();
+    $('nav').toggleClass('d-none');
 }
