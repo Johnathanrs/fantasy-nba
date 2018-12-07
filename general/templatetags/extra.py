@@ -30,3 +30,11 @@ def ou_ml(game, team):
         return '( {} )'.format(game.ml.split(' ')[-1])
     else:
         return '( {} )'.format(int(game.ou))
+
+@register.filter
+def team(opponent):
+    return opponent.strip('@')
+
+@register.filter
+def vs(opponent):
+    return '@' if '@' in opponent else 'vs'

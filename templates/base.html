@@ -37,23 +37,27 @@
 </nav>
 
 <div class="container-fluid">
+  <div class="container mt-2">
+    <div class="fav-title float-right text-primary mr-2"><i class="fa fa-thumbs-up"></i> Favorites</div>
+    <div class="clearfix"></div>
+  </div>
   <script type="text/javascript" src="/static/js/common.js"></script>
   {% block content %}
   {% endblock %}
-  <div class="fav-wrapper d-none">
-    <div class="fav-header">
-      <div class="fav-title"><i class="fa fa-thumbs-up"></i> Favorites</div>
-      <div class="fav-close"><i class="fa fa-window-maximize"></i><i class="fa fa-window-minimize d-none"></i></div>
-      <div class="fav-close fav-remove"><i class="fa fa-trash-alt"></i></div>
-    </div>
-    <div class="fav-body">
-    </div>
-  </div> 
 </div>
 
 {% block script %}
 {% endblock %}
 
+  <div class="fav-wrapper">
+<!--     <div class="fav-header">
+      <div class="fav-title"><i class="fa fa-thumbs-up"></i> Favorites</div>
+      <div class="fav-close"><i class="fa fa-window-maximize"></i><i class="fa fa-window-minimize d-none"></i></div>
+      <div class="fav-close fav-remove"><i class="fa fa-trash-alt"></i></div>
+    </div>
+ -->    <div class="fav-body"></div>
+  </div> 
+  <script type="text/javascript" src="/static/js/fav_dlg.js"></script>
 </body>
 </html>
 

@@ -2,7 +2,7 @@
 {% load extra %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container">
   <div class="row">
     <div class="col-md-4">
       <div class="mr-3 float-left" style="height: 200px;">
@@ -12,7 +12,7 @@
       </div>
       <h3>{{ player.first_name }} {{ player.last_name }} <br><small class="text-secondary">{{ player.position }}&nbsp;&nbsp;<i class="far fa-thumbs-up fav {{ player.uid|liked }}" data-uid="{{ player.uid }}"></i></small></h3>
 
-      <h6><span class="text-success">{{ player.team }}</span> vs <span class="text-danger">{{ player.opponent }}</span></h6>
+      <h6><span class="text-success">{{ player.team }}</span> {{ player.opponent|vs }} <span class="text-danger">{{ player.opponent|team }}</span></h6>
       <h6 class="text-secondary">
         <span class="text-body">Salary:</span> ${{ player.salary|floatformat:2 }}
       </h6>
