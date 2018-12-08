@@ -8,9 +8,10 @@ register = template.Library()
 def percent(val):
     return val if val else '-';
 
-@register.filter
-def liked(uid):
-    return 'done' if uid and FavPlayer.objects.filter(player__uid=uid).exists() else ''
+@register.filter()
+def liked(uid, session):
+    fav = session.get('fav', [])
+    return 'done' if str(uid) in fav else ''
 
 @register.filter 
 def hot_sfp(player):

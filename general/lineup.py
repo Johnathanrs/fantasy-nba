@@ -34,12 +34,6 @@ class Roster:
     def position_order(self, player):
         return self.POSITION_ORDER[player.position]
 
-    def fav_position_order(self, obj):
-        if obj.player.position in self.POSITION_ORDER:
-            return self.POSITION_ORDER[obj.player.position]
-        else:
-            return 100
-
     def dict_position_order(self, player):
         if player['pos'] in self.POSITION_ORDER:
             return self.POSITION_ORDER[player['pos']] + 10.0 / player['salary']

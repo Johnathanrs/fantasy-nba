@@ -47,7 +47,7 @@
           <td>{{ ii.val|floatformat:1 }}</td>
           <td>{{ ii.ppr }}</td>
           <td class="{% if ii.inj != '-' %}text-danger{% endif %}">{{ ii.inj }}</td>
-          <td><i class="far fa-thumbs-up fav {{ ii.uid|liked }}" data-uid="{{ ii.uid }}"></i></td>
+          <td><i class="far fa-thumbs-up fav {{ ii.uid|liked:request.session }}" data-uid="{{ ii.uid }}"></i></td>
         {% else %}
           <td colspan="17" class="break">&nbsp;</td>
         {% endif %}

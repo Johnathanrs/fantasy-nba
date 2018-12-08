@@ -10,7 +10,7 @@
         <div class="clearfix"></div>
         <a class="ml-5" href="javascript:history.go(-1);">Back</a>
       </div>
-      <h3>{{ player.first_name }} {{ player.last_name }} <br><small class="text-secondary">{{ player.position }}&nbsp;&nbsp;<i class="far fa-thumbs-up fav {{ player.uid|liked }}" data-uid="{{ player.uid }}"></i></small></h3>
+      <h3>{{ player.first_name }} {{ player.last_name }} <br><small class="text-secondary">{{ player.position }}&nbsp;&nbsp;<i class="far fa-thumbs-up fav {{ player.uid|liked:request.session }}" data-uid="{{ player.uid }}"></i></small></h3>
 
       <h6><span class="text-success">{{ player.team }}</span> {{ player.opponent|vs }} <span class="text-danger">{{ player.opponent|team }}</span></h6>
       <h6 class="text-secondary">

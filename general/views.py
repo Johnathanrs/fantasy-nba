@@ -42,16 +42,18 @@ def fav_player(request):
     uid = request.POST.get('uid')
     if uid:
         if uid == "-1":
-            FavPlayer.objects.all().delete()
+            request.session['fav'] = []
         else:
-            player = Player.objects.filter(uid=uid).first()
-            if FavPlayer.objects.filter(player=player).exists():
-                FavPlayer.objects.filter(player=player).delete()
+            fav = request.session.get('fav', [])
+            if uid in fav:
+                fav.remove(uid)
             else:
-                FavPlayer.objects.create(player=player)
+                fav.append(uid)
+            request.session['fav'] = fav
 
-    players = [ii for ii in FavPlayer.objects.all()]
-    players = sorted(players, key=Roster().fav_position_order)
+    fav = request.session.get('fav', [])
+    players = [Player.objects.filter(uid=uid).first() for uid in fav]
+    players = sorted(players, key=Roster().position_order)
 
     return HttpResponse(render_to_string('fav-body.html', locals()))
 
