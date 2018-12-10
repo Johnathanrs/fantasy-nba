@@ -18,27 +18,27 @@ class Player(models.Model):
     injury = models.CharField(max_length=250, blank=True, null=True)
     opponent = models.CharField(max_length=50)
     
-    minutes = models.FloatField()              # ampg
-    money_line = models.IntegerField()
-    over_under = models.FloatField()           # smpg
-    point_spread = models.FloatField()
+    minutes = models.FloatField(default=0)              # ampg
+    money_line = models.IntegerField(default=0)
+    over_under = models.FloatField(default=0)           # smpg
+    point_spread = models.FloatField(default=0)
     position = models.CharField(max_length=50)
     actual_position = models.CharField(max_length=50)
-    proj_ceiling = models.FloatField()
-    proj_custom = models.FloatField()
-    proj_floor = models.FloatField()
-    proj_original = models.FloatField()
-    proj_points = models.FloatField()
-    proj_rotowire = models.FloatField()
-    proj_site = models.FloatField()            # sfp
-    proj_third_party_one = models.FloatField()
-    proj_third_party_two = models.FloatField()  
-    salary = models.IntegerField()
-    salary_custom = models.FloatField()        # afp
-    salary_original = models.FloatField()      # l3a
+    proj_ceiling = models.FloatField(default=0)
+    proj_custom = models.FloatField(default=0)
+    proj_floor = models.FloatField(default=0)
+    proj_original = models.FloatField(default=0)
+    proj_points = models.FloatField(default=0)
+    proj_rotowire = models.FloatField(default=0)
+    proj_site = models.FloatField(default=0)            # sfp
+    proj_third_party_one = models.FloatField(default=0)
+    proj_third_party_two = models.FloatField(default=0)  
+    salary = models.IntegerField(default=0)
+    salary_custom = models.FloatField(default=0)        # afp
+    salary_original = models.FloatField(default=0)      # l3a
     team = models.CharField(max_length=50)
-    team_points = models.FloatField()
-    value = models.FloatField()
+    team_points = models.FloatField(default=0)
+    value = models.FloatField(default=0)
     
     play_today = models.BooleanField(default=False)
     data_source = models.CharField(max_length=30, choices=DATA_SOURCE, default='FanDuel')
@@ -100,7 +100,7 @@ GAME_STATUS = (
 class Game(models.Model):
     home_team = models.CharField(max_length=20)
     visit_team = models.CharField(max_length=20)
-    ou = models.FloatField()
+    ou = models.FloatField(default=0)
     ml = models.CharField(max_length=20)
     date = models.DateTimeField()
     game_status = models.CharField(max_length=50, choices=GAME_STATUS, default='started')
