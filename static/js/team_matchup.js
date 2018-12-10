@@ -21,10 +21,16 @@ $(document).ready(function () {
     $('.game-item').removeClass('active');
     $(this).addClass('active');
     game = $(this).data('game');
+    location.hash = game;
     loadBoard();
   });
   
-  $('.slate .game-item:first').click();
+  game = location.hash.substring(1);
+  if (game) {
+    $('div[data-game="'+game+'"]').click();
+  } else {
+    $('.slate .game-item:first').click();
+  }
 
   $('body').on('click','.team-stat table th',function() {
     var cls = $(this).closest('table').attr("class"),
