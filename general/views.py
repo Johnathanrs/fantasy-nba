@@ -277,12 +277,23 @@ def get_player(full_name, team):
     return player
 
 
+def get_win_loss(team):
+    season = current_season()
+    q = Q(team=team) & \
+        Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+
+    team_games = PlayerGame.objects.filter(q)
+    game_results = team_games.values('date', 'game_result').distinct()
+    wins = game_results.filter(game_result='W').count()
+    losses = game_results.filter(game_result='L').count()
+    return wins, losses
+
+
 def get_team_info(team, loc):
     team_games = get_team_games(team)
     # at most one game a day
     game_results = team_games.values('date', 'game_result').distinct()
-    wins = game_results.filter(game_result='W').count()
-    losses = game_results.filter(game_result='L').count()
+    wins, losses = get_win_loss(team)
 
     # get distinct players
     players_ = team_games.values('name', 'team').distinct()

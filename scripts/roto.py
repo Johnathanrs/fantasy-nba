@@ -14,7 +14,7 @@ from general import html2text
 import pdb
 
 def get_players(data_source):
-    # try:
+    try:
         url = 'https://www.rotowire.com/daily/tables/optimizer-nba.php?sport=NBA&' + \
               'site={}&projections=&type=main&slate=all'.format(data_source)
 
@@ -35,8 +35,9 @@ def get_players(data_source):
                 defaults['position'] = defaults['actual_position']
             obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
                                                   defaults=defaults)
-    # except:
-    #     pass
+    except:
+        print('*** Something is wrong ***')
+
 
 if __name__ == "__main__":
     Player.objects.all().update(play_today=False)
