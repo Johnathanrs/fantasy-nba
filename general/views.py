@@ -377,46 +377,10 @@ def team_match_up(request):
     return HttpResponse(render_to_string('team-board_.html', locals()))
 
 
-def build_OPR_cache():
-    season = current_season()
-    opr_info = { '': {}, '@': {} }
-    all_teams = _all_teams()
-
-    colors = linear_gradient('#90EE90', '#137B13', len(all_teams))['hex']
-    # OPR info
-    for loc in ['', '@']:
-        for pos in POSITION:
-            pos_opr = []
-            for team in all_teams:
-                # opponent's games
-                loc_ = '' if loc == '@' else '@'
-                q = Q(opp=team) & Q(location=loc_) & \
-                    Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
-                games = PlayerGame.objects.filter(q)
-                opp_teams = [jj['team'] for jj in games.values('team').distinct()]
-                # filter with pos
-                q = Q(position=pos) & Q(data_source='FanDuel')
-                players_ = Player.objects.filter(Q(team__in=opp_teams) & q)
-                players_ = ['{} {}'.format(ip.first_name, ip.last_name) for ip in players_]
-                games = games.filter(name__in=players_).values('date').annotate(fpts=Sum('fpts'))
-                opp = games.aggregate(Avg('fpts'))['fpts__avg'] or 0
-
-                pos_opr.append({ 
-                    'team': team, 
-                    'opp': opp 
-                })
-            pos_opr, _ = get_ranking(pos_opr, 'opp', 'opr')
-            opr_info[loc][pos] = { 
-                                    ii['team']: { 'opp': ii['opp'], 'opr': ii['opr'], 'color': colors[ii['opr']-1] } 
-                                    for ii in pos_opr 
-                                 }
-    TMSCache.objects.create(team='TM_OPR', type=3, body=json.dumps(opr_info))
-
-    # player info
-    players = Player.objects.filter(data_source='FanDuel',
-                                    play_today=True) \
+def build_player_cache():
+    # player info -> build cache
+    players = Player.objects.filter(data_source='FanDuel', play_today=True) \
                             .order_by('-proj_points')
-
     game_info = {}
     for game in Game.objects.all():
         game_info[game.home_team] = ''
@@ -462,11 +426,9 @@ def player_match_up(request):
         if loc == '@' or loc == 'all':
             teams_.append(teams[1])
 
-    opr_info = json.loads(TMSCache.objects.filter(team='TM_OPR').first().body)
-
-    players = Player.objects.filter(data_source=ds,
-                                    play_today=True, 
-                                    team__in=teams_) \
+    all_teams = _all_teams()
+    colors = linear_gradient('#90EE90', '#137B13', len(all_teams))['hex']
+    players = Player.objects.filter(data_source=ds, play_today=True, team__in=teams_) \
                             .order_by('-proj_points')
     players_ = []
     for player in players:
@@ -476,8 +438,8 @@ def player_match_up(request):
                     vs = game_info[player.team][0]
                     loc = game_info[player.team][1]
                     loc_ = game_info[player.team][2]
-                    opr_info_ = opr_info[loc_][player.position][vs]
 
+                    opr_info_ = json.loads(TMSCache.objects.filter(team=vs, type=2).first().body)
                     players_.append({
                         'avatar': player.avatar,
                         'id': player.id,
@@ -496,9 +458,9 @@ def player_match_up(request):
                         'sfp': player.proj_site,
                         'pdiff': formated_diff(player.proj_site-player.salary_custom),
                         'val': player.salary / 250 + 10,    # exception
-                        'opp': opr_info_['opp'],
-                        'opr': opr_info_['opr'],
-                        'color': opr_info_['color']
+                        'opp': opr_info_[player.position],
+                        'opr': opr_info_[player.position+'_rank'],
+                        'color': colors[opr_info_[player.position+'_rank']]
                     })
 
     groups = { ii: [] for ii in POSITION }

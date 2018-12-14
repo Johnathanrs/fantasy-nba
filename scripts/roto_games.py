@@ -30,7 +30,7 @@ def get_games():
                 defaults['ou'] = float(ii['ou']) if ii['ou'] else 0
                 Game.objects.create(**defaults)
             build_TMS_cache()
-            build_OPR_cache()
+            build_player_cache()
     # except:
     #     pass
 
