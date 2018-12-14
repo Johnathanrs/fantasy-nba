@@ -389,7 +389,8 @@ def build_OPR_cache():
             pos_opr = []
             for team in all_teams:
                 # opponent's games
-                q = Q(opp=team) & Q(location=loc) & \
+                loc_ = '' if loc == '@' else '@'
+                q = Q(opp=team) & Q(location=loc_) & \
                     Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
                 games = PlayerGame.objects.filter(q)
                 opp_teams = [jj['team'] for jj in games.values('team').distinct()]
