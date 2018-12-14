@@ -460,7 +460,7 @@ def player_match_up(request):
                         'val': player.salary / 250 + 10,    # exception
                         'opp': opr_info_[player.position],
                         'opr': opr_info_[player.position+'_rank'],
-                        'color': colors[opr_info_[player.position+'_rank']]
+                        'color': colors[opr_info_[player.position+'_rank']-1]
                     })
 
     groups = { ii: [] for ii in POSITION }
