@@ -11,7 +11,6 @@ django.setup()
 
 from general.models import *
 from general.views import *
-import pdb
 
 def get_games():
     # try:
