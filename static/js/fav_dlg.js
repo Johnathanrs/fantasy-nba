@@ -11,12 +11,14 @@ $('body').on('click','.fav',function() {
 });
 
 $('body').on('click','.fav-remove',function() {
-  var r = confirm("Are you sure to remove all favorites?");
-  if (r == true) {
+  body = "Are you sure to remove all favorites?";
+  $('#confirmModal .modal-body').html(body);
+  $('#confirmModal').modal();
+  $('#confirmModal .btn-ok').on('click', function () {
     $.post( "/fav-player", { uid: -1 }, function( data ) {
       location.reload();
     });
-  }
+  })
 });
 
 $(document).ready(function () {

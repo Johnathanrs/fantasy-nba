@@ -1,3 +1,8 @@
+function showWarning (body) {
+  $('#warningModal .modal-body').html(body);
+  $('#warningModal').modal();
+}
+
 $(function() {
   $('.nav-tabs.ds a').on('shown.bs.tab', function(event) {
     getPlayers();
@@ -17,7 +22,7 @@ $(function() {
   $('.btn-export').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;
     if (num_players == 0) {
-      alert('Please choose players.');
+      showWarning('Please choose players.');
       return false;
     }
 
@@ -27,7 +32,7 @@ $(function() {
   $('.btn-calc').click(function() {
     var num_players = $('input[type="checkbox"]:checked').length;
     if (num_players < 8) {
-      alert('Please choose more than 8 players.');
+      showWarning('Please choose more than 8 players.');
       return
     }
 
@@ -109,7 +114,7 @@ function getPlayers () {
 
 function toggleLock(obj, pid) {
   if ($('.fa-lock').length == 7 && $(obj).hasClass('fa-lock-open')) {
-    alert('You cannot add more locked players.');
+    showWarning('You can not add more locked players.');
     return false;
   }
 
