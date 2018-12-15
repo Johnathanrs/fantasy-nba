@@ -16,7 +16,7 @@ import pdb
 def get_games():
     # try:
         url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NBA&' + \
-              'site=FanDuel&type=main&slate=Main'
+              'site=FanDuel&type=main&slate=all'
 
         games = requests.get(url).json()
         if games:
