@@ -39,3 +39,8 @@ def team(opponent):
 @register.filter
 def vs(opponent):
     return '@' if '@' in opponent else 'vs'
+
+@register.filter
+def cus_proj(player, session):
+    cus_proj = session.get('cus_proj', {})
+    return cus_proj.get(str(player.id), player.proj_points)

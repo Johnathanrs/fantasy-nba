@@ -88,12 +88,6 @@ function choose_all (obj) {
   $('input[type="checkbox"]').prop("checked", $(obj).prop('checked'));
 }
 
-function change_point (obj) {
-  var pid = $(obj).data('id'),
-      val = $(obj).val();
-  $.post( "/update-point", { pid: pid, val: val }, function( data ) {})
-}
-
 function getPlayers () {
   var games = '';
   $('.slate').find('input:checked').each(function() {

@@ -21,6 +21,12 @@ $('body').on('click','.fav-remove',function() {
   })
 });
 
+function change_point (obj) {
+  var pid = $(obj).data('id'),
+      val = $(obj).val();
+  $.post( "/update-point", { pid: pid, val: val }, function( data ) {})
+}
+
 $(document).ready(function () {
   var pos = $('.fav-title').position();
   $('.fav-wrapper').css({ 

@@ -552,7 +552,12 @@ def export_lineups(request):
 def update_point(request):
     pid = int(request.POST.get('pid'))
     points = request.POST.get('val')
-    # Player.objects.filter(id=pid).update(proj_points=points)
+
+    player = Player.objects.get(id=pid)
+    cus_proj = request.session.get('cus_proj', {})
+    cus_proj[pid] = points
+    request.session['cus_proj'] = cus_proj
+
     return HttpResponse('')
 
 

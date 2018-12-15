@@ -39,7 +39,7 @@ th {
 }
 
 .fav-wrapper td {
-    padding: .24rem .4rem !important;
+    padding: .24rem !important;
     vertical-align: middle;
 }
 
@@ -182,8 +182,24 @@ table th {
   table-layout: fixed;
 }
 
+.a98ef3r3e {
+    min-height: 28px;
+    display: flex;
+    align-items: center;
+    line-height: 15px;
+}
+
+._4r9f03f {
+    width: 40px;
+    margin-left: -12px;
+    text-align: right;
+    padding: 3px 5px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
 .fav-inner th {
-    padding: .4rem .6rem !important;
+    padding: .4rem !important;
 }
 
 .fav-inner thead {
