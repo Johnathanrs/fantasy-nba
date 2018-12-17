@@ -14,7 +14,7 @@ from general.views import *
 
 def get_games():
     # try:
-        for  slate in ['all', 'Main']:
+        for slate in ['all', 'Main']:
             url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NBA&' + \
                   'site=FanDuel&type=main&slate={}'.format(slate)
 
