@@ -13,6 +13,8 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.forms.models import model_to_dict
 
+from rangefilter.filter import DateRangeFilter
+
 from general.models import *
 
 class PlayerAdmin(admin.ModelAdmin):
@@ -27,7 +29,7 @@ class PlayerGameAdmin(admin.ModelAdmin):
                     'fg3', 'fg3a', 'fg3_pct', 'ft', 'fta', 'ft_pct', 'trb', 'ast', 'stl', 'blk',
                     'tov', 'pf', 'pts', 'fpts', 'date']
     search_fields = ['name', 'team']
-    list_filter = ['team', 'opp', 'location', 'game_result']
+    list_filter = ['team', 'opp', 'location', 'game_result', ('date', DateRangeFilter)]
     actions = ['export_games']
 
     def export_games(self, request, queryset):
