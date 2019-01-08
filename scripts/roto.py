@@ -27,14 +27,17 @@ def get_players(data_source):
                   'salary', 'team', 'team_points']
         print data_source, len(players)
         for ii in players:
-            defaults = { key: str(ii[key]).replace(',', '') for key in fields }
-            defaults['play_today'] = True
+            try:
+                defaults = { key: str(ii[key]).replace(',', '') for key in fields }
+                defaults['play_today'] = True
 
-            defaults['injury'] = html2text.html2text(ii['injury']).strip()
-            if data_source == 'FantasyDraft':
-                defaults['position'] = defaults['actual_position']
-            obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
-                                                  defaults=defaults)
+                defaults['injury'] = html2text.html2text(ii['injury']).strip()
+                if data_source == 'FantasyDraft':
+                    defaults['position'] = defaults['actual_position']
+                obj = Player.objects.update_or_create(uid=ii['id'], data_source=data_source,
+                                                      defaults=defaults)
+            except Exception as e:
+                pass
     except:
         print('*** Something is wrong ***')
 
