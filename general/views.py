@@ -264,17 +264,14 @@ def get_team_stat(team, loc):
     return res
 
 
-def get_player(full_name, team):
+def get_player(full_name):
     '''
     FanDuel has top priority
     '''
     names = full_name.split(' ')
-    players = Player.objects.filter(first_name=names[0], last_name=names[1], team=team) \
+    players = Player.objects.filter(first_name=names[0], last_name=names[1]) \
                             .order_by('data_source')
-    player = players.filter(data_source='FanDuel').first()
-    if not player:
-        player = players.first()
-    return player
+    return players.filter(data_source='FanDuel').first()
 
 
 def get_win_loss(team):
@@ -296,12 +293,12 @@ def get_team_info(team, loc):
     wins, losses = get_win_loss(team)
 
     # get distinct players
-    players_ = team_games.values('name', 'team').distinct()
+    players_ = team_games.values('name').distinct()
 
     players = []
 
     for ii in players_:
-        player = get_player(ii['name'], ii['team'])
+        player = get_player(ii['name'])
         if player:
             games = team_games.filter(name=ii['name'], location=loc)
             ampg = games.aggregate(Avg('mp'))['mp__avg']
