@@ -31,6 +31,7 @@ def sync(type_, val):
             'Juan Hernangomez': 'Juancho Hernangomez',
             'CJ McCollum': 'C.J. McCollum',
             'Taurean Waller-Prince': 'Taurean Prince',
+            'Derrick Jones': 'Derrick Jones Jr.'
         }
     }
     return conv[type_][val] if val in conv[type_] else val
