@@ -16,6 +16,7 @@ from django.db.models import Avg, Q, Sum
 from general.models import *
 from general.lineup import *
 from general.color import *
+from general.utils import *
 
 POSITION = ['PG', 'SG', 'SF', 'PF', 'C']
 
@@ -36,6 +37,18 @@ def lineup(request):
     games = _get_game_today()
     return render(request, 'lineup.html', locals())
 
+def download_game_report(request):
+    game = request.GET.get('game')
+    game = Game.objects.get(id=game)
+    season = current_season()
+    q = Q(team__in=[game.home_team, game.visit_team]) & \
+        Q(opp__in=[game.home_team, game.visit_team]) & \
+        Q(date__range=[datetime.date(season, 10, 1), datetime.date(season+1, 6, 30)])
+    qs = PlayerGame.objects.filter(q)
+    fields = [f.name for f in PlayerGame._meta.get_fields() 
+              if f.name not in ['id', 'is_new']]
+    path = "/tmp/nba_games({}@{}).csv".format(game.visit_team, game.home_team)
+    return download_response(qs, path, fields)
 
 @csrf_exempt
 def fav_player(request):

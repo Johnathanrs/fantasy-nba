@@ -35,4 +35,5 @@ urlpatterns = [
     url(r'^player-match-up', player_match_up, name="player_match_up"),
     url(r'^team-match-up-board', team_match_up_board, name="team_match_up_board"),
     url(r'^team-match-up', team_match_up, name="team_match_up"),
+    url(r'^download_game_report', download_game_report, name="download_game_report"),
 ]
