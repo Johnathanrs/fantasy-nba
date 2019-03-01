@@ -12,8 +12,10 @@ class Roster:
         "C": 4
     }
 
-    def __init__(self):
+    def __init__(self, ds):
         self.players = []
+        self.ds = ds
+        self.drop = None
 
     def add_player(self, player):
         self.players.append(player)
@@ -28,8 +30,17 @@ class Roster:
     def spent(self):
         return sum(map(lambda x: x.salary, self.players))
 
-    def projected(self):
-        return sum(map(lambda x: x.proj_points, self.players))
+    def projected(self, gross=True):        # False
+        lst = map(lambda x: x.proj_points, self.players)
+        res = sum(lst)
+        if self.ds == 'FanDuel' and not gross:
+            drop = min(lst)
+            for ii in self.players:
+                if ii.proj_points == drop:
+                    self.drop = str(ii)
+                    break
+            res = res - drop
+        return res
 
     def position_order(self, player):
         return self.POSITION_ORDER[player.position]
@@ -123,17 +134,30 @@ ROSTER_SIZE = {
     'Fanball': 8
 }
 
+TEAM_LIMIT = {
+    'FanDuel': 3,
+    'Yahoo': 3,
+    'DraftKings': 2,
+    'Fanball': 2
+}
 
-def get_lineup(ds, players, teams, locked, max_point):
+TEAM_MEMEBER_LIMIT = {
+    'FanDuel': 4,
+    'Yahoo': 6,
+    'DraftKings': 8,
+    'Fanball': 8
+}
+
+def get_lineup(ds, players, teams, locked, max_point, con_mul):
     solver = pywraplp.Solver('nba-lineup', pywraplp.Solver.CBC_MIXED_INTEGER_PROGRAMMING)
 
     variables = []
 
-    for player in players:
-        if player.id in locked:
-            variables.append(solver.IntVar(1, 1, str(player)))
+    for i, player in enumerate(players):
+        if player.id in locked and ds != 'DraftKings':
+            variables.append(solver.IntVar(1, 1, str(player)+str(i)))
         else:        
-            variables.append(solver.IntVar(0, 1, str(player)))
+            variables.append(solver.IntVar(0, 1, str(player)+str(i)))
 
     objective = solver.Objective()
     objective.SetMaximization()
@@ -157,12 +181,23 @@ def get_lineup(ds, players, teams, locked, max_point):
             if player.position in position:
                 position_cap.SetCoefficient(variables[i], 1)
 
-    # at most 4 players from one team (yahoo)
-    for team in teams:
-        team_cap = solver.Constraint(0, 6)
-        for i, player in enumerate(players):
-            if team == player.team:
-                team_cap.SetCoefficient(variables[i], 1)
+    # no more than n players from one team (yahoo, fanduel)
+    if TEAM_MEMEBER_LIMIT[ds] != ROSTER_SIZE[ds]:
+        for team in teams:
+            team_cap = solver.Constraint(0, TEAM_MEMEBER_LIMIT[ds])
+            for i, player in enumerate(players):
+                if team == player.team:
+                    team_cap.SetCoefficient(variables[i], 1)
+
+    if ds == 'DraftKings':    # multi positional constraints
+        for ii in con_mul:
+            if players[ii[0]].id in locked:
+                mul_pos_cap = solver.Constraint(1, 1)
+            else:
+                mul_pos_cap = solver.Constraint(0, 1)
+
+            for jj in ii:
+                mul_pos_cap.SetCoefficient(variables[jj], 1)
 
     size_cap = solver.Constraint(ROSTER_SIZE[ds], ROSTER_SIZE[ds])
     for variable in variables:
@@ -171,7 +206,7 @@ def get_lineup(ds, players, teams, locked, max_point):
     solution = solver.Solve()
 
     if solution == solver.OPTIMAL:
-        roster = Roster()
+        roster = Roster(ds)
 
         for i, player in enumerate(players):
             if variables[i].solution_value() == 1:
@@ -179,22 +214,43 @@ def get_lineup(ds, players, teams, locked, max_point):
 
         return roster
 
-
-def calc_lineups(players, num_lineups, locked=[], ds='FanDuel'):
+def calc_lineups(players, num_lineups, locked, ds, cus_proj={}):
     result = []
 
     max_point = 10000
     teams = set([ii.team for ii in players])
+
+    con_mul = []
+    players_ = []
+    idx = 0
+    for ii in players:
+        p = vars(ii)
+        p.pop('_state')
+        p['proj_points'] = float(cus_proj.get(str(ii.id), ii.proj_points))
+
+        ci_ = []
+        for jj in ii.actual_position.split('/'):
+            ci_.append(idx)
+            p['position'] = jj
+            players_.append(Player(**p))
+            idx += 1
+        con_mul.append(ci_)
+    players = players_
+
     while True:
-        roster = get_lineup(ds, players, teams, locked, max_point)
-        max_point = roster.projected() - 0.001
+        roster = get_lineup(ds, players, teams, locked, max_point, con_mul)
+        max_point = roster.projected(gross=True) - 0.001
 
         if not roster:
             break
         
-        if roster.get_num_teams() > 2 or ds != 'Yahoo': # min number of teams - 3 (Yahoo)
+        if roster.get_num_teams() >= TEAM_LIMIT[ds]:
             result.append(roster)
             if len(result) == num_lineups:
                 break
 
+    if ds == 'FanDuel':
+        _result = [{ "roster": ii, "proj": ii.projected() } for ii in result]
+        _result = sorted(_result, key=lambda k: k["proj"], reverse=True)
+        result = [ii["roster"] for ii in _result]
     return result
