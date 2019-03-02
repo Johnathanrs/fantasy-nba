@@ -12,7 +12,7 @@ class Roster:
         "C": 4
     }
 
-    def __init__(self, ds):
+    def __init__(self, ds='FanDuel'):
         self.players = []
         self.ds = ds
         self.drop = None
