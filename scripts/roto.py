@@ -11,12 +11,13 @@ django.setup()
 
 from general.models import *
 from general import html2text
-import pdb
+from scripts.get_slate import get_slate
 
 def get_players(data_source):
     try:
+        slate = get_slate(data_source)
         url = 'https://www.rotowire.com/daily/tables/optimizer-nba.php?sport=NBA&' + \
-              'site={}&projections=&type=main&slate=all'.format(data_source)
+              'site={}&projections=&type=main&slate={}'.format(data_source, slate)
 
         players = requests.get(url).json()
 
