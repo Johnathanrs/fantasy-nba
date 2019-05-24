@@ -239,10 +239,11 @@ def calc_lineups(players, num_lineups, locked, ds, cus_proj={}):
 
     while True:
         roster = get_lineup(ds, players, teams, locked, max_point, con_mul)
-        max_point = roster.projected(gross=True) - 0.001
 
         if not roster:
             break
+
+        max_point = roster.projected(gross=True) - 0.001
         
         if roster.get_num_teams() >= TEAM_LIMIT[ds]:
             result.append(roster)

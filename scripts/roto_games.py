@@ -15,9 +15,9 @@ from scripts.get_slate import get_slate
 
 def get_games():
     # try:
-        slate = get_slate('FanDuel')
+        slate, type = get_slate('FanDuel')
         url = 'https://www.rotowire.com/daily/tables/schedule.php?sport=NBA&' + \
-              'site=FanDuel&type=main&slate={}'.format(slate)
+              'site=FanDuel&type={}&slate={}'.format(type, slate)
 
         games = requests.get(url).json()
         if games:

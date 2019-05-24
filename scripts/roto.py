@@ -15,9 +15,9 @@ from scripts.get_slate import get_slate
 
 def get_players(data_source):
     try:
-        slate = get_slate(data_source)
+        slate, type = get_slate(data_source)
         url = 'https://www.rotowire.com/daily/tables/optimizer-nba.php?sport=NBA&' + \
-              'site={}&projections=&type=main&slate={}'.format(data_source, slate)
+              'site={}&projections=&type={}&slate={}'.format(data_source, type, slate)
 
         players = requests.get(url).json()
 

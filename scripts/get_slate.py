@@ -12,7 +12,8 @@ def get_slate(ds):
         soup = BeautifulSoup(r, "html.parser")
         body = soup.find('body')
         slate = body['data-slate']
+        type = body['data-type']
     except:
         pass
 
-    return slate
+    return slate, type
