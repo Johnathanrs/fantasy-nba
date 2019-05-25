@@ -182,7 +182,7 @@ def get_lineup(ds, players, teams, locked, max_point, con_mul):
                 position_cap.SetCoefficient(variables[i], 1)
 
     # no more than n players from one team (yahoo, fanduel)
-    if TEAM_MEMEBER_LIMIT[ds] != ROSTER_SIZE[ds]:
+    if TEAM_MEMEBER_LIMIT[ds] != ROSTER_SIZE[ds] and len(teams) > 2:
         for team in teams:
             team_cap = solver.Constraint(0, TEAM_MEMEBER_LIMIT[ds])
             for i, player in enumerate(players):
@@ -245,7 +245,7 @@ def calc_lineups(players, num_lineups, locked, ds, cus_proj={}):
 
         max_point = roster.projected(gross=True) - 0.001
         
-        if roster.get_num_teams() >= TEAM_LIMIT[ds]:
+        if roster.get_num_teams() >= TEAM_LIMIT[ds] or len(teams) == 2:
             result.append(roster)
             if len(result) == num_lineups:
                 break

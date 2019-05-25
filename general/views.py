@@ -442,7 +442,8 @@ def player_match_up(request):
                             .order_by('-proj_points')
     players_ = []
     for player in players:
-        if pos in player.position:
+        position = player.actual_position.split('/')[0] if player.position == 'UT' else player.position
+        if pos in position:
             if min_afp <= player.salary_custom <= max_afp:
                 if min_sfp <= player.proj_site <= max_sfp:
                     vs = game_info[player.team][0]
@@ -450,6 +451,7 @@ def player_match_up(request):
                     loc_ = game_info[player.team][2]
 
                     opr_info_ = json.loads(TMSCache.objects.filter(team=vs, type=2).first().body)
+
                     players_.append({
                         'avatar': player.avatar,
                         'id': player.id,
@@ -458,7 +460,7 @@ def player_match_up(request):
                         'team': player.team,
                         'loc': loc,
                         'vs': vs,
-                        'pos': player.position,
+                        'pos': position,
                         'inj': player.injury,
                         'salary': player.salary,
                         'ampg': player.minutes,
@@ -468,9 +470,9 @@ def player_match_up(request):
                         'sfp': player.proj_site,
                         'pdiff': formated_diff(player.proj_site-player.salary_custom),
                         'val': player.salary / 250 + 10,    # exception
-                        'opp': opr_info_[player.position],
-                        'opr': opr_info_[player.position+'_rank'],
-                        'color': colors[opr_info_[player.position+'_rank']-1]
+                        'opp': opr_info_[position],
+                        'opr': opr_info_[position+'_rank'],
+                        'color': colors[opr_info_[position+'_rank']-1]
                     })
 
     groups = { ii: [] for ii in POSITION }
