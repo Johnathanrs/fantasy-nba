@@ -5,7 +5,6 @@ from bs4 import BeautifulSoup
 import os
 from os import sys, path
 import django
-import pdb
 
 import datetime
 
@@ -14,6 +13,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fantasy_nba.settings")
 django.setup()
 
 from general.models import *
+
 
 def sync(type_, val):
     # bball -> roto
@@ -34,7 +34,29 @@ def sync(type_, val):
             'Derrick Jones': 'Derrick Jones Jr.'
         }
     }
+
     return conv[type_][val] if val in conv[type_] else val
+
+
+def clean_unicode(name):
+    unicode_map = {
+        u'\u0107': 'c',
+        u'\u0160': 'S',
+        u'\u010d': 'c',
+        u'\u016b': 'u',
+        u'\xe1':   'a',
+        u'\u0161': 's',
+        u'\xfd':   'y',
+        u'\u0146': 'n',
+        u'\u0123': 'g',
+        u'\xf2':   'o'
+    }
+
+    for key, val in unicode_map.items():
+        name = name.replace(key, val)
+
+    return name
+
 
 def scrape(param):
     dp = "https://www.basketball-reference.com/friv/dailyleaders.fcgi?" + param
@@ -62,6 +84,7 @@ def scrape(param):
 
             mp = player.find("td", {"data-stat":"mp"}).text.split(':')
             name = player.find("td", {"data-stat":"player"}).text.strip()
+            name = clean_unicode(name)
             name = sync('name', name)
             team = player.find("td", {"data-stat":"team_id"}).text.strip()
             team = sync('team', team)
